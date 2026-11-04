@@ -38,8 +38,12 @@ export default function Navbar() {
         <div className="flex items-center justify-between h-20">
           {/* Logo & Brand Identity */}
           <Link href="/" className="flex items-center space-x-3.5 group">
-            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#1e242d] to-[#12151b] border border-gold/40 flex items-center justify-center text-gold group-hover:border-gold transition-all duration-300 shadow-gold">
-              <Shield className="w-5 h-5 text-gold group-hover:scale-110 transition-transform" />
+            <div className="w-11 h-11 rounded-xl bg-gradient-to-br from-[#1e242d] to-[#12151b] border border-gold/40 flex items-center justify-center text-gold group-hover:border-gold transition-all duration-300 shadow-gold overflow-hidden">
+              <img
+                src="/raylab-logo.png"
+                alt="RayLab Logo"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform"
+              />
             </div>
             <div className="flex flex-col">
               <span className="font-extrabold text-lg tracking-wider text-ivory flex items-center gap-0.5">

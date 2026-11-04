@@ -32,8 +32,8 @@ export default function Footer() {
           {/* Col 1: Identity */}
           <div className="space-y-4">
             <div className="flex items-center space-x-3">
-              <div className="w-9 h-9 rounded-lg bg-gold/15 border border-gold/40 flex items-center justify-center text-gold">
-                <Shield className="w-5 h-5" />
+              <div className="w-9 h-9 rounded-lg bg-gold/15 border border-gold/40 flex items-center justify-center text-gold overflow-hidden">
+                <img src="/raylab-logo.png" alt="RayLab Logo" className="w-full h-full object-cover" />
               </div>
               <span className="font-extrabold text-base tracking-wider text-ivory">
                 Ray<span className="text-gold">Lab</span>

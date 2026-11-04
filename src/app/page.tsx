@@ -89,6 +89,22 @@ export default async function HomePage() {
               </Link>
             </div>
 
+            {/* Official Brand Banner Card */}
+            <div className="pt-8 max-w-4xl mx-auto">
+              <div className="relative rounded-2xl overflow-hidden border border-gold/40 shadow-2xl bg-[#0d1016] group">
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0e1218]/80 via-transparent to-transparent z-10 pointer-events-none" />
+                <img
+                  src="/raylab-banner.png"
+                  alt="RayLab Official Banner - Acad?mie de Cybers?curit? & Lab Virtuel"
+                  className="w-full h-auto object-cover transform group-hover:scale-[1.01] transition-transform duration-500"
+                />
+                <div className="absolute bottom-3 left-4 z-20 flex items-center space-x-2 text-[11px] font-mono text-gold bg-[#10141b]/90 px-3 py-1 rounded-full border border-gold/30 backdrop-blur-sm">
+                  <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                  <span>RAYLAB ACAD?MIE ? CYBERPATH 2026-2027</span>
+                </div>
+              </div>
+            </div>
+
             {/* Statistics Row */}
             <div className="pt-14 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto border-t border-[#1c222b]">
               <div className="p-4 bg-[#13171e] rounded-2xl border border-[#202732] text-left">

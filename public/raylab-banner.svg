@@ -2,43 +2,52 @@
   <defs>
     <!-- Background Gradients -->
     <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#090B0E" />
-      <stop offset="50%" stop-color="#12161F" />
-      <stop offset="100%" stop-color="#080A0D" />
+      <stop offset="0%" stop-color="#080A0E" />
+      <stop offset="50%" stop-color="#111620" />
+      <stop offset="100%" stop-color="#06080B" />
     </linearGradient>
 
-    <radialGradient id="goldGlow" cx="50%" cy="35%" r="45%">
-      <stop offset="0%" stop-color="#C6A66B" stop-opacity="0.22" />
-      <stop offset="60%" stop-color="#C6A66B" stop-opacity="0.03" />
-      <stop offset="100%" stop-color="#C6A66B" stop-opacity="0" />
+    <!-- Radial Glows -->
+    <radialGradient id="goldGlow" cx="50%" cy="32%" r="42%">
+      <stop offset="0%" stop-color="#D4AF37" stop-opacity="0.25" />
+      <stop offset="60%" stop-color="#D4AF37" stop-opacity="0.04" />
+      <stop offset="100%" stop-color="#D4AF37" stop-opacity="0" />
     </radialGradient>
 
-    <radialGradient id="blueGlow" cx="80%" cy="20%" r="35%">
-      <stop offset="0%" stop-color="#3B82F6" stop-opacity="0.15" />
-      <stop offset="100%" stop-color="#3B82F6" stop-opacity="0" />
+    <radialGradient id="cyanGlow" cx="80%" cy="20%" r="35%">
+      <stop offset="0%" stop-color="#06B6D4" stop-opacity="0.18" />
+      <stop offset="100%" stop-color="#06B6D4" stop-opacity="0" />
     </radialGradient>
 
-    <radialGradient id="emeraldGlow" cx="20%" cy="80%" r="35%">
-      <stop offset="0%" stop-color="#10B981" stop-opacity="0.12" />
+    <radialGradient id="emeraldGlow" cx="20%" cy="75%" r="35%">
+      <stop offset="0%" stop-color="#10B981" stop-opacity="0.14" />
       <stop offset="100%" stop-color="#10B981" stop-opacity="0" />
     </radialGradient>
 
     <!-- Metallic Gold Gradient -->
     <linearGradient id="metallicGold" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#F2E6C9" />
-      <stop offset="40%" stop-color="#C6A66B" />
-      <stop offset="100%" stop-color="#99783D" />
+      <stop offset="0%" stop-color="#F5E8C8" />
+      <stop offset="35%" stop-color="#D4AF37" />
+      <stop offset="70%" stop-color="#AA820A" />
+      <stop offset="100%" stop-color="#E5C158" />
     </linearGradient>
 
+    <!-- Cyan Gradient -->
+    <linearGradient id="neonCyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#22D3EE" />
+      <stop offset="100%" stop-color="#06B6D4" />
+    </linearGradient>
+
+    <!-- Badge Border -->
     <linearGradient id="badgeBorder" x1="0%" y1="0%" x2="100%" y2="0%">
-      <stop offset="0%" stop-color="#C6A66B" stop-opacity="0.5" />
-      <stop offset="50%" stop-color="#C6A66B" stop-opacity="0.1" />
-      <stop offset="100%" stop-color="#C6A66B" stop-opacity="0.4" />
+      <stop offset="0%" stop-color="#D4AF37" stop-opacity="0.6" />
+      <stop offset="50%" stop-color="#06B6D4" stop-opacity="0.2" />
+      <stop offset="100%" stop-color="#D4AF37" stop-opacity="0.5" />
     </linearGradient>
 
     <!-- Tech Grid Pattern -->
     <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
-      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#222935" stroke-width="0.75" stroke-opacity="0.4" />
+      <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1D2430" stroke-width="0.75" stroke-opacity="0.5" />
     </pattern>
 
     <!-- Filter for Glow -->
@@ -53,114 +62,113 @@
   <rect width="1200" height="630" fill="url(#grid)" />
 
   <!-- Ambient Light Orbs -->
-  <circle cx="600" cy="220" r="380" fill="url(#goldGlow)" />
-  <circle cx="950" cy="140" r="280" fill="url(#blueGlow)" />
-  <circle cx="200" cy="500" r="280" fill="url(#emeraldGlow)" />
+  <circle cx="600" cy="210" r="380" fill="url(#goldGlow)" />
+  <circle cx="980" cy="150" r="280" fill="url(#cyanGlow)" />
+  <circle cx="180" cy="500" r="280" fill="url(#emeraldGlow)" />
 
   <!-- Border Frame -->
-  <rect x="24" y="24" width="1152" height="582" rx="20" fill="none" stroke="#252D3A" stroke-width="1.5" />
-  <rect x="28" y="28" width="1144" height="574" rx="16" fill="none" stroke="#C6A66B" stroke-width="0.5" stroke-opacity="0.3" />
+  <rect x="24" y="24" width="1152" height="582" rx="20" fill="none" stroke="#222A38" stroke-width="1.5" />
+  <rect x="28" y="28" width="1144" height="574" rx="16" fill="none" stroke="#D4AF37" stroke-width="0.5" stroke-opacity="0.3" />
 
   <!-- Corner Brackets -->
-  <path d="M 44 64 L 44 44 L 64 44" fill="none" stroke="#C6A66B" stroke-width="3" stroke-linecap="round" />
-  <path d="M 1156 64 L 1156 44 L 1136 44" fill="none" stroke="#C6A66B" stroke-width="3" stroke-linecap="round" />
-  <path d="M 44 566 L 44 586 L 64 586" fill="none" stroke="#C6A66B" stroke-width="3" stroke-linecap="round" />
-  <path d="M 1156 566 L 1156 586 L 1136 586" fill="none" stroke="#C6A66B" stroke-width="3" stroke-linecap="round" />
+  <path d="M 44 64 L 44 44 L 64 44" fill="none" stroke="#D4AF37" stroke-width="3" stroke-linecap="round" />
+  <path d="M 1156 64 L 1156 44 L 1136 44" fill="none" stroke="#D4AF37" stroke-width="3" stroke-linecap="round" />
+  <path d="M 44 566 L 44 586 L 64 586" fill="none" stroke="#D4AF37" stroke-width="3" stroke-linecap="round" />
+  <path d="M 1156 566 L 1156 586 L 1136 586" fill="none" stroke="#D4AF37" stroke-width="3" stroke-linecap="round" />
 
   <!-- Top Pill Badge -->
-  <g transform="translate(435, 75)">
-    <rect width="330" height="34" rx="17" fill="#141820" stroke="url(#badgeBorder)" stroke-width="1.2" />
+  <g transform="translate(415, 65)">
+    <rect width="370" height="34" rx="17" fill="#131720" stroke="url(#badgeBorder)" stroke-width="1.2" />
     <circle cx="22" cy="17" r="4.5" fill="#10B981" />
     <circle cx="22" cy="17" r="8" fill="none" stroke="#10B981" stroke-width="1" stroke-opacity="0.5" />
-    <text x="38" y="22" fill="#C6A66B" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="12" letter-spacing="1.5">
-      INSTITUT TECHNIQUE &amp; MENTORAT IA
+    <text x="38" y="22" fill="#D4AF37" font-family="system-ui, -apple-system, sans-serif" font-weight="700" font-size="12" letter-spacing="1.5">
+      ACADÉMIE DE CYBERSÉCURITÉ &amp; LAB VIRTUEL
     </text>
   </g>
 
   <!-- Central Crest / Shield Emblem -->
-  <g transform="translate(600, 180)">
+  <g transform="translate(600, 175)">
     <!-- Outer Glow Shield -->
-    <path d="M 0 -45 L 36 -27 L 36 18 C 36 40 18 57 0 65 C -18 57 -36 40 -36 18 L -36 -27 Z"
-          fill="#161B24" stroke="url(#metallicGold)" stroke-width="2.5" filter="url(#glowEffect)" />
-    
+    <path d="M 0 -48 L 40 -26 L 40 18 C 40 42 20 62 0 70 C -20 62 -40 42 -40 18 L -40 -26 Z"
+          fill="#141924" stroke="url(#metallicGold)" stroke-width="2.5" filter="url(#glowEffect)" />
+
     <!-- Inner Shield Accent -->
-    <path d="M 0 -34 L 26 -20 L 26 14 C 26 31 13 44 0 50 C -13 44 -26 31 -26 14 L -26 -20 Z"
-          fill="#0F1218" stroke="#C6A66B" stroke-width="1" stroke-opacity="0.4" />
-    
-    <!-- Lock / Core Tech Icon -->
-    <rect x="-10" y="-2" width="20" height="16" rx="3" fill="url(#metallicGold)" />
-    <path d="M -6 -2 L -6 -8 C -6 -12 6 -12 6 -8 L 6 -2" fill="none" stroke="url(#metallicGold)" stroke-width="2.5" stroke-linecap="round" />
-    <circle cx="0" cy="5" r="2" fill="#101216" />
+    <path d="M 0 -36 L 28 -20 L 28 14 C 28 32 14 46 0 52 C -14 46 -28 32 -28 14 L -28 -20 Z"
+          fill="#0D1016" stroke="url(#neonCyan)" stroke-width="1.2" stroke-opacity="0.7" />
+
+    <!-- Terminal Prompt Motif ">_" -->
+    <path d="M -15 -8 L -4 0 L -15 8" fill="none" stroke="url(#metallicGold)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" />
+    <line x1="2" y1="8" x2="15" y2="8" stroke="url(#neonCyan)" stroke-width="2.5" stroke-linecap="round" />
   </g>
 
   <!-- Brand Title "RayLab" -->
-  <g transform="translate(600, 290)">
+  <g transform="translate(600, 285)">
     <text text-anchor="middle" font-family="system-ui, -apple-system, sans-serif" font-weight="900" font-size="64" letter-spacing="-1">
       <tspan fill="#F3F0E8">Ray</tspan><tspan fill="url(#metallicGold)">Lab</tspan>
     </text>
   </g>
 
-  <!-- Official Signature -->
-  <g transform="translate(600, 335)">
-    <text text-anchor="middle" fill="#C6A66B" font-family="'Courier New', Courier, monospace" font-weight="700" font-size="16" letter-spacing="5">
+  <!-- Official Signature Tagline -->
+  <g transform="translate(600, 328)">
+    <text text-anchor="middle" fill="#D4AF37" font-family="'Courier New', Courier, monospace" font-weight="700" font-size="15" letter-spacing="5">
       LEARN • BUILD • SECURE • BECOME
     </text>
   </g>
 
   <!-- Mission Subheading -->
-  <g transform="translate(600, 375)">
-    <text text-anchor="middle" fill="#9AA4B2" font-family="system-ui, -apple-system, sans-serif" font-weight="400" font-size="16">
-      L'Excellence Technique en Programmation Python, Administration Système &amp; Cybersécurité Défensive
+  <g transform="translate(600, 365)">
+    <text text-anchor="middle" fill="#9AA4B2" font-family="system-ui, -apple-system, sans-serif" font-weight="400" font-size="15">
+      Plateforme d'Élite en Informatique, Programmation Python, Administration Linux &amp; Cybersécurité
     </text>
   </g>
 
   <!-- Decorative Separator Line with Accent Diamond -->
-  <line x1="380" y1="410" x2="820" y2="410" stroke="#252D3A" stroke-width="1" />
-  <line x1="530" y1="410" x2="670" y2="410" stroke="url(#metallicGold)" stroke-width="1.5" />
-  <polygon points="600,406 604,410 600,414 596,410" fill="#C6A66B" />
+  <line x1="380" y1="395" x2="820" y2="395" stroke="#222A38" stroke-width="1" />
+  <line x1="530" y1="395" x2="670" y2="395" stroke="url(#metallicGold)" stroke-width="1.5" />
+  <polygon points="600,391 604,395 600,399 596,395" fill="#D4AF37" />
 
   <!-- 4 Pillars Feature Cards at the Bottom -->
-  <g transform="translate(100, 445)">
+  <g transform="translate(100, 430)">
     <!-- Card 1: Python -->
     <g transform="translate(0, 0)">
-      <rect width="230" height="96" rx="14" fill="#13171F" stroke="#232B37" stroke-width="1" />
-      <rect x="0" y="0" width="230" height="96" rx="14" fill="none" stroke="#C6A66B" stroke-width="1" stroke-opacity="0.2" />
-      <text x="18" y="32" fill="#F2E6C9" font-family="system-ui, sans-serif" font-weight="700" font-size="14">🐍 Python Academy</text>
-      <text x="18" y="54" fill="#8892A2" font-family="system-ui, sans-serif" font-size="11">Niveaux 1 à 7 progressifs</text>
-      <text x="18" y="74" fill="#C6A66B" font-family="'Courier New', monospace" font-size="10" font-weight="700">POO • Algorithmique • PEP 8</text>
+      <rect width="230" height="96" rx="14" fill="#121620" stroke="#222A38" stroke-width="1" />
+      <rect x="0" y="0" width="230" height="96" rx="14" fill="none" stroke="#D4AF37" stroke-width="1" stroke-opacity="0.3" />
+      <text x="18" y="32" fill="#F2E6C9" font-family="system-ui, sans-serif" font-weight="700" font-size="13">🐍 Python &amp; AppSec</text>
+      <text x="18" y="54" fill="#8892A2" font-family="system-ui, sans-serif" font-size="11">POO, Algorithmes, Cryptographie</text>
+      <text x="18" y="74" fill="#D4AF37" font-family="'Courier New', monospace" font-size="10" font-weight="700">Sockets • Scapy • PBKDF2</text>
     </g>
 
     <!-- Card 2: Cyber SOC -->
     <g transform="translate(255, 0)">
-      <rect width="230" height="96" rx="14" fill="#13171F" stroke="#232B37" stroke-width="1" />
-      <rect x="0" y="0" width="230" height="96" rx="14" fill="none" stroke="#3B82F6" stroke-width="1" stroke-opacity="0.3" />
-      <text x="18" y="32" fill="#60A5FA" font-family="system-ui, sans-serif" font-weight="700" font-size="14">🛡️ Blue Team &amp; SOC</text>
-      <text x="18" y="54" fill="#8892A2" font-family="system-ui, sans-serif" font-size="11">Analyse d'incidents &amp; SIEM</text>
-      <text x="18" y="74" fill="#60A5FA" font-family="'Courier New', monospace" font-size="10" font-weight="700">MITRE ATT&amp;CK • NIST • FIM</text>
+      <rect width="230" height="96" rx="14" fill="#121620" stroke="#222A38" stroke-width="1" />
+      <rect x="0" y="0" width="230" height="96" rx="14" fill="none" stroke="#06B6D4" stroke-width="1" stroke-opacity="0.3" />
+      <text x="18" y="32" fill="#67E8F9" font-family="system-ui, sans-serif" font-weight="700" font-size="13">🛡️ Blue Team &amp; SOC</text>
+      <text x="18" y="54" fill="#8892A2" font-family="system-ui, sans-serif" font-size="11">Analyse de logs &amp; SIEM</text>
+      <text x="18" y="74" fill="#67E8F9" font-family="'Courier New', monospace" font-size="10" font-weight="700">MITRE ATT&amp;CK • NIST • FIM</text>
     </g>
 
     <!-- Card 3: Linux & Networks -->
     <g transform="translate(510, 0)">
-      <rect width="230" height="96" rx="14" fill="#13171F" stroke="#232B37" stroke-width="1" />
+      <rect width="230" height="96" rx="14" fill="#121620" stroke="#222A38" stroke-width="1" />
       <rect x="0" y="0" width="230" height="96" rx="14" fill="none" stroke="#10B981" stroke-width="1" stroke-opacity="0.3" />
-      <text x="18" y="32" fill="#34D399" font-family="system-ui, sans-serif" font-weight="700" font-size="14">🐧 Linux &amp; TCP/IP</text>
-      <text x="18" y="54" fill="#8892A2" font-family="system-ui, sans-serif" font-size="11">Architecture d'infrastructure</text>
-      <text x="18" y="74" fill="#34D399" font-family="'Courier New', monospace" font-size="10" font-weight="700">Sockets • Wireshark • Docker</text>
+      <text x="18" y="32" fill="#34D399" font-family="system-ui, sans-serif" font-weight="700" font-size="13">🖥️ Linux &amp; Kernel</text>
+      <text x="18" y="54" fill="#8892A2" font-family="system-ui, sans-serif" font-size="11">Architecture &amp; Protocoles TCP/IP</text>
+      <text x="18" y="74" fill="#34D399" font-family="'Courier New', monospace" font-size="10" font-weight="700">Shell • SUID PrivEsc • Nmap</text>
     </g>
 
-    <!-- Card 4: RayBot AI -->
+    <!-- Card 4: Lab Virtuel & CTF -->
     <g transform="translate(765, 0)">
-      <rect width="235" height="96" rx="14" fill="#151A23" stroke="#C6A66B" stroke-width="1.2" />
-      <text x="18" y="32" fill="#FBBF24" font-family="system-ui, sans-serif" font-weight="700" font-size="14">✨ RayBot AI Mentor</text>
-      <text x="18" y="54" fill="#C6A66B" font-family="system-ui, sans-serif" font-size="11">Mentor 24/7 &amp; Revue de code</text>
-      <text x="18" y="74" fill="#F3F0E8" font-family="'Courier New', monospace" font-size="10" font-weight="700">Opencode • Omniroute • Local</text>
+      <rect width="235" height="96" rx="14" fill="#151A24" stroke="#D4AF37" stroke-width="1.3" />
+      <text x="18" y="32" fill="#FBBF24" font-family="system-ui, sans-serif" font-weight="700" font-size="13">⚡ Lab Virtuel &amp; CTF</text>
+      <text x="18" y="54" fill="#D4AF37" font-family="system-ui, sans-serif" font-size="11">Terminal Shell &amp; WASM CPython</text>
+      <text x="18" y="74" fill="#F3F0E8" font-family="'Courier New', monospace" font-size="10" font-weight="700">70% Pratique • 30% Théorie</text>
     </g>
   </g>
 
-  <!-- Bottom Brand Status Indicator -->
-  <g transform="translate(600, 580)">
-    <text text-anchor="middle" fill="#586376" font-family="'Courier New', monospace" font-size="11" letter-spacing="1">
-      RAYLAB.TECH • REPOSITORY OPEN SOURCE • NORME ATS RECRUTEMENT
+  <!-- Bottom URL & Status Indicator -->
+  <g transform="translate(600, 565)">
+    <text text-anchor="middle" fill="#64748B" font-family="'Courier New', monospace" font-size="11" letter-spacing="2">
+      https://raylab.pages.dev  •  PLATEFORME OFFICIELLE CYBERPATH 2026-2027
     </text>
   </g>
 </svg>
