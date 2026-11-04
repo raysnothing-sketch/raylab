@@ -17,7 +17,7 @@ import {
   Shield,
   FileCode,
   Sparkles,
-  Bot,
+  Terminal,
 } from "lucide-react";
 
 export default async function PathDetailPage({
@@ -69,26 +69,26 @@ export default async function PathDetailPage({
         </div>
       </div>
 
-      {/* RayBot Mentor Callout Banner */}
+      {/* Virtual Lab Callout Banner */}
       <div className="mb-12 p-6 rounded-2xl bg-[#11151c] border border-gold/30 flex flex-col sm:flex-row items-center justify-between gap-4">
         <div className="flex items-center space-x-4">
           <div className="w-12 h-12 rounded-xl bg-gold/15 border border-gold/40 flex items-center justify-center text-gold flex-shrink-0">
-            <Sparkles className="w-6 h-6 animate-pulse" />
+            <Terminal className="w-6 h-6 animate-pulse" />
           </div>
           <div>
             <h3 className="text-sm font-bold text-ivory">
-              Besoin d&apos;aide ou d&apos;explications sur ce cursus ?
+              Atelier Pratique &amp; Terminal Interactif
             </h3>
             <p className="text-xs text-ivory-muted mt-0.5">
-              RayBot AI est entraîné sur le programme complet de « {path.title} ». Interrogez-le pour clarifier un concept ou débloquer un exercice.
+              Mettez en application directe les compétences de « {path.title} » dans notre bac à sable interactif et terminal pratique.
             </p>
           </div>
         </div>
         <Link
-          href="/raybot"
+          href="/lab"
           className="px-5 py-2.5 rounded-xl bg-gold hover:bg-gold-light text-[#101216] font-bold text-xs uppercase tracking-wider whitespace-nowrap transition-all shadow-gold flex items-center space-x-1.5"
         >
-          <span>Consulter RayBot IA</span>
+          <span>Ouvrir le Labo Virtuel</span>
           <ArrowRight className="w-3.5 h-3.5" />
         </Link>
       </div>

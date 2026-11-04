@@ -23,7 +23,7 @@ import {
   Briefcase,
 } from "lucide-react";
 import { getLearningPaths, getProjects, getCertifications } from "@/lib/data";
-import InteractiveAiWidget from "@/components/InteractiveAiWidget";
+import InteractiveTerminalLab from "@/components/InteractiveTerminalLab";
 
 export default async function HomePage() {
   const paths = await getLearningPaths();
@@ -74,11 +74,11 @@ export default async function HomePage() {
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
-                href="/raybot"
+                href="/lab"
                 className="w-full sm:w-auto px-7 py-4 rounded-xl bg-[#161a22] hover:bg-[#1f2530] border border-gold/40 text-gold font-bold text-xs tracking-wider uppercase flex items-center justify-center space-x-2 transition-all group shadow-sm"
               >
-                <Sparkles className="w-4 h-4 text-gold animate-pulse" />
-                <span>Découvrir RayBot IA</span>
+                <Terminal className="w-4 h-4 text-gold animate-pulse" />
+                <span>Labo Virtuel &amp; Terminal &gt;_</span>
               </Link>
               <Link
                 href="/about"
@@ -316,55 +316,55 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 6. DÉMONSTRATION IA EN DIRECT (Opencode / Omniroute / Local) */}
+      {/* 6. LABORATOIRE VIRTUEL & TERMINAL INTERACTIF (Méthode CyberPath 70/30) */}
       <section className="py-24 bg-[#0d1015] border-t border-[#1c222b]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
             <div className="lg:col-span-5 space-y-6">
               <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-gold/15 text-gold text-xs font-mono border border-gold/30">
-                <Sparkles className="w-3.5 h-3.5 animate-pulse" />
-                <span>RayBot 2.0 • Mentor IA Intégré</span>
+                <Terminal className="w-3.5 h-3.5 text-gold animate-pulse" />
+                <span>Labo Virtuel • 70% Pratique / 30% Théorie</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-extrabold text-ivory leading-tight">
-                L&apos;Ingénierie Assistée par l&apos;Intelligence Artificielle
+                L&apos;Ingénierie Pratique les Mains sur le Terminal
               </h2>
               <p className="text-xs sm:text-sm text-ivory-muted leading-relaxed">
-                RayBot accompagne chaque étudiant 24/7. Connecté aux modèles d&apos;IA gratuits sur <strong>Opencode</strong> et <strong>Omniroute</strong> (ou propulsé par le moteur technique souverain de RayLab), il audite votre code Python, interprète vos journaux SOC et vous entraîne aux entretiens techniques.
+                Conformément aux principes de CyberPath 2026-2027, la maîtrise technique s&apos;acquiert par l&apos;expérimentation concrète. Testez vos scripts Python, simulez des poignées de main TCP SYN/ACK, décortiquez des trames réseau et analysez des journaux de cyberattaques en temps réel directement dans votre navigateur.
               </p>
 
               <div className="grid grid-cols-2 gap-3 text-xs font-mono">
                 <div className="p-3 bg-[#13171f] rounded-xl border border-[#202734] space-y-1">
-                  <div className="text-gold font-bold">🐍 Python &amp; POO</div>
-                  <div className="text-[11px] text-ivory-dim">Audit Big-O &amp; PEP 8</div>
+                  <div className="text-gold font-bold">🐍 Python Sandbox</div>
+                  <div className="text-[11px] text-ivory-dim">Sockets, Algorithmes &amp; PEP 8</div>
                 </div>
                 <div className="p-3 bg-[#13171f] rounded-xl border border-[#202734] space-y-1">
-                  <div className="text-blue-400 font-bold">🛡️ SOC &amp; SIEM</div>
-                  <div className="text-[11px] text-ivory-dim">Triage &amp; Détection NIST</div>
+                  <div className="text-blue-400 font-bold">🌐 Scan TCP &amp; Handshake</div>
+                  <div className="text-[11px] text-ivory-dim">Sondes SYN, Bannières &amp; Ports</div>
                 </div>
                 <div className="p-3 bg-[#13171f] rounded-xl border border-[#202734] space-y-1">
-                  <div className="text-emerald-400 font-bold">🌐 Linux &amp; TCP</div>
-                  <div className="text-[11px] text-ivory-dim">Handshake &amp; Droits Unix</div>
+                  <div className="text-emerald-400 font-bold">🛡️ Scapy &amp; ARP Spoofing</div>
+                  <div className="text-[11px] text-ivory-dim">Dissection de Trames &amp; MITM</div>
                 </div>
                 <div className="p-3 bg-[#13171f] rounded-xl border border-[#202734] space-y-1">
-                  <div className="text-purple-400 font-bold">💼 Coaching CV</div>
-                  <div className="text-[11px] text-ivory-dim">Simulateur ATS &amp; XYZ</div>
+                  <div className="text-purple-400 font-bold">📜 SIEM &amp; Détection Regex</div>
+                  <div className="text-[11px] text-ivory-dim">SQLi, Traversal &amp; MITRE ATT&amp;CK</div>
                 </div>
               </div>
 
               <div className="pt-2 flex flex-col sm:flex-row gap-3">
                 <Link
-                  href="/raybot"
+                  href="/lab"
                   className="px-6 py-3 rounded-xl bg-gold hover:bg-gold-light text-[#101216] font-bold text-xs uppercase tracking-wider shadow-gold inline-flex items-center justify-center space-x-2"
                 >
-                  <span>Explorer tout le potentiel de RayBot</span>
+                  <span>Ouvrir le Laboratoire Virtuel</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               </div>
             </div>
 
-            {/* Interactive Live AI Console Widget */}
+            {/* Interactive Live Terminal Widget */}
             <div className="lg:col-span-7">
-              <InteractiveAiWidget />
+              <InteractiveTerminalLab />
             </div>
           </div>
         </div>
@@ -456,10 +456,10 @@ export default async function HomePage() {
 
             <div className="p-6 bg-[#141820] rounded-2xl border border-[#222935] space-y-2">
               <h3 className="font-bold text-ivory text-base">
-                Comment fonctionne l&apos;assistant IA RayBot ?
+                Comment fonctionne le Laboratoire Virtuel RayLab ?
               </h3>
               <p className="text-ivory-muted leading-relaxed">
-                RayBot s&apos;appuie soit sur un moteur local expert des programmes RayLab, soit sur des modèles d&apos;intelligence artificielle gratuits routés via Omniroute ou Opencode pour vous assister sans surcoût.
+                Le Laboratoire Virtuel RayLab intègre un bac à sable d&apos;exécution Python dans votre navigateur, des simulateurs de sockets TCP, des dissecteurs de trames ARP Scapy et des analyseurs de journaux SOC conformes aux RFC et à la méthode 70/30 de CyberPath.
               </p>
             </div>
           </div>

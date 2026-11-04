@@ -83,8 +83,8 @@ export default function Footer() {
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <Link href="/raybot" className="hover:text-gold transition-colors text-gold flex items-center space-x-1 font-semibold">
-                  <span>RayBot AI (Mentor Virtuel)</span>
+                <Link href="/lab" className="hover:text-gold transition-colors text-gold flex items-center space-x-1 font-semibold">
+                  <span>Labo Virtuel &amp; Terminal Interactif</span>
                 </Link>
               </li>
               <li>

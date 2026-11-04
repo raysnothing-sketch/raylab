@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Link from "next/link";
-import { Sparkles, ArrowRight, X } from "lucide-react";
+import { Terminal, ArrowRight, X } from "lucide-react";
 
 export default function AnnouncementBanner() {
   const [isVisible, setIsVisible] = useState(true);
@@ -27,20 +27,20 @@ export default function AnnouncementBanner() {
         {/* Banner Content */}
         <div className="flex-1 flex items-center justify-center space-x-2.5 text-center">
           <span className="hidden sm:inline-flex items-center space-x-1.5 px-2.5 py-0.5 rounded-full bg-gold/15 text-gold border border-gold/40 text-[10px] font-mono font-bold">
-            <Sparkles className="w-3 h-3 text-gold animate-pulse" />
-            <span>NOUVEAU</span>
+            <Terminal className="w-3 h-3 text-gold animate-pulse" />
+            <span>LABO VIRTUEL</span>
           </span>
 
           <p className="text-xs text-ivory-muted leading-tight">
-            <span className="text-ivory font-semibold">RayBot AI Mentor 2.0 est en ligne :</span>{" "}
-            <span className="hidden md:inline">Auditez votre code Python, décodez les alertes SOC et préparez vos entretiens.</span>
+            <span className="text-ivory font-semibold">Le Laboratoire Virtuel &amp; Terminal Pratique est en ligne :</span>{" "}
+            <span className="hidden md:inline">Testez vos scripts Python, balayez des ports TCP et analysez des trames Scapy en direct.</span>
           </p>
 
           <Link
-            href="/raybot"
+            href="/lab"
             className="inline-flex items-center space-x-1 text-gold hover:text-gold-light font-bold text-xs underline underline-offset-4 decoration-gold/50 hover:decoration-gold transition-all ml-1"
           >
-            <span>Tester l&apos;IA</span>
+            <span>Ouvrir le Labo</span>
             <ArrowRight className="w-3.5 h-3.5 inline-block" />
           </Link>
         </div>

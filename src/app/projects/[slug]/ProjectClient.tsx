@@ -16,6 +16,7 @@ import {
   ArrowRight,
   Sparkles,
   Send,
+  Terminal,
 } from "lucide-react";
 
 export default function ProjectClient({ project }: { project: any }) {
@@ -228,20 +229,20 @@ export default function ProjectClient({ project }: { project: any }) {
             )}
           </div>
 
-          {/* RayBot Code Review Card */}
+          {/* Virtual Lab Card */}
           <div className="p-5 rounded-2xl bg-[#101319] border border-gold/30 space-y-3">
             <div className="flex items-center space-x-2 text-xs font-mono text-gold font-bold">
-              <Sparkles className="w-4 h-4 animate-pulse text-gold" />
-              <span>Audit de Projet avec RayBot</span>
+              <Terminal className="w-4 h-4 text-gold" />
+              <span>Tester dans le Labo Virtuel</span>
             </div>
             <p className="text-xs text-ivory-muted leading-relaxed">
-              Un doute sur l&apos;architecture de votre code, les tests unitaires ou la sécurité des dépendances ? RayBot peut auditer vos spécifications.
+              Expérimentez votre logique, vos fonctions critiques et vos requêtes réseau dans le bac à sable interactif et le terminal de RayLab.
             </p>
             <Link
-              href="/raybot"
+              href="/lab"
               className="w-full py-2.5 rounded-xl bg-[#161a22] hover:bg-[#1e2430] border border-gold/40 text-gold text-xs font-bold font-mono flex items-center justify-center space-x-1.5 transition-all shadow-sm"
             >
-              <span>Consulter RayBot AI Mentor</span>
+              <span>Ouvrir l&apos;Atelier Virtuel</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

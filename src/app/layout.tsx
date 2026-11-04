@@ -4,7 +4,6 @@ import { AppProvider } from "@/context/AppContext";
 import AnnouncementBanner from "@/components/AnnouncementBanner";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
-import AiMentorModal from "@/components/AiMentorModal";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://raylab.tech"),
@@ -14,10 +13,10 @@ export const metadata: Metadata = {
   openGraph: {
     title: "RayLab — Learn. Build. Secure. Become.",
     description:
-      "Institut technique & laboratoire d'ingénierie logicielle et cybersécurité. Mentor IA RayBot intégré.",
+      "Institut technique & laboratoire d'ingénierie logicielle et cybersécurité. Labo virtuel & simulateur interactif intégré.",
     images: [
       {
-        url: "/raylab-banner.svg",
+        url: "/raylab-banner.jpg",
         width: 1200,
         height: 630,
         alt: "RayLab Banner",
@@ -39,7 +38,6 @@ export default function RootLayout({
           <Navbar />
           <main className="flex-1">{children}</main>
           <Footer />
-          <AiMentorModal />
         </AppProvider>
       </body>
     </html>

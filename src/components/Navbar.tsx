@@ -15,19 +15,18 @@ import {
   Sparkles,
   ArrowRight,
   Award,
+  Terminal,
 } from "lucide-react";
-import { useApp } from "@/context/AppContext";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const { setIsAiDrawerOpen } = useApp();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const navLinks = [
     { label: "Accueil", href: "/" },
     { label: "À Propos & Vision", href: "/about" },
     { label: "Académies & Cursus", href: "/paths" },
-    { label: "RayBot IA", href: "/raybot", highlight: true },
+    { label: "Labo Virtuel", href: "/lab", highlight: true },
     { label: "Projets du Lab", href: "/projects" },
     { label: "Carrière & Certifs", href: "/career" },
     { label: "Contact", href: "/contact" },
@@ -74,7 +73,7 @@ export default function Navbar() {
                       : "text-ivory-muted hover:text-ivory hover:bg-[#181d24]"
                   }`}
                 >
-                  {item.highlight && <Sparkles className="w-3.5 h-3.5 text-gold animate-pulse" />}
+                  {item.highlight && <Terminal className="w-3.5 h-3.5 text-gold" />}
                   <span>{item.label}</span>
                 </Link>
               );
@@ -83,14 +82,14 @@ export default function Navbar() {
 
           {/* Action CTAs */}
           <div className="hidden sm:flex items-center space-x-3">
-            {/* AI Assistant Button */}
-            <button
-              onClick={() => setIsAiDrawerOpen(true)}
+            {/* Lab Virtual Terminal Button */}
+            <Link
+              href="/lab"
               className="px-3.5 py-2 rounded-xl bg-[#161a22] hover:bg-[#1d232e] border border-gold/40 text-gold text-xs font-semibold flex items-center space-x-2 transition-all shadow-sm group"
             >
-              <Sparkles className="w-3.5 h-3.5 animate-pulse text-gold" />
-              <span>RayBot IA</span>
-            </button>
+              <Terminal className="w-3.5 h-3.5 text-gold animate-pulse" />
+              <span>Labo Virtuel &gt;_</span>
+            </Link>
 
             {/* Main Action Button */}
             <Link
@@ -104,13 +103,13 @@ export default function Navbar() {
 
           {/* Mobile hamburger */}
           <div className="flex lg:hidden items-center space-x-2">
-            <button
-              onClick={() => setIsAiDrawerOpen(true)}
+            <Link
+              href="/lab"
               className="p-2 rounded-lg text-gold bg-gold/10 border border-gold/30"
-              title="Ouvrir l'IA"
+              title="Labo Virtuel"
             >
-              <Sparkles className="w-4 h-4" />
-            </button>
+              <Terminal className="w-4 h-4" />
+            </Link>
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="p-2 rounded-lg text-ivory-dim hover:text-ivory bg-[#181d24] border border-[#262e3b]"
@@ -130,22 +129,30 @@ export default function Navbar() {
               key={item.href}
               href={item.href}
               onClick={() => setMobileMenuOpen(false)}
-              className={`block px-3 py-2.5 rounded-lg text-xs font-medium ${
-                item.highlight
-                  ? "text-gold bg-gold/10 border border-gold/30 font-bold"
-                  : "text-ivory-muted hover:text-ivory hover:bg-[#1a1f29]"
+              className={`block px-3 py-2.5 rounded-xl text-sm font-medium ${
+                pathname === item.href
+                  ? "text-gold bg-gold/10 border border-gold/30 font-semibold"
+                  : "text-ivory-muted hover:text-ivory hover:bg-[#181d24]"
               }`}
             >
-              {item.highlight ? "✨ " : ""}{item.label}
+              {item.label}
             </Link>
           ))}
-          <div className="pt-2 border-t border-[#1d232e]">
+          <div className="pt-3 flex flex-col space-y-2">
+            <Link
+              href="/lab"
+              onClick={() => setMobileMenuOpen(false)}
+              className="w-full py-2.5 rounded-xl bg-[#161a22] border border-gold/40 text-gold text-xs font-semibold flex items-center justify-center space-x-2"
+            >
+              <Terminal className="w-3.5 h-3.5" />
+              <span>Labo Virtuel &gt;_</span>
+            </Link>
             <Link
               href="/paths"
               onClick={() => setMobileMenuOpen(false)}
-              className="w-full py-3 rounded-xl bg-gold text-[#101216] font-bold text-xs flex items-center justify-center space-x-2 shadow-gold"
+              className="w-full py-2.5 rounded-xl bg-gold text-[#101216] font-bold text-xs flex items-center justify-center space-x-2 shadow-gold"
             >
-              <span>Explorer les Cursus</span>
+              <span>Découvrir les Cursus</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </Link>
           </div>

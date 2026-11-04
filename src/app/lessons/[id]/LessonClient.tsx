@@ -260,13 +260,13 @@ export default function LessonClient({ lessonData }: { lessonData: any }) {
           <span>Notes Personnelles</span>
         </button>
 
-        <button
-          onClick={() => setIsAiDrawerOpen(true)}
+        <Link
+          href="/lab"
           className="ml-auto my-auto hidden sm:flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-[#161a22] hover:bg-[#1f2530] border border-gold/40 text-gold text-xs font-mono font-bold transition-all shadow-sm"
         >
-          <Sparkles className="w-3.5 h-3.5 text-gold animate-pulse" />
-          <span>RayBot IA Mentor</span>
-        </button>
+          <Terminal className="w-3.5 h-3.5 text-gold animate-pulse" />
+          <span>Labo Virtuel &gt;_</span>
+        </Link>
       </div>
 
       {/* Tab Contents */}
