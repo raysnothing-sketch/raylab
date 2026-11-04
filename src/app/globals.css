@@ -1,0 +1,133 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --color-obsidian: #101216;
+  --color-graphite: #20252C;
+  --color-ivory: #F3F0E8;
+  --color-gold: #C6A66B;
+}
+
+body {
+  background-color: #101216;
+  color: #F3F0E8;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  overflow-x: hidden;
+}
+
+code, pre, .font-mono {
+  font-family: 'JetBrains Mono', 'Fira Code', 'Courier New', monospace;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #101216;
+}
+::-webkit-scrollbar-thumb {
+  background: #2b323c;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #C6A66B;
+}
+
+/* Custom glow utility */
+.gold-glow {
+  box-shadow: 0 0 30px -5px rgba(198, 166, 107, 0.2);
+}
+
+.gold-border-glow {
+  border-color: rgba(198, 166, 107, 0.4);
+  box-shadow: 0 0 15px rgba(198, 166, 107, 0.15);
+}
+
+/* Markdown styling in lessons */
+.prose-raylab h1 {
+  color: #F3F0E8;
+  font-size: 1.875rem;
+  font-weight: 700;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  border-bottom: 1px solid #2d3540;
+  padding-bottom: 0.5rem;
+}
+
+.prose-raylab h2 {
+  color: #F3F0E8;
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.prose-raylab h3 {
+  color: #C6A66B;
+  font-size: 1.15rem;
+  font-weight: 600;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.prose-raylab p {
+  color: #C5C2BA;
+  line-height: 1.75;
+  margin-bottom: 1rem;
+}
+
+.prose-raylab ul, .prose-raylab ol {
+  color: #C5C2BA;
+  margin-left: 1.5rem;
+  margin-bottom: 1rem;
+  line-height: 1.7;
+}
+
+.prose-raylab ul {
+  list-style-type: disc;
+}
+
+.prose-raylab ol {
+  list-style-type: decimal;
+}
+
+.prose-raylab li {
+  margin-bottom: 0.35rem;
+}
+
+.prose-raylab pre {
+  background-color: #0c0e12;
+  border: 1px solid #2d3540;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 1.25rem 0;
+  font-size: 0.875rem;
+  color: #e5e7eb;
+}
+
+.prose-raylab code {
+  background-color: #1a1e25;
+  color: #C6A66B;
+  padding: 0.15rem 0.4rem;
+  border-radius: 0.25rem;
+  font-size: 0.875em;
+}
+
+.prose-raylab pre code {
+  background-color: transparent;
+  color: inherit;
+  padding: 0;
+}
+
+.prose-raylab blockquote {
+  border-left: 4px solid #C6A66B;
+  background: rgba(198, 166, 107, 0.08);
+  padding: 0.75rem 1rem;
+  border-radius: 0 0.375rem 0.375rem 0;
+  margin: 1rem 0;
+  color: #F3F0E8;
+}
