@@ -3,62 +3,127 @@ import fs from "fs";
 import path from "path";
 import dotenv from "dotenv";
 
-// Charge les variables d'environnement depuis .env ou .env.local
 dotenv.config({ path: ".env.local" });
 dotenv.config({ path: ".env" });
 
-const url = process.env.TURSO_DATABASE_URL;
+const remoteUrl = process.env.TURSO_DATABASE_URL;
 const authToken = process.env.TURSO_AUTH_TOKEN;
 
 async function migrate() {
-  console.log("----------------------------------------------------------------");
+  console.log("================================================================");
   console.log("⚡ RAYLAB - MIGRATION AUTOMATIQUE VERS TURSO CLOUD (libSQL)");
-  console.log("----------------------------------------------------------------");
+  console.log("================================================================");
 
-  if (!url || url.startsWith("file:")) {
-    console.error("❌ ERREUR : TURSO_DATABASE_URL n'est pas configuré pour Turso Cloud.");
-    console.error("   Format attendu : libsql://votre-base-nom.turso.io");
-    console.error("   Veuillez définir TURSO_DATABASE_URL et TURSO_AUTH_TOKEN dans .env.local ou en variable d'environnement.");
+  if (!remoteUrl || !authToken) {
+    console.error("❌ ERREUR : TURSO_DATABASE_URL ou TURSO_AUTH_TOKEN manquant.");
     process.exit(1);
   }
 
-  console.log(`[*] Connexion à l'instance Turso Cloud : ${url}`);
-  const client = createClient({
-    url,
+  console.log(`[*] Connexion à l'instance Turso Cloud : ${remoteUrl}`);
+  const remoteClient = createClient({
+    url: remoteUrl,
     authToken,
   });
 
-  try {
-    // Test de connexion ping
-    const ping = await client.execute("SELECT 1 AS alive;");
-    console.log("✔ Connexion réussie à l'instance Turso Cloud ! Ping OK :", ping.rows[0]);
+  const localClient = createClient({
+    url: "file:raylab.sqlite",
+  });
 
-    // Lecture du dump SQL complet CyberPath v2
-    const sqlPath = path.resolve(process.cwd(), "raylab_turso_complete_v2.sql");
-    if (!fs.existsSync(sqlPath)) {
-      throw new Error(`Fichier SQL introuvable : ${sqlPath}`);
+  try {
+    // 1. Test ping
+    const ping = await remoteClient.execute("SELECT 1 AS alive;");
+    console.log("✔ Ping Turso Cloud réussi ! Statut :", ping.rows[0]);
+
+    // 2. Création des 33 tables dans l'ordre strict des dépendances
+    const schemaFile = path.resolve(
+      "C:/Users/raysn/.gemini/antigravity/brain/dce71671-bf6e-4d47-a0e2-c74401ed82ec/.user_uploaded/media_1793819190162_033924e2.sql"
+    );
+    console.log(`[*] Lecture du schéma DDL officiel : ${schemaFile}`);
+    const schemaSql = fs.readFileSync(schemaFile, "utf-8");
+
+    console.log("[*] Création des 33 tables sur Turso Cloud...");
+    await remoteClient.executeMultiple(schemaSql);
+    console.log("✔ Les 33 tables ont été créées avec succès sur Turso Cloud !");
+
+    // 3. Migration des données depuis raylab.sqlite
+    const tableOrder = [
+      "users",
+      "roles",
+      "user_roles",
+      "learning_paths",
+      "courses",
+      "path_courses",
+      "modules",
+      "lessons",
+      "lesson_resources",
+      "skills",
+      "course_skills",
+      "lesson_prerequisites",
+      "path_enrollments",
+      "lesson_progress",
+      "user_notes",
+      "bookmarks",
+      "exercises",
+      "exercise_attempts",
+      "quizzes",
+      "quiz_questions",
+      "quiz_attempts",
+      "projects",
+      "project_skills",
+      "project_submissions",
+      "project_bookmarks",
+      "career_paths",
+      "career_path_skills",
+      "certifications",
+      "user_certifications",
+      "user_goals",
+      "achievements",
+      "user_achievements",
+      "activity_events",
+    ];
+
+    let totalMigratedRows = 0;
+
+    for (const table of tableOrder) {
+      const res = await localClient.execute(`SELECT * FROM "${table}"`);
+      const rows = res.rows;
+      if (!rows || rows.length === 0) continue;
+
+      console.log(`[*] Synchronisation de ${rows.length} lignes dans [${table}]...`);
+      const cols = res.columns;
+      const colNames = cols.map((c) => `"${c}"`).join(", ");
+      const placeholders = cols.map(() => "?").join(", ");
+      const insertSql = `INSERT OR REPLACE INTO "${table}" (${colNames}) VALUES (${placeholders})`;
+
+      for (const row of rows) {
+        const values = cols.map((c) => row[c]);
+        await remoteClient.execute({ sql: insertSql, args: values });
+        totalMigratedRows++;
+      }
     }
 
-    console.log(`[*] Lecture du schéma et des données complètes (${sqlPath})...`);
-    const sqlContent = fs.readFileSync(sqlPath, "utf-8");
+    console.log("================================================================");
+    console.log("🎉 MIGRATION TURSO CLOUD COMPLÉTÉE AVEC SUCCÈS !");
+    console.log(`✔ Total de lignes synchronisées : ${totalMigratedRows}`);
 
-    console.log("[*] Injection du schéma et des 33 tables dans Turso Cloud...");
-    await client.executeMultiple(sqlContent);
-    console.log("✔ Injection terminée avec succès !");
+    // Vérification finale sur le cluster Turso
+    const verifyCourses = await remoteClient.execute("SELECT count(*) as count FROM courses;");
+    const verifyLessons = await remoteClient.execute("SELECT count(*) as count FROM lessons;");
+    const verifyProjects = await remoteClient.execute("SELECT count(*) as count FROM projects;");
+    const verifyQuizzes = await remoteClient.execute("SELECT count(*) as count FROM quizzes;");
+    const verifyTables = await remoteClient.execute(
+      "SELECT count(*) as count FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%';"
+    );
 
-    // Vérification du nombre de tables et de cours
-    const coursesCount = await client.execute("SELECT count(*) as total FROM courses;");
-    const lessonsCount = await client.execute("SELECT count(*) as total FROM lessons;");
-    const projectsCount = await client.execute("SELECT count(*) as total FROM capstone_projects;");
-
-    console.log("----------------------------------------------------------------");
-    console.log("🎉 BASE DE DONNÉES RAYLAB SYNCHRONISÉE AVEC SUCCÈS SUR TURSO !");
-    console.log(`   - Cours / Volumes CyberPath : ${coursesCount.rows[0].total}`);
-    console.log(`   - Leçons Pratiques Approfondies : ${lessonsCount.rows[0].total}`);
-    console.log(`   - Projets Capstones Professionnels : ${projectsCount.rows[0].total}`);
-    console.log("----------------------------------------------------------------");
+    console.log(`✔ Vérification Turso Cloud :`);
+    console.log(`   - Tables créées : ${verifyTables.rows[0].count} / 33`);
+    console.log(`   - Cours / Volumes CyberPath : ${verifyCourses.rows[0].count}`);
+    console.log(`   - Leçons Pratiques : ${verifyLessons.rows[0].count}`);
+    console.log(`   - Projets Capstones : ${verifyProjects.rows[0].count}`);
+    console.log(`   - Quiz & Évaluations : ${verifyQuizzes.rows[0].count}`);
+    console.log("================================================================");
   } catch (err) {
-    console.error("❌ Erreur lors de la migration Turso :", err.message || err);
+    console.error("❌ Erreur de synchronisation Turso :", err);
     process.exit(1);
   }
 }
