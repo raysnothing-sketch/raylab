@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "seed": "node scripts/seed.mjs",
-    "db:push": "node scripts/push-turso.mjs"
+    "db:push": "node scripts/push-turso.mjs",
+    "deploy:pages": "node scripts/prepare-cloudflare-dist.mjs && wrangler pages deploy cloudflare-dist --project-name=raylab"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",

@@ -20,6 +20,7 @@ dist/
 *.db-journal
 
 # Cloudflare & Wrangler
+cloudflare-dist/
 .wrangler/
 .vercel/
 
