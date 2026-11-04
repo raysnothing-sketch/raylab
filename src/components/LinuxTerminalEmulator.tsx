@@ -852,6 +852,19 @@ Nmap done: 1 IP address (1 host up) scanned in 0.42 seconds`,
             Linux 6.8.0-hardened
           </span>
           <button
+            onClick={() => {
+              setFs(initialFS);
+              setIsRoot(false);
+              setCurrentDir("/home/raylab");
+              setOutputLines([{ type: "info", text: "[*] Système de fichiers virtuel RayLab réinitialisé à l'état initial (Usine)." }]);
+            }}
+            className="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-[#181e28] hover:bg-[#202735] text-ivory-dim hover:text-gold text-[11px] font-mono border border-[#2b3544] transition-all"
+            title="Réinitialiser le système de fichiers"
+          >
+            <RotateCcw className="w-3 h-3 text-gold" />
+            <span>Reset VFS</span>
+          </button>
+          <button
             onClick={() => setIsFullScreen(!isFullScreen)}
             className="p-1.5 rounded-lg text-ivory-dim hover:text-ivory hover:bg-[#1a202c] transition-colors"
             title="Plein écran"

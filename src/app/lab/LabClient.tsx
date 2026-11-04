@@ -41,6 +41,7 @@ type LabTab =
 
 export default function LabClient() {
   const [activeTab, setActiveTab] = useState<LabTab>("linux_terminal");
+  const [activeScenario, setActiveScenario] = useState<string | null>("scenario_linux_audit");
   const [copied, setCopied] = useState(false);
 
   // ---------------------------------------------------------------------------
@@ -449,6 +450,123 @@ for ligne in logs_bruts:
             L&apos;exécution Python s&apos;effectue localement dans le bac à sable WebAssembly (CPython 3.12 / Pyodide) de votre navigateur. Le terminal Linux et les émulateurs réseau fonctionnent via un système de fichiers virtuel isolé sans aucun accès à l&apos;infrastructure hôte ni risque de débordement.
           </p>
         </div>
+      </div>
+
+      {/* Cyber Range : Scénarios Guidés d'Entraînement (Cahier des Charges V3.0 - Section 9.2) */}
+      <div className="bg-[#12161f] p-6 rounded-3xl border border-[#222a38] space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+          <div className="flex items-center space-x-2 text-xs font-mono text-gold uppercase tracking-wider">
+            <Flame className="w-4 h-4 text-amber-400" />
+            <span>Cyber Range • Missions Guidées avec Validation Automatique</span>
+          </div>
+          <span className="text-[11px] font-mono text-ivory-dim">
+            4 Scénarios d&apos;Opérations Réelles
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+          {[
+            {
+              id: "scenario_linux_audit",
+              tab: "linux_terminal",
+              title: "Mission 1 : Audit Linux & SUID",
+              desc: "Identifier les binaires SUID malveillants et tenter l'élévation root.",
+              difficulty: "Débutant",
+              badge: "Linux Sys",
+            },
+            {
+              id: "scenario_soc_triage",
+              tab: "soc_logs",
+              title: "Mission 2 : Triage d'Incidents SIEM",
+              desc: "Isoler les 4 attaques web (SQLi, LFI, XSS) et l'IP malveillante.",
+              difficulty: "Intermédiaire",
+              badge: "Blue Team",
+            },
+            {
+              id: "scenario_scapy_mitm",
+              tab: "scapy_arp",
+              title: "Mission 3 : Dissection Scapy ARP",
+              desc: "Détecter l'usurpation de passerelle et disséquer la trame RFC 826.",
+              difficulty: "Intermédiaire",
+              badge: "Réseaux",
+            },
+            {
+              id: "scenario_crypto_pbkdf2",
+              tab: "crypto_hash",
+              title: "Mission 4 : Audit Cryptographique",
+              desc: "Évaluer la résistance au brute-force GPU de PBKDF2 (600k rounds).",
+              difficulty: "Avancé",
+              badge: "Crypto",
+            },
+          ].map((sc) => {
+            const isSelected = activeScenario === sc.id;
+            return (
+              <button
+                key={sc.id}
+                onClick={() => {
+                  setActiveScenario(sc.id);
+                  setActiveTab(sc.tab as LabTab);
+                }}
+                className={`p-3.5 rounded-2xl text-left border transition-all flex flex-col justify-between space-y-2 ${
+                  isSelected
+                    ? "bg-gold/15 border-gold shadow-md text-ivory"
+                    : "bg-[#0d1016] border-[#1e2533] text-ivory-muted hover:border-gold/40 hover:text-ivory"
+                }`}
+              >
+                <div className="flex items-center justify-between text-[10px] font-mono">
+                  <span className="px-2 py-0.5 rounded-md bg-[#161a22] text-gold border border-gold/20 font-bold">
+                    {sc.badge}
+                  </span>
+                  <span className="text-ivory-dim">{sc.difficulty}</span>
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-ivory font-mono">{sc.title}</div>
+                  <div className="text-[11px] text-ivory-dim mt-1 leading-snug line-clamp-2">
+                    {sc.desc}
+                  </div>
+                </div>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Active Scenario Mission Briefing Banner */}
+        {activeScenario && (
+          <div className="p-4 rounded-xl bg-[#090b0f] border border-[#1a212c] space-y-2 text-xs font-mono">
+            <div className="flex items-center justify-between text-gold font-bold">
+              <span className="flex items-center space-x-1.5">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>Consignes de la Mission Active :</span>
+              </span>
+              <button
+                onClick={() => setActiveScenario(null)}
+                className="text-[10px] text-ivory-dim hover:text-rose-400"
+              >
+                Masquer le briefing ×
+              </button>
+            </div>
+            {activeScenario === "scenario_linux_audit" && (
+              <p className="text-ivory-muted leading-relaxed text-[11px]">
+                🎯 <strong>Objectif :</strong> Dans le terminal ci-dessous, exécutez <code>find /bin -perm -4000</code> pour lister les exécutables avec bit SUID. Essayez ensuite de lire <code>cat /etc/shadow</code> pour constater le refus de permission, puis passez en root avec <code>sudo su</code> (ou <code>sudo cat /etc/shadow</code>) pour examiner les condensats de mots de passe cryptographiques.
+              </p>
+            )}
+            {activeScenario === "scenario_soc_triage" && (
+              <p className="text-ivory-muted leading-relaxed text-[11px]">
+                🎯 <strong>Objectif :</strong> Dans l&apos;onglet Analyseur de Logs SOC, examinez les événements web ingérés. Identifiez les requêtes contenant <code>UNION SELECT</code> et <code>/etc/passwd</code>, notez l&apos;adresse IP externe récurrente <code>185.220.101.5</code> et appliquez l&apos;action de blocage dans le SIEM.
+              </p>
+            )}
+            {activeScenario === "scenario_scapy_mitm" && (
+              <p className="text-ivory-muted leading-relaxed text-[11px]">
+                🎯 <strong>Objectif :</strong> Dans le module Scapy, inspectez la table ARP locale, générez une trame ARP Reply pour observer la modification du cache, puis vérifiez la protection par inspection dynamique (DAI / Dynamic ARP Inspection).
+              </p>
+            )}
+            {activeScenario === "scenario_crypto_pbkdf2" && (
+              <p className="text-ivory-muted leading-relaxed text-[11px]">
+                🎯 <strong>Objectif :</strong> Dans le module Cryptographie, comparez un hachage instantané vulnérable (MD5 ou SHA-1) à une dérivation lente PBKDF2-HMAC-SHA256 (600 000 itérations). Observez le délai d&apos;exécution nécessaire pour neutraliser les attaques par force brute GPU.
+              </p>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Tabs navigation */}

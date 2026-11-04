@@ -273,6 +273,18 @@ export async function getUserDashboard(userId: string) {
     [userId]
   );
 
+  // Notes personnelles
+  const notes = await dbQuery(
+    `
+    SELECT un.*, l.title as lesson_title
+    FROM user_notes un
+    JOIN lessons l ON l.id = un.lesson_id
+    WHERE un.user_id = ?
+    ORDER BY un.updated_at DESC
+    `,
+    [userId]
+  );
+
   return {
     user,
     enrollments,
@@ -280,5 +292,6 @@ export async function getUserDashboard(userId: string) {
     goals,
     achievements,
     submissions,
+    notes,
   };
 }

@@ -21,6 +21,7 @@ import {
   ExternalLink,
   BookOpen,
   Briefcase,
+  Share2,
 } from "lucide-react";
 import { getLearningPaths, getProjects, getCertifications } from "@/lib/data";
 import InteractiveTerminalLab from "@/components/InteractiveTerminalLab";
@@ -64,13 +65,14 @@ export default async function HomePage() {
               Learn. Build. Secure. Become.
             </div>
 
-            {/* Action buttons */}
-            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+            {/* Action buttons: Dual Pathway (Débutant vs Avancé - Recommandation V3) */}
+            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
                 href="/paths"
-                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gold hover:bg-gold-light text-[#101216] font-bold text-xs tracking-wider uppercase shadow-gold transition-all duration-200 flex items-center justify-center space-x-2 group"
+                className="w-full sm:w-auto px-7 py-4 rounded-xl bg-gold hover:bg-gold-light text-[#101216] font-bold text-xs tracking-wider uppercase shadow-gold transition-all flex items-center justify-center space-x-2 group"
               >
-                <span>Explorer les Cursus</span>
+                <BookOpen className="w-4 h-4" />
+                <span>Débutant : Découvrir les 8 Académies</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
@@ -78,14 +80,14 @@ export default async function HomePage() {
                 className="w-full sm:w-auto px-7 py-4 rounded-xl bg-[#161a22] hover:bg-[#1f2530] border border-gold/40 text-gold font-bold text-xs tracking-wider uppercase flex items-center justify-center space-x-2 transition-all group shadow-sm"
               >
                 <Terminal className="w-4 h-4 text-gold animate-pulse" />
-                <span>Labo Virtuel &amp; Terminal &gt;_</span>
+                <span>Pratiquant : Cyber Range &amp; Sandbox &gt;_</span>
               </Link>
               <Link
-                href="/about"
-                className="w-full sm:w-auto px-7 py-4 rounded-xl bg-[#1b212b] hover:bg-[#232b38] border border-[#2d3644] text-ivory font-semibold text-xs tracking-wider uppercase flex items-center justify-center space-x-2 transition-all"
+                href="/portfolio"
+                className="w-full sm:w-auto px-5 py-4 rounded-xl bg-[#1b212b] hover:bg-[#232b38] border border-[#2d3644] text-ivory font-semibold text-xs tracking-wider uppercase flex items-center justify-center space-x-2 transition-all"
               >
-                <Shield className="w-4 h-4 text-gold" />
-                <span>La Vision du Lab</span>
+                <Share2 className="w-4 h-4 text-gold" />
+                <span>Portfolio Public</span>
               </Link>
             </div>
 

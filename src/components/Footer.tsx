@@ -116,7 +116,12 @@ export default function Footer() {
               </li>
               <li>
                 <Link href="/projects" className="hover:text-gold transition-colors">
-                  Portfolio de Projets Capstones (7)
+                  Laboratoire des 7 Projets Capstones
+                </Link>
+              </li>
+              <li>
+                <Link href="/portfolio" className="hover:text-gold transition-colors text-gold font-medium">
+                  Portfolio Public de Compétences
                 </Link>
               </li>
               <li>
