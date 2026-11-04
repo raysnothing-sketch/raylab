@@ -1,7 +1,12 @@
 import React from "react";
 import { notFound } from "next/navigation";
-import { getProjectBySlug } from "@/lib/data";
+import { getProjectBySlug, getProjects } from "@/lib/data";
 import ProjectClient from "./ProjectClient";
+
+export async function generateStaticParams() {
+  const projects = await getProjects();
+  return projects.map((p) => ({ slug: p.slug }));
+}
 
 export default async function ProjectDetailPage({
   params,

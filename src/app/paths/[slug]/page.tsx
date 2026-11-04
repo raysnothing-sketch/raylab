@@ -1,7 +1,12 @@
 import React from "react";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getLearningPathBySlug } from "@/lib/data";
+import { getLearningPathBySlug, getLearningPaths } from "@/lib/data";
+
+export async function generateStaticParams() {
+  const paths = await getLearningPaths();
+  return paths.map((p) => ({ slug: p.slug }));
+}
 import {
   BookOpen,
   Clock,
