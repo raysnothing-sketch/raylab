@@ -1,97 +1,73 @@
-# 🚀 Guide de Déploiement : Turso + GitHub + Cloudflare Pages
+# 🚀 RayLab — Statut & Guide de Déploiement
 
-Ce guide vous accompagne pas à pas pour connecter votre base de données **Turso**, publier votre code sur **GitHub** et mettre votre site en ligne sur **Cloudflare Pages**.
+Ce document résume le statut de mise en production de **RayLab**, les URLs en direct, et la procédure pour connecter votre instance Turso Cloud.
 
 ---
 
-## 1. 🗄️ Étape 1 : Connecter la Base de Données Turso
+## 🟢 1. Statut en Direct
 
-RayLab intègre nativement le client officiel `@libsql/client`.
+| Service | Statut | Détails / Liens |
+|---|---|---|
+| **Cloudflare Pages** | **LIVE (Production)** | 🌐 [https://raylab.pages.dev](https://raylab.pages.dev) |
+| **Cloudflare Edge API** | **FONCTIONNEL** | ⚡ `POST https://raylab.pages.dev/api/ai/chat` (RayBot AI Mentor) |
+| **Dépôt GitHub** | **SYNCHRONISÉ** | 🐙 [https://github.com/raysnothing-sketch/raylab](https://github.com/raysnothing-sketch/raylab) |
+| **Base de Données** | **PRÊTE (libSQL / Turso)** | Moteur `@libsql/client` actif (Local `raylab.sqlite` / Prêt pour Turso Cloud) |
 
-### Option A : En 60 secondes via la CLI Turso
-1. Installez la CLI Turso si ce n'est pas déjà fait :
-   ```bash
-   curl -sSfL https://get.tur.so/install.sh | bash
-   ```
-2. Connectez-vous à votre compte Turso :
-   ```bash
-   turso auth login
-   ```
-3. Créez votre base de données Cloud :
-   ```bash
-   turso db create raylab
-   ```
-4. Récupérez l'URL et le jeton d'authentification :
-   ```bash
-   turso db show raylab --url
-   # Exemple : libsql://raylab-votre-pseudo.turso.io
+---
 
-   turso db tokens create raylab
-   # Exemple : eyJhbGciOi...
-   ```
+## 🗄️ 2. Connecter votre base de données Turso Cloud
 
-### Option B : Via la Console Web Turso
-1. Rendez-vous sur [turso.tech](https://turso.tech) et connectez-vous.
-2. Cliquez sur **Create Database**, nommez-la `raylab`, choisissez la région la plus proche (ex: Paris `cdg` ou Francfort `fra`).
-3. Copiez la **Database URL** et générez un **Auth Token**.
+Le code est 100% prêt pour **Turso** grâce au SDK officiel `@libsql/client` (voir `src/lib/db.ts`).
 
-### Déployer les 30+ tables et le contenu vers Turso :
-1. Créez votre fichier `.env.local` à la racine du projet :
+### Si vous avez déjà créé votre base Turso sur [turso.tech](https://turso.tech) :
+1. Récupérez vos deux identifiants sur le dashboard Turso :
+   - **Database URL** (ex: `libsql://raylab-nom.turso.io`)
+   - **Auth Token** (jeton secret commençant par `ey...`)
+
+2. **En local :** Créez un fichier `.env.local` dans le dossier du projet :
    ```env
    TURSO_DATABASE_URL=libsql://raylab-votre-pseudo.turso.io
-   TURSO_AUTH_TOKEN=votre-token-secret
+   TURSO_AUTH_TOKEN=votre_jeton_secret_turso
    ```
-2. Lancez la synchronisation automatique :
+   Puis lancez la synchronisation instantanée du schéma et des données :
    ```bash
    pnpm run db:push
    ```
-> ✅ Le schéma SQL complet et l'ensemble des parcours sont instantanément provisionnés sur Turso Cloud !
+   *Ce script crée automatiquement les 30+ tables du schéma et injecte les cours, leçons, projets et certifications.*
+
+3. **Sur Cloudflare Pages :**
+   - Rendez-vous sur votre [Tableau de bord Cloudflare](https://dash.cloudflare.com) > **Workers & Pages** > Projet **`raylab`**.
+   - Allez dans **Settings** > **Environment variables**.
+   - Ajoutez :
+     - `TURSO_DATABASE_URL` = `libsql://raylab-votre-pseudo.turso.io`
+     - `TURSO_AUTH_TOKEN` = `votre_jeton_secret_turso`
+     - `OMNIROUTE_API_KEY` = `sk-c0d0262b91767837-80ca49-4ff67cda` *(optionnel pour booster Raybot avec vos modèles)*
 
 ---
 
-## 2. 🐙 Étape 2 : Publier le Code sur GitHub
+## 🐙 3. Synchronisation avec GitHub
 
-Le projet est déjà initialisé en Git local avec tous les fichiers commités sur la branche `main`.
+Le dépôt GitHub a été automatiquement créé et configuré sur votre compte :
+- **URL :** [https://github.com/raysnothing-sketch/raylab](https://github.com/raysnothing-sketch/raylab)
+- **Branche principale :** `main`
 
-### Avec GitHub CLI (`gh`) :
-Si vous avez installé GitHub CLI :
+Pour pousser de futures modifications :
 ```bash
-# 1. Connectez-vous à GitHub
-gh auth login
-
-# 2. Créez et poussez le dépôt en une seule commande
-gh repo create raylab --public --source=. --remote=origin --push
+git add .
+git commit -m "feat: mes nouvelles fonctionnalités"
+git push origin main
 ```
 
-### Manuellement depuis GitHub.com :
-1. Allez sur [github.com/new](https://github.com/new).
-2. Créez un nouveau dépôt nommé `raylab`.
-3. Liez et poussez votre code local :
-   ```bash
-   git remote add origin https://github.com/VOTRE_NOM_UTILISATEUR/raylab.git
-   git push -u origin main
-   ```
-
 ---
 
-## 3. ☁️ Étape 3 : Mise en Ligne sur Cloudflare Pages
+## ⚡ 4. Redéploiement sur Cloudflare Pages
 
-Cloudflare Pages offre un hébergement mondial gratuit ultra-rapide avec CDN et protection anti-DDoS.
-
-### Connexion Automatique GitHub -> Cloudflare Pages :
-1. Rendez-vous sur votre [Tableau de bord Cloudflare](https://dash.cloudflare.com).
-2. Dans le menu de gauche, naviguez vers **Compute (Workers) > Workers & Pages**.
-3. Cliquez sur **Create Application** puis sur l'onglet **Pages** > **Connect to Git**.
-4. Sélectionnez votre dépôt GitHub `raylab`.
-5. Configurez les paramètres de build :
-   - **Framework Preset** : `Next.js`
-   - **Build Command** : `pnpm run build`
-   - **Build Output Directory** : `.next`
-   - **Root Directory** : `/`
-6. Dans la section **Environment Variables (Advanced)**, ajoutez :
-   - `TURSO_DATABASE_URL` = `libsql://raylab-votre-pseudo.turso.io`
-   - `TURSO_AUTH_TOKEN` = `votre-token-secret-turso`
-   - `NODE_VERSION` = `20`
-7. Cliquez sur **Save and Deploy**.
-
-> 🎉 Cloudflare compile votre application et vous attribue une URL mondiale sécurisée en HTTPS (ex: `https://raylab.pages.dev`). Chaque futur `git push` sur GitHub déploiera automatiquement la nouvelle version !
+Pour redéployer le site sur Cloudflare Pages à tout moment :
+```bash
+pnpm run deploy:pages
+```
+Ou avec Wrangler directement :
+```bash
+node scripts/prepare-cloudflare-dist.mjs
+npx wrangler pages deploy cloudflare-dist --project-name=raylab
+```
