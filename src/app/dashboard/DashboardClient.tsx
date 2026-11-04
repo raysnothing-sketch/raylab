@@ -99,13 +99,13 @@ export default function DashboardClient({ dashboardData }: { dashboardData: any 
             </div>
           </div>
 
-          <button
-            onClick={() => setIsAiDrawerOpen(true)}
+          <Link
+            href="/lab"
             className="px-4 py-2.5 rounded-xl bg-gold hover:bg-gold-light text-[#101216] font-bold text-xs flex items-center space-x-1.5 shadow-gold transition-all"
           >
             <Terminal className="w-3.5 h-3.5" />
-            <span>Mentor IA</span>
-          </button>
+            <span>Labo Virtuel &gt;_</span>
+          </Link>
         </div>
       </div>
 

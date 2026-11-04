@@ -9,7 +9,7 @@ Ce document résume le statut de mise en production de **RayLab**, les URLs en d
 | Service | Statut | Détails / Liens |
 |---|---|---|
 | **Cloudflare Pages** | **LIVE (Production)** | 🌐 [https://raylab.pages.dev](https://raylab.pages.dev) |
-| **Cloudflare Edge API** | **FONCTIONNEL** | ⚡ `POST https://raylab.pages.dev/api/ai/chat` (RayBot AI Mentor) |
+| **Cloudflare Edge API** | **FONCTIONNEL** | ⚡ `POST https://raylab.pages.dev/api/ai/chat` (Laboratoire Virtuel (WASM & Linux)) |
 | **Dépôt GitHub** | **SYNCHRONISÉ** | 🐙 [https://github.com/raysnothing-sketch/raylab](https://github.com/raysnothing-sketch/raylab) |
 | **Base de Données** | **PRÊTE (libSQL / Turso)** | Moteur `@libsql/client` actif (Local `raylab.sqlite` / Prêt pour Turso Cloud) |
 
@@ -41,7 +41,7 @@ Le code est 100% prêt pour **Turso** grâce au SDK officiel `@libsql/client` (v
    - Ajoutez :
      - `TURSO_DATABASE_URL` = `libsql://raylab-votre-pseudo.turso.io`
      - `TURSO_AUTH_TOKEN` = `votre_jeton_secret_turso`
-     - `OMNIROUTE_API_KEY` = `sk-c0d0262b91767837-80ca49-4ff67cda` *(optionnel pour booster Raybot avec vos modèles)*
+     - `OMNIROUTE_API_KEY` = `sk-c0d0262b91767837-80ca49-4ff67cda` *(optionnel pour booster Laboratoire Virtuel (WASM & Linux) avec vos modèles)*
 
 ---
 

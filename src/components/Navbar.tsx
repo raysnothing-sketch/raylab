@@ -29,7 +29,7 @@ export default function Navbar() {
     { label: "Labo Virtuel", href: "/lab", highlight: true },
     { label: "Projets du Lab", href: "/projects" },
     { label: "Carrière & Certifs", href: "/career" },
-    { label: "Contact", href: "/contact" },
+    
   ];
 
   return (

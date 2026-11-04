@@ -183,13 +183,13 @@ export default function LessonClient({ lessonData }: { lessonData: any }) {
         </div>
 
         <div className="flex items-center space-x-3">
-          <button
-            onClick={() => setIsAiDrawerOpen(true)}
+          <Link
+            href="/lab"
             className="px-3 py-1.5 rounded-lg bg-gold/15 hover:bg-gold/25 border border-gold/40 text-gold text-xs font-semibold flex items-center space-x-1.5 transition-all shadow-gold"
           >
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Demander au Mentor IA</span>
-          </button>
+            <Terminal className="w-3.5 h-3.5" />
+            <span>Labo Virtuel &gt;_</span>
+          </Link>
 
           <button
             onClick={handleMarkComplete}
@@ -312,21 +312,21 @@ export default function LessonClient({ lessonData }: { lessonData: any }) {
                 </div>
               </div>
 
-              {/* RayBot Dedicated Card */}
+              {/* Virtual Lab Dedicated Card */}
               <div className="bg-[#101319] rounded-2xl border border-gold/30 p-5 space-y-3">
                 <div className="flex items-center space-x-2 text-xs font-mono text-gold font-bold">
-                  <Sparkles className="w-4 h-4 animate-pulse" />
-                  <span>RayBot Mentor Dédié</span>
+                  <Terminal className="w-4 h-4 animate-pulse" />
+                  <span>Laboratoire Virtuel Pratique</span>
                 </div>
                 <p className="text-xs text-ivory-muted leading-relaxed">
-                  Un doute sur le code ou la théorie ? RayBot est disponible pour vous éclairer sans vous bloquer.
+                  Pratiquez cette le?on dans le Terminal Linux et l&apos;ex?cuteur WebAssembly Python en direct.
                 </p>
-                <button
-                  onClick={() => setIsAiDrawerOpen(true)}
+                <Link
+                  href="/lab"
                   className="w-full py-2.5 rounded-xl bg-gold hover:bg-gold-light text-[#101216] font-bold text-xs font-mono shadow-gold transition-all flex items-center justify-center space-x-1.5"
                 >
-                  <span>Poser une question</span>
-                </button>
+                  <span>Ouvrir dans le Labo &gt;_</span>
+                </Link>
               </div>
 
               {/* Navigation buttons */}

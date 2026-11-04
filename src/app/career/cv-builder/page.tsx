@@ -133,13 +133,7 @@ export default function CvBuilderPage() {
             </button>
           </div>
 
-          <Link
-            href="/raybot"
-            className="px-3.5 py-2 rounded-xl bg-[#161a22] hover:bg-[#1e2430] border border-gold/40 text-gold font-bold text-xs flex items-center space-x-1.5 transition-all shadow-sm"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-gold animate-pulse" />
-            <span>Auditer avec RayBot</span>
-          </Link>
+          
 
           <button
             onClick={handlePrint}

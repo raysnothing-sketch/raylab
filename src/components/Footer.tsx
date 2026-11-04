@@ -110,7 +110,7 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 4: Le Lab & Contact */}
+          {/* Col 4: Le Lab RayLab */}
           <div className="space-y-3">
             <h4 className="font-bold text-ivory text-xs uppercase tracking-wider font-mono">
               Le Projet RayLab
@@ -121,11 +121,7 @@ export default function Footer() {
                   La Vision &amp; Les Principes
                 </Link>
               </li>
-              <li>
-                <Link href="/contact" className="hover:text-gold transition-colors">
-                  Contacter le Lab / Échanger
-                </Link>
-              </li>
+              
               <li className="pt-2 text-[11px] text-ivory-dim leading-relaxed">
                 Les travaux offensifs présentés s&apos;effectuent exclusivement en environnements de simulation isolés.
               </li>

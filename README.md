@@ -14,7 +14,7 @@ Conforme au **Cahier des charges RayLab v2.0** et au schéma de données **Turso
 
 1. **Usage Personnel (Fondateur) :** Environnement structuré pour suivre ses objectifs privés, préparer des certifications réelles (CompTIA Security+, CCNA, LPIC-1) et documenter ses projets.
 2. **Usage Public (Apprenants) :** Parcours pédagogiques progressifs du fondamental au niveau professionnel, exercices interactifs, évaluations et générateur de CV ATS.
-3. **RayBot AI Mentor :** Assistant technique interactif intégré, compatible avec les modèles IA gratuits via **Omniroute**, **Opencode**, ou moteur local autonome.
+3. **Laboratoire Virtuel (WASM & Linux) :** Assistant technique interactif intégré, compatible avec les modèles IA gratuits via **Omniroute**, **Opencode**, ou moteur local autonome.
 
 ---
 
@@ -45,7 +45,7 @@ Conforme au **Cahier des charges RayLab v2.0** et au schéma de données **Turso
 | **Catalogue Certifications** (`/certifications`) | Référentiel des certifications officielles vérifiées (CompTIA Security+, CCNA, LPIC-1). |
 | **Tableau de Bord** (`/dashboard`) | Bascule en 1 clic entre le **Personal Mode (Fondateur)** et le **Public Mode**, suivi des objectifs privés, calcul de streak et badges. |
 | **Console d'Administration** (`/admin`) | Supervision des utilisateurs, statistiques globales et studio de contenu. |
-| **RayBot AI Mentor** | Tiroir d'assistance IA avec prompts rapides, suggestions de correction et support Opencode / Omniroute. |
+| **Laboratoire Virtuel (WASM & Linux)** | Tiroir d'assistance IA avec prompts rapides, suggestions de correction et support Opencode / Omniroute. |
 
 ---
 
