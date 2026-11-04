@@ -9,6 +9,7 @@ import {
   Copy,
   Check,
   Shield,
+  ShieldCheck,
   Network,
   KeyRound,
   FileSearch,
@@ -437,6 +438,17 @@ for ligne in logs_bruts:
         <p className="text-sm sm:text-base text-ivory-muted max-w-3xl leading-relaxed">
           Conformément au principe directeur de <strong>CyberPath (70% pratique / 30% théorie)</strong>, cet environnement interactif vous permet d&apos;exécuter des scripts Python, de simuler des balayages de ports réseau, de disséquer des trames Scapy et d&apos;auditer des flux de journaux SIEM en temps réel sans installer de machine virtuelle.
         </p>
+      </div>
+
+      {/* Sandbox Isolation & Security Guarantee (Cahier des Charges V3.0 - Section 9.3 & 20.3) */}
+      <div className="p-4 rounded-2xl bg-gold/5 border border-gold/30 flex items-start space-x-3 text-xs">
+        <ShieldCheck className="w-4 h-4 text-gold flex-shrink-0 mt-0.5" />
+        <div className="space-y-1 text-ivory-dim">
+          <div className="font-bold text-ivory">Environnement d'Expérimentation Isolé &amp; Sandboxé (Section 9.3)</div>
+          <p className="text-[11px] leading-relaxed">
+            L&apos;exécution Python s&apos;effectue localement dans le bac à sable WebAssembly (CPython 3.12 / Pyodide) de votre navigateur. Le terminal Linux et les émulateurs réseau fonctionnent via un système de fichiers virtuel isolé sans aucun accès à l&apos;infrastructure hôte ni risque de débordement.
+          </p>
+        </div>
       </div>
 
       {/* Tabs navigation */}

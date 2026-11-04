@@ -95,33 +95,33 @@ export default async function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0e1218]/80 via-transparent to-transparent z-10 pointer-events-none" />
                 <img
                   src="/raylab-banner.png"
-                  alt="RayLab Official Banner - Acad?mie de Cybers?curit? & Lab Virtuel"
+                  alt="RayLab Official Banner — Académie de Cybersécurité & Lab Virtuel"
                   className="w-full h-auto object-cover transform group-hover:scale-[1.01] transition-transform duration-500"
                 />
                 <div className="absolute bottom-3 left-4 z-20 flex items-center space-x-2 text-[11px] font-mono text-gold bg-[#10141b]/90 px-3 py-1 rounded-full border border-gold/30 backdrop-blur-sm">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>RAYLAB ACAD?MIE ? CYBERPATH 2026-2027</span>
+                  <span>RAYLAB ACADÉMIE • CYBERPATH 2026-2027</span>
                 </div>
               </div>
             </div>
 
-            {/* Statistics Row */}
+            {/* Statistics Row (Conforme Cahier des Charges V3.0) */}
             <div className="pt-14 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto border-t border-[#1c222b]">
               <div className="p-4 bg-[#13171e] rounded-2xl border border-[#202732] text-left">
-                <div className="text-2xl font-black text-gold font-mono">4 Cursus</div>
-                <div className="text-xs text-ivory-dim mt-1">Python, Cyber, Systèmes, Carrière</div>
+                <div className="text-2xl font-black text-gold font-mono">8 Académies</div>
+                <div className="text-xs text-ivory-dim mt-1">Python, Linux, Réseaux, SOC, DFIR...</div>
               </div>
               <div className="p-4 bg-[#13171e] rounded-2xl border border-[#202732] text-left">
-                <div className="text-2xl font-black text-ivory font-mono">Niv. 1 à 7</div>
-                <div className="text-xs text-ivory-dim mt-1">Du débutant au Dev professionnel</div>
+                <div className="text-2xl font-black text-ivory font-mono">12 Volumes</div>
+                <div className="text-xs text-ivory-dim mt-1">CyberPath : 70% Pratique / 30% Théorie</div>
               </div>
               <div className="p-4 bg-[#13171e] rounded-2xl border border-[#202732] text-left">
-                <div className="text-2xl font-black text-emerald-400 font-mono">100% Concret</div>
-                <div className="text-xs text-ivory-dim mt-1">Projets documentés sur GitHub</div>
+                <div className="text-2xl font-black text-emerald-400 font-mono">7 Projets</div>
+                <div className="text-xs text-ivory-dim mt-1">Capstones documentés sur GitHub</div>
               </div>
               <div className="p-4 bg-[#13171e] rounded-2xl border border-[#202732] text-left">
-                <div className="text-2xl font-black text-gold font-mono">Norme ATS</div>
-                <div className="text-xs text-ivory-dim mt-1">CV prêt pour France &amp; Allemagne</div>
+                <div className="text-2xl font-black text-gold font-mono">100% Sandboxé</div>
+                <div className="text-xs text-ivory-dim mt-1">WASM &amp; Terminal émulé sans risque</div>
               </div>
             </div>
           </div>

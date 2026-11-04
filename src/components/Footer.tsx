@@ -1,6 +1,6 @@
 import React from "react";
 import Link from "next/link";
-import { Shield, ArrowRight } from "lucide-react";
+import { ArrowRight, ShieldCheck, Terminal } from "lucide-react";
 
 export default function Footer() {
   return (
@@ -13,14 +13,14 @@ export default function Footer() {
               Prêt à développer des compétences techniques concrètes ?
             </h3>
             <p className="text-xs text-ivory-muted max-w-xl">
-              Rejoignez RayLab pour apprendre Python, maîtriser l&apos;administration Linux, comprendre les réseaux et concevoir des outils de cybersécurité opérationnels.
+              Rejoignez RayLab pour apprendre Python, maîtriser l&apos;administration Linux, comprendre les réseaux TCP/IP et concevoir des outils de cybersécurité opérationnels.
             </p>
           </div>
           <Link
             href="/paths"
             className="px-6 py-3 rounded-xl bg-gold hover:bg-gold-light text-[#101216] font-bold text-xs tracking-wider uppercase transition-all shadow-gold flex items-center space-x-2"
           >
-            <span>Explorer le Programme</span>
+            <span>Explorer les 8 Académies</span>
             <ArrowRight className="w-4 h-4" />
           </Link>
         </div>
@@ -40,61 +40,88 @@ export default function Footer() {
               </span>
             </div>
             <p className="text-xs text-gold/90 font-mono tracking-wider uppercase">
-              Learn. Build. Secure. Become.
+              Learn • Build • Secure • Become
             </p>
             <p className="text-[12px] text-ivory-dim leading-relaxed">
-              Plateforme personnelle et académique dédiée à l&apos;apprentissage rigoureux de l&apos;informatique, du développement logiciel et de la cybersécurité défensive.
+              Plateforme d&apos;apprentissage pratique et laboratoire d&apos;ingénierie spécialisé dans la programmation, l&apos;administration système et la cybersécurité opérationnelle.
             </p>
+            <div className="pt-2">
+              <span className="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-md bg-[#141820] border border-[#202733] text-[11px] font-mono text-emerald-400">
+                <ShieldCheck className="w-3.5 h-3.5" />
+                <span>Base Turso Cloud Connectée</span>
+              </span>
+            </div>
           </div>
 
-          {/* Col 2: Académies */}
+          {/* Col 2: Académies (Section 6) */}
           <div className="space-y-3">
             <h4 className="font-bold text-ivory text-xs uppercase tracking-wider font-mono">
-              Académies &amp; Cursus
+              Académies Spécialisées
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
                 <Link href="/paths/python-academy" className="hover:text-gold transition-colors">
-                  Programming Academy (Python 1 à 7)
-                </Link>
-              </li>
-              <li>
-                <Link href="/paths/cybersecurity-academy" className="hover:text-gold transition-colors">
-                  Cybersecurity Academy &amp; Blue Team SOC
+                  Académie Python (Niveaux 1 à 6)
                 </Link>
               </li>
               <li>
                 <Link href="/paths/systems-networks-academy" className="hover:text-gold transition-colors">
-                  Systems &amp; Networks (Linux &amp; TCP/IP)
+                  Académie Linux &amp; Systèmes
                 </Link>
               </li>
               <li>
-                <Link href="/paths/career-launchpad" className="hover:text-gold transition-colors">
-                  Professional Career Launchpad
+                <Link href="/paths/reseaux-academy" className="hover:text-gold transition-colors">
+                  Académie Réseaux TCP/IP
+                </Link>
+              </li>
+              <li>
+                <Link href="/paths/cybersecurity-academy" className="hover:text-gold transition-colors">
+                  Académie Blue Team &amp; SOC
+                </Link>
+              </li>
+              <li>
+                <Link href="/paths/ethical-hacking-python" className="hover:text-gold transition-colors">
+                  Académie Pentesting Encadré
+                </Link>
+              </li>
+              <li>
+                <Link href="/paths/forensics-dfir-academy" className="hover:text-gold transition-colors">
+                  Académie Forensique DFIR
+                </Link>
+              </li>
+              <li>
+                <Link href="/paths/cloud-devsecops-academy" className="hover:text-gold transition-colors">
+                  Académie Cloud &amp; DevSecOps
+                </Link>
+              </li>
+              <li>
+                <Link href="/paths/cyberpath-2026-2027" className="hover:text-gold transition-colors text-gold font-semibold">
+                  ★ CyberPath Master (12 Volumes)
                 </Link>
               </li>
             </ul>
           </div>
 
-          {/* Col 3: Projets & Carrière */}
+          {/* Col 3: Laboratoire & Projets (Section 9 & 10) */}
           <div className="space-y-3">
             <h4 className="font-bold text-ivory text-xs uppercase tracking-wider font-mono">
-              Ressources &amp; Projets
+              Laboratoire &amp; Projets
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
-                <Link href="/lab" className="hover:text-gold transition-colors text-gold flex items-center space-x-1 font-semibold">
-                  <span>Labo Virtuel &amp; Terminal Interactif</span>
+                <Link href="/lab" className="hover:text-gold transition-colors text-gold flex items-center space-x-1.5 font-semibold">
+                  <Terminal className="w-3.5 h-3.5" />
+                  <span>Laboratoire Virtuel Sandboxé</span>
                 </Link>
               </li>
               <li>
                 <Link href="/projects" className="hover:text-gold transition-colors">
-                  Laboratoire de Projets Open Source
+                  Portfolio de Projets Capstones (7)
                 </Link>
               </li>
               <li>
                 <Link href="/career/cv-builder" className="hover:text-gold transition-colors">
-                  Générateur de CV Compatible ATS
+                  Générateur de CV Format ATS
                 </Link>
               </li>
               <li>
@@ -110,20 +137,24 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Col 4: Le Lab RayLab */}
+          {/* Col 4: Le Projet RayLab */}
           <div className="space-y-3">
             <h4 className="font-bold text-ivory text-xs uppercase tracking-wider font-mono">
-              Le Projet RayLab
+              La Plateforme
             </h4>
             <ul className="space-y-2 text-xs">
               <li>
                 <Link href="/about" className="hover:text-gold transition-colors">
-                  La Vision &amp; Les Principes
+                  La Vision &amp; Les 10 Principes
                 </Link>
               </li>
-              
-              <li className="pt-2 text-[11px] text-ivory-dim leading-relaxed">
-                Les travaux offensifs présentés s&apos;effectuent exclusivement en environnements de simulation isolés.
+              <li>
+                <Link href="/dashboard" className="hover:text-gold transition-colors">
+                  Mon Espace Apprenant
+                </Link>
+              </li>
+              <li className="pt-2 text-[11px] text-ivory-dim leading-relaxed border-t border-[#1a202c]">
+                <strong>Éthique &amp; Légalité :</strong> Les exercices offensifs s&apos;exécutent exclusivement en environnements locaux sandboxés et autorisés.
               </li>
             </ul>
           </div>

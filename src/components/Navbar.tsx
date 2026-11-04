@@ -4,32 +4,26 @@ import React, { useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
-  Shield,
-  BookOpen,
-  Code2,
-  Briefcase,
-  Info,
-  Mail,
   Menu,
   X,
-  Sparkles,
   ArrowRight,
-  Award,
   Terminal,
+  User,
 } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  // Conformité Cahier des Charges V3.0 (Section 3.2)
   const navLinks = [
     { label: "Accueil", href: "/" },
-    { label: "À Propos & Vision", href: "/about" },
-    { label: "Académies & Cursus", href: "/paths" },
-    { label: "Labo Virtuel", href: "/lab", highlight: true },
-    { label: "Projets du Lab", href: "/projects" },
-    { label: "Carrière & Certifs", href: "/career" },
-    
+    { label: "Vision", href: "/about" },
+    { label: "Académies", href: "/paths" },
+    { label: "Laboratoire", href: "/lab", highlight: true },
+    { label: "Projets", href: "/projects" },
+    { label: "Carrière", href: "/career" },
+    { label: "Certifications", href: "/certifications" },
   ];
 
   return (
@@ -92,16 +86,16 @@ export default function Navbar() {
               className="px-3.5 py-2 rounded-xl bg-[#161a22] hover:bg-[#1d232e] border border-gold/40 text-gold text-xs font-semibold flex items-center space-x-2 transition-all shadow-sm group"
             >
               <Terminal className="w-3.5 h-3.5 text-gold animate-pulse" />
-              <span>Labo Virtuel &gt;_</span>
+              <span>Labo &gt;_</span>
             </Link>
 
-            {/* Main Action Button */}
+            {/* Dashboard / Connexion (Section 3.2) */}
             <Link
-              href="/paths"
-              className="px-5 py-2.5 rounded-xl bg-gold hover:bg-gold-light text-[#101216] font-bold text-xs tracking-wide shadow-gold transition-all duration-200 flex items-center space-x-1.5 group"
+              href="/dashboard"
+              className="px-4 py-2.5 rounded-xl bg-gold hover:bg-gold-light text-[#101216] font-bold text-xs tracking-wide shadow-gold transition-all duration-200 flex items-center space-x-1.5 group"
             >
-              <span>Découvrir les Cursus</span>
-              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+              <User className="w-3.5 h-3.5" />
+              <span>Mon Espace</span>
             </Link>
           </div>
 
@@ -110,7 +104,7 @@ export default function Navbar() {
             <Link
               href="/lab"
               className="p-2 rounded-lg text-gold bg-gold/10 border border-gold/30"
-              title="Labo Virtuel"
+              title="Laboratoire"
             >
               <Terminal className="w-4 h-4" />
             </Link>
@@ -149,15 +143,15 @@ export default function Navbar() {
               className="w-full py-2.5 rounded-xl bg-[#161a22] border border-gold/40 text-gold text-xs font-semibold flex items-center justify-center space-x-2"
             >
               <Terminal className="w-3.5 h-3.5" />
-              <span>Labo Virtuel &gt;_</span>
+              <span>Laboratoire Virtuel &gt;_</span>
             </Link>
             <Link
-              href="/paths"
+              href="/dashboard"
               onClick={() => setMobileMenuOpen(false)}
               className="w-full py-2.5 rounded-xl bg-gold text-[#101216] font-bold text-xs flex items-center justify-center space-x-2 shadow-gold"
             >
-              <span>Découvrir les Cursus</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <User className="w-3.5 h-3.5" />
+              <span>Mon Espace (Tableau de Bord)</span>
             </Link>
           </div>
         </div>
