@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 
 export default function LessonClient({ lessonData }: { lessonData: any }) {
-  const { user, addXp, setIsAiDrawerOpen } = useApp();
+  const { user, addXp } = useApp();
   const [activeTab, setActiveTab] = useState<"lesson" | "exercise" | "quiz" | "notes">("lesson");
   const [isCompleted, setIsCompleted] = useState(false);
   const [markingProgress, setMarkingProgress] = useState(false);

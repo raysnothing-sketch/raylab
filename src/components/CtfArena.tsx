@@ -130,7 +130,10 @@ export default function CtfArena() {
       return;
     }
 
-    if (userFlag === challenge.flag) {
+    const clean = (s: string) => s.trim().toLowerCase().replace(/^raylab\{|\}$/g, "");
+    const isCorrect = userFlag === challenge.flag || clean(userFlag) === clean(challenge.flag);
+
+    if (isCorrect) {
       const updated = challenges.map((c) =>
         c.id === id ? { ...c, solved: true } : c
       );

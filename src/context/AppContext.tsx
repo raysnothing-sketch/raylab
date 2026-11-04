@@ -15,8 +15,6 @@ type AppContextType = {
   mode: "personal" | "public";
   setMode: (mode: "personal" | "public") => void;
   setUser: (user: AppUser) => void;
-  isAiDrawerOpen: boolean;
-  setIsAiDrawerOpen: (open: boolean) => void;
   userXp: number;
   addXp: (amount: number) => void;
   streakDays: number;
@@ -43,7 +41,6 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AppUser>(DEFAULT_FOUNDER);
   const [mode, setMode] = useState<"personal" | "public">("personal");
-  const [isAiDrawerOpen, setIsAiDrawerOpen] = useState(false);
   const [userXp, setUserXp] = useState(850);
   const [streakDays, setStreakDays] = useState(7);
 
@@ -78,8 +75,6 @@ export function AppProvider({ children }: { children: React.ReactNode }) {
         mode,
         setMode: handleSetMode,
         setUser,
-        isAiDrawerOpen,
-        setIsAiDrawerOpen,
         userXp,
         addXp,
         streakDays,

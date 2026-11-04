@@ -24,7 +24,7 @@ import {
 } from "lucide-react";
 
 export default function DashboardClient({ dashboardData }: { dashboardData: any }) {
-  const { mode, setMode, user, userXp, streakDays, setIsAiDrawerOpen } = useApp();
+  const { mode, setMode, user, userXp, streakDays } = useApp();
   const [goals, setGoals] = useState(dashboardData.goals || []);
   const [newGoalTitle, setNewGoalTitle] = useState("");
   const [newGoalDate, setNewGoalDate] = useState("");

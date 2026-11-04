@@ -216,6 +216,7 @@ export default function PythonLiveRunner() {
   const [loadingMsg, setLoadingMsg] = useState("Initialisation du moteur WASM...");
 
   const outputRef = useRef<HTMLPreElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   // Load Pyodide WebAssembly
   useEffect(() => {
@@ -485,8 +486,28 @@ export default function PythonLiveRunner() {
           </div>
           <div className="relative">
             <textarea
+              ref={textareaRef}
               value={code}
               onChange={(e) => setCode(e.target.value)}
+              onKeyDown={(e) => {
+                if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+                  e.preventDefault();
+                  if (!isRunning) runCode();
+                  return;
+                }
+                if (e.key === "Tab") {
+                  e.preventDefault();
+                  const start = e.currentTarget.selectionStart;
+                  const end = e.currentTarget.selectionEnd;
+                  const val = e.currentTarget.value;
+                  setCode(val.substring(0, start) + "    " + val.substring(end));
+                  setTimeout(() => {
+                    if (textareaRef.current) {
+                      textareaRef.current.selectionStart = textareaRef.current.selectionEnd = start + 4;
+                    }
+                  }, 0);
+                }
+              }}
               spellCheck={false}
               className="w-full h-80 lg:h-96 p-4 bg-transparent font-mono text-xs sm:text-sm text-cyan-200 resize-none focus:outline-none focus:ring-1 focus:ring-cyan-500/40 leading-relaxed selection:bg-cyan-900/60"
             />
