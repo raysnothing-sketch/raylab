@@ -21,15 +21,11 @@ export default function ContactPage() {
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16 space-y-12">
       {/* Header */}
       <div className="max-w-3xl space-y-4">
-        <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-gold/10 text-gold text-xs font-mono border border-gold/30">
-          <Mail className="w-3.5 h-3.5" />
-          <span>Échanges &amp; Support Pédagogique</span>
-        </div>
         <h1 className="text-3xl sm:text-5xl font-black text-ivory tracking-tight">
           Contacter RayLab
         </h1>
         <p className="text-sm text-ivory-muted leading-relaxed">
-          Une question sur un cursus, un retour d&apos;expérience sur un projet ou une proposition de collaboration ? Écrivez-nous directement.
+          Une question sur un cursus, un retour d&apos;expérience sur un projet ou une proposition de collaboration ? Écrivez-nous directement via le formulaire ci-dessous.
         </p>
       </div>
 
@@ -129,7 +125,7 @@ export default function ContactPage() {
                     required
                     value={subject}
                     onChange={(e) => setSubject(e.target.value)}
-                    placeholder="Question sur le cursus Python & SOC..."
+                    placeholder="Question sur le cursus Python &amp; SOC..."
                     className="w-full bg-[#101216] border border-[#252e3c] rounded-xl px-3.5 py-2.5 text-ivory placeholder-ivory-dim focus:outline-none focus:border-gold"
                   />
                 </div>
