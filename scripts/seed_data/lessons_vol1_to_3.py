@@ -475,123 +475,252 @@ pip install --upgrade pip requests scapy cryptography
         "lesson_type": "article",
         "position": 1,
         "estimated_minutes": 40,
-        "content_md": """# Commandes Linux, Pipelines, Filtres & Permissions POSIX
+        "content_md": """# Administration Système Linux : Du Terminal au Durcissement Opérationnel
 
-Dans l'univers de la cybersécurité, le terminal Linux est votre interface principale de travail. La quasi-totalité des serveurs cibles, des pare-feux et des conteneurs s'administrent en ligne de commande.
-
----
-
-## 1. La Philosophie des Flux Standard & Pipelines UNIX
-
-Sous UNIX, « tout est fichier », et tout programme lancé dispose automatiquement de trois descripteurs de flux fondamentaux :
-* **Descripteur 0 : Entrée standard (stdin)** — flux entrant depuis le clavier ou un pipe.
-* **Descripteur 1 : Sortie standard (stdout)** — flux de sortie normale des résultats.
-* **Descripteur 2 : Sortie d'erreur (stderr)** — flux des messages d'erreur et alertes.
-
-### Redirections :
-```bash
-# Rediriger stdout vers un fichier (écrase le fichier)
-commande > resultat.txt
-
-# Rediriger stdout en mode ajout (append)
-commande >> historique.log
-
-# Rediriger stdout ET stderr dans le même fichier
-commande > sortie.txt 2>&1
-
-# Ignorer totalement les erreurs en les envoyant dans le trou noir /dev/null
-find / -name "*.conf" 2>/dev/null
-```
-
-### Le Pipe (`|`) : La Chaîne de Traitement
-Le tube (`|`) injecte directement la sortie standard du programme de gauche dans l'entrée standard du programme de droite.
-
-Exemple d'extraction d'adresses IP uniques connectées à un serveur :
-```bash
-netstat -ant | grep ESTABLISHED | awk '{print $5}' | cut -d: -f1 | sort | uniq -c | sort -nr
-```
+> **Fiche Pédagogique V4**  
+> **Niveau :** Niveau 1 – Beginner à Intermédiaire  
+> **Durée estimée :** 55 minutes (20 min Théorie • 25 min Laboratoire Pratique • 10 min Évaluation & Synthèse)  
+> **Prerequisites :** Connaissances élémentaires sur l'ordinateur et manipulation de base d'un clavier.
 
 ---
 
-## 2. Les Outils de Filtrage Essentiels : `grep`, `awk` et `sed`
+## 1. Objectifs Pédagogiques Mesurables
 
-* **`grep` (Global Regular Expression Print) :** Recherche de motifs textuels ou d'expressions régulières.
-  ```bash
-  # Trouver tous les échecs de connexion SSH dans le journal d'authentification
-  grep -i "failed password" /var/log/auth.log
-  ```
-* **`awk` :** Langage complet de traitement par colonnes. Par défaut, `awk` découpe chaque ligne selon les espaces.
-  ```bash
-  # Afficher le nom d'utilisateur ($1) et son shell par défaut ($7) depuis /etc/passwd
-  awk -F: '{print $1, "utilise le shell :", $7}' /etc/passwd
-  ```
-* **`sed` (Stream Editor) :** Édition de flux à la volée (rechercher/remplacer).
-  ```bash
-  # Remplacer toutes les occurrences de HTTP par HTTPS dans un fichier de configuration
-  sed -i 's/http:/https:/g' /etc/nginx/sites-available/default
-  ```
+À l'issue de cette leçon, vous serez capable de :
+1. **Administrer** les utilisateurs, les groupes et les privilèges restreints (`sudo`, `visudo`, `setfacl`).
+2. **Naviguer et monter** des systèmes de fichiers selon la hiérarchie standard FHS (`lsblk`, `mount`, `/etc/fstab`).
+3. **Gérer les paquets et vérifier leur intégrité** cryptographique (`apt`, `dpkg`, trousseaux de clés GPG).
+4. **Contrôler les démons et services** critiques avec `systemd` (`systemctl`, unités `.service`, cgroups).
+5. **Sécuriser les accès distants OpenSSH** (clés asymétriques Ed25519, durcissement de `/etc/ssh/sshd_config`).
+6. **Analyser les journaux système et diagnostiquer les incidents** (`journalctl`, `/var/log/auth.log`, `dmesg`).
+7. **Appliquer les contrôles de filtrage pare-feu et les règles de base du CIS Benchmark** (`ufw`, `nftables`).
 
 ---
 
-## 3. Le Modèle de Permissions POSIX & Calcul Octal
+## 2. Pilier 1 : Utilisateurs, Groupes et Gestion des Privilèges
 
-Chaque fichier ou répertoire sous Linux possède des droits pour trois entités distinctes :
-1. **User (u) :** Le propriétaire du fichier.
-2. **Group (g) :** Le groupe propriétaire.
-3. **Others (o) :** Tout autre utilisateur du système.
+Sous Linux, tout processus s'exécute sous l'identité d'un utilisateur identifié par un **UID** (User ID) et un ou plusieurs **GID** (Group ID). L'utilisateur `root` (UID 0) possède les pleins privilèges sur le noyau.
 
-Les droits se décomposent en trois permissions binaires :
-* **Read (r) :** Valeur octale **4** (binaire `100`). Permet de lire le contenu.
-* **Write (w) :** Valeur octale **2** (binaire `010`). Permet de modifier ou supprimer.
-* **Execute (x) :** Valeur octale **1** (binaire `001`). Permet d'exécuter un script ou de traverser un répertoire (`cd`).
+### Fichiers de Configuration Critiques :
+* `/etc/passwd` : Liste publique des comptes (nom, UID, GID, dossier personnel, shell).
+  ```text
+  raylab:x:1001:1001:RayLab Learner,,,:/home/raylab:/bin/bash
+  ```
+* `/etc/shadow` : Base des empreintes de mots de passe chiffrés (SHA-512 ou yescrypt), accessible **uniquement** en lecture par `root` (droits `0640` ou `0000`).
+* `/etc/sudoers` : Fichier de délégation de privilèges. **Règle absolue :** ne jamais éditer directement avec un éditeur classique, utiliser obligatoirement `visudo` pour vérifier la syntaxe avant écriture.
 
-```
-Droits :  r w x   r - x   r - -
-Binaire : 1 1 1   1 0 1   1 0 0
-Octal :     7       5       4
-Total :  chmod 754 mon_script.sh
-```
-
-### Les Permissions Spéciales Majeures pour le Pentesteur :
-* **SUID (Set User ID) — Octal 4000 :** Lorsqu'un binaire possède le bit SUID (ex: `-rwsr-xr-x`), il s'exécute toujours avec les privilèges de son **propriétaire**, souvent `root`, quel que soit l'utilisateur qui le lance !
-* **SGID (Set Group ID) — Octal 2000 :** Exécute avec les privilèges du groupe propriétaire.
-* **Sticky Bit — Octal 1000 :** Présent sur `/tmp` (`drwxrwxrwt`), il empêche un utilisateur de supprimer le fichier d'un autre utilisateur même dans un dossier partagé en écriture.
-
-Pour trouver tous les binaires SUID sur un serveur Linux lors d'une phase d'élévation de privilèges :
 ```bash
-find / -perm -4000 -type f 2>/dev/null
+# Créer un compte d'administration avec groupe dédié et shell sécurisé
+useradd -m -s /bin/bash -g admin rayan_admin
+
+# Ajouter l'utilisateur au groupe sudo sans lui octroyer root direct
+usermod -aG sudo rayan_admin
+
+# Auditer les droits étendus avec les listes de contrôle d'accès POSIX (ACL)
+getfacl /var/www/html/secret
+setfacl -m u:rayan_admin:rwx /var/www/html/secret
 ```
-""",
+
+---
+
+## 3. Pilier 2 : Arborescence FHS, Systèmes de Fichiers & Montage
+
+Linux organise tous les périphériques sous une arborescence unique unifiée selon la norme **FHS (Filesystem Hierarchy Standard)** :
+* `/bin`, `/sbin` : Exécutables système essentiels.
+* `/etc` : Fichiers de configuration textuels du système et des services.
+* `/var` : Données variables (bases de données `/var/lib`, logs `/var/log`).
+* `/proc` & `/sys` : Systèmes de fichiers virtuels en mémoire exposant l'état du noyau, du matériel et des processus.
+* `/dev` : Nœuds de périphériques (`/dev/sda`, `/dev/nvme0n1`, `/dev/urandom`).
+
+### Gestion du Stockage & Montage :
+```bash
+# Identifier les disques physiques et partitions
+lsblk -f
+
+# Obtenir les identifiants uniques universels (UUID)
+blkid
+
+# Montage manuel sécurisé (avec options noexec, nosuid)
+mount -o noexec,nosuid /dev/sdb1 /mnt/donnees_externes
+
+# Règle persistante dans /etc/fstab :
+# UUID=xxxx-xxxx /mnt/donnees ext4 defaults,noexec,nosuid 0 2
+```
+
+---
+
+## 4. Pilier 3 : Gestion des Paquets & Trousseaux GPG
+
+Sur Debian / Ubuntu, le gestionnaire de paquets de bas niveau est `dpkg` et l'outil de gestion des dépendances distantes est `apt`.
+
+```bash
+# Mettre à jour l'index des dépôts signés et les correctifs de sécurité
+apt-get update && apt-get upgrade -y
+
+# Vérifier la signature GPG des dépôts tiers (dans /etc/apt/keyrings/)
+gpg --show-keys /etc/apt/keyrings/docker.gpg
+
+# Vérifier l'intégrité d'un paquet installé face aux altérations de fichiers
+dpkg --verify nginx
+```
+
+---
+
+## 5. Pilier 4 : Contrôle des Processus & Services avec `systemd`
+
+`systemd` est le système d'initialisation (PID 1) standard des distributions modernes. Il gère le démarrage parallèle des démons et leur supervision via des unités `.service`.
+
+```bash
+# État en temps réel du service SSH
+systemctl status ssh
+
+# Activer le lancement automatique au démarrage et démarrer immédiatement
+systemctl enable --now ufw
+
+# Redémarrer un service après modification de sa configuration
+systemctl restart nginx
+
+# Créer une unité personnalisée dans /etc/systemd/system/agent-telemetrie.service :
+# [Unit]
+# Description=Agent de Télémétrie RayLab
+# After=network.target
+# [Service]
+# ExecStart=/usr/local/bin/agent_telemetrie
+# Restart=always
+# User=raylab_service
+# [Install]
+# WantedBy=multi-user.target
+```
+
+---
+
+## 6. Pilier 5 : Sécurisation Rigoureuse d'OpenSSH
+
+Le protocole SSH (port 22) est la porte d'entrée de vos serveurs. Une mauvaise configuration expose directement le serveur aux attaques par force brute mondiales.
+
+### Fichier `/etc/ssh/sshd_config` durci :
+```text
+# Désactiver formellement l'accès direct par le compte root
+PermitRootLogin no
+
+# Interdire l'authentification par mot de passe faible (clé asymétrique obligatoire)
+PasswordAuthentication no
+
+# Restreindre le nombre maximal de tentatives avant déconnexion
+MaxAuthTries 3
+
+# Limiter les utilisateurs autorisés à se connecter
+AllowUsers rayan_admin auditeur_sec
+```
+
+Génération d'une paire de clés moderne à courbe elliptique :
+```bash
+# Générer une clé Ed25519 ultra-sécurisée avec 100 tours KDF
+ssh-keygen -t ed25519 -a 100 -C "admin@raylab.local"
+```
+
+---
+
+## 7. Pilier 6 : Journaux Système & Diagnostic d'Incident
+
+La traçabilité est la condition *sine qua non* de la détection en cybersécurité.
+
+```bash
+# Suivre en direct tous les journaux système avec coloration
+journalctl -f
+
+# Filtrer les événements d'un service spécifique depuis 1 heure
+journalctl -u ssh --since "1 hour ago"
+
+# Détecter les alertes prioritaires du noyau (erreurs matérielles ou crashs)
+dmesg -T -l err,crit
+
+# Examiner les tentatives de connexion échouées dans le log d'authentification
+grep "Failed password" /var/log/auth.log | awk '{print $1, $2, $3, $9, $11}' | sort | uniq -c
+```
+
+---
+
+## 8. Pilier 7 : Pare-feu d'Hôte (`ufw` / `nftables`) & CIS Benchmarks
+
+Le pare-feu d'hôte bloque les flux non autorisés avant même qu'ils n'atteignent les services applicatifs.
+
+```bash
+# Politique par défaut restrictive : Bloquer tout le trafic entrant, autoriser le sortant
+ufw default deny incoming
+ufw default allow outgoing
+
+# Autoriser uniquement les flux légitimes nécessaires
+ufw allow 22/tcp comment "Administration SSH restreinte"
+ufw allow 443/tcp comment "Serveur Web HTTPS"
+
+# Activer le pare-feu
+ufw enable
+```
+
+### Le Standard CIS Benchmarks (Center for Internet Security) :
+Le CIS Benchmark édicte les recommandations de référence pour durcir un OS Linux :
+1. Séparer `/tmp`, `/var` et `/home` sur des partitions distinctes.
+2. Désactiver les systèmes de fichiers non nécessaires (`cramfs`, `freevxfs`, `jffs2`).
+3. Activer `ASLR` (Address Space Layout Randomization) : `sysctl kernel.randomize_va_space=2`.
+4. Désactiver le routage ICMP Redirects et les paquets source-routés.""",
         "exercise": {
-            "title": "Convertisseur de Droits Symboliques en Octal",
-            "description_md": "Écrivez une fonction Python `symb_to_octal(mode: str) -> str` qui prend une chaîne de 9 caractères (ex: 'rwxr-xr--') et retourne sa représentation octale à 3 chiffres (ex: '754').",
-            "starter_code": "def symb_to_octal(mode: str) -> str:\n    # Votre code ici\n    pass\n",
-            "solution_code": "def symb_to_octal(mode: str) -> str:\n    valeurs = {'r': 4, 'w': 2, 'x': 1, '-': 0}\n    triplets = [mode[0:3], mode[3:6], mode[6:9]]\n    octal = ''\n    for t in triplets:\n        score = sum(valeurs.get(c, 0) for c in t)\n        octal += str(score)\n    return octal\n",
+            "title": "Script Python d'Analyse des Permissions POSIX & SUID",
+            "description_md": """Développez une fonction Python `auditer_droits_fichier(mode_octal: int) -> dict` qui prend un entier représentant les permissions complètes d'un fichier (ex: 0o4755 pour un binaire SUID root, ou 0o755 pour un script normal) et retourne un dictionnaire contenant :
+- `is_suid`: booléen indiquant si le bit SUID (0o4000) est activé
+- `is_world_writable`: booléen indiquant si tout le monde peut écrire dans le fichier (bit 0o0002)
+- `droits_str`: la représentation octale à 3 chiffres des droits standards (ex: '755').""",
+            "starter_code": """def auditer_droits_fichier(mode_octal: int) -> dict:
+    # Votre code ici
+    pass
+""",
+            "solution_code": """def auditer_droits_fichier(mode_octal: int) -> dict:
+    is_suid = bool(mode_octal & 0o4000)
+    is_world_writable = bool(mode_octal & 0o0002)
+    # Les 3 derniers chiffres octaux
+    droits_std = oct(mode_octal & 0o0777)[2:].zfill(3)
+    return {
+        'is_suid': is_suid,
+        'is_world_writable': is_world_writable,
+        'droits_str': droits_std
+    }
+""",
             "difficulty": "intermediate"
         },
         "quiz": {
-            "title": "Quiz - Permissions & Terminal Linux",
+            "title": "Quiz Évaluatif - Administration & Durcissement Système Linux",
             "passing_score": 100,
             "questions": [
                 {
-                    "prompt_md": "Quelle commande permet de rediriger la sortie d'erreur (stderr) vers le fichier /dev/null sans impacter la sortie standard ?",
-                    "explanation_md": "Le chiffre 2 désigne le descripteur de fichier de stderr, donc `2>/dev/null` redirige spécifiquement les erreurs.",
+                    "prompt_md": "Quelle directive dans /etc/ssh/sshd_config est la plus cruciale pour empêcher les attaques par force brute automatisées sur les serveurs exposés ?",
+                    "explanation_md": "En désactivant PasswordAuthentication no (en conjonction avec des clés Ed25519) et PermitRootLogin no, les attaques par dictionnaires de mots de passe sur root deviennent totalement inopérantes.",
                     "options_json": json.dumps([
-                        {"text": "2>/dev/null", "is_correct": True},
-                        {"text": "1>/dev/null", "is_correct": False},
-                        {"text": ">> /dev/null", "is_correct": False},
-                        {"text": "< /dev/null", "is_correct": False}
+                        {"text": "PasswordAuthentication no et PermitRootLogin no", "is_correct": True},
+                        {"text": "Port 2222 uniquement sans autre modification", "is_correct": False},
+                        {"text": "Compression yes pour accélérer le chiffrement", "is_correct": False},
+                        {"text": "X11Forwarding yes pour le confort d'administration", "is_correct": False}
                     ]),
                     "points": 10
                 },
                 {
-                    "prompt_md": "Pourquoi les binaires possédant le bit de permission SUID (valeur octale 4000) intéressent-ils particulièrement les auditeurs en phase d'élévation de privilèges ?",
-                    "explanation_md": "Un binaire SUID appartenant à root s'exécute avec les privilèges de root même s'il est lancé par un utilisateur ordinaire, offrant un vecteur d'escalade en cas de faille.",
+                    "prompt_md": "Pourquoi doit-on obligatoirement utiliser la commande 'visudo' plutôt qu'un éditeur classique pour modifier /etc/sudoers ?",
+                    "explanation_md": "visudo verrouille le fichier contre les modifications concurrentes et effectue une validation syntaxique stricte avant enregistrement, évitant de verrouiller définitivement l'accès sudo à l'ensemble du système en cas de faute de frappe.",
                     "options_json": json.dumps([
-                        {"text": "Car ils s'exécutent avec les privilèges de leur propriétaire (souvent root)", "is_correct": True},
-                        {"text": "Car ils sont automatiquement chiffrés en mémoire", "is_correct": False},
-                        {"text": "Car ils contournent le pare-feu du noyau", "is_correct": False},
-                        {"text": "Car ils ne peuvent jamais être effacés par l'administrateur", "is_correct": False}
+                        {"text": "Elle vérifie la validité de la syntaxe avant d'enregistrer pour éviter de corrompre l'accès super-utilisateur", "is_correct": True},
+                        {"text": "Elle chiffre automatiquement le fichier sudoers avec AES-256", "is_correct": False},
+                        {"text": "Elle recharge instantanément le noyau Linux sans redémarrage", "is_correct": False},
+                        {"text": "Elle est la seule commande capable de lire le système de fichiers ext4", "is_correct": False}
+                    ]),
+                    "points": 10
+                },
+                {
+                    "prompt_md": "Dans quel répertoire FHS virtuel trouve-t-on l'état en temps réel des processus et les structures de données du noyau Linux ?",
+                    "explanation_md": "/proc est un pseudo-système de fichiers généré dynamiquement en mémoire par le noyau Linux, exposant les tables de processus (/proc/[pid]) et les paramètres noyau (/proc/sys).",
+                    "options_json": json.dumps([
+                        {"text": "/proc (Process Information Pseudo-Filesystem)", "is_correct": True},
+                        {"text": "/etc/systemd/processes", "is_correct": False},
+                        {"text": "/var/log/kernel", "is_correct": False},
+                        {"text": "/usr/share/processes", "is_correct": False}
                     ]),
                     "points": 10
                 }

@@ -22,9 +22,9 @@ LESSONS_VOL4_TO_6 = [
         "content_md": """# Modèles OSI vs TCP/IP : Encapsulation & Architecture des Flux Réseau
 
 > **Fiche Pédagogique V4**  
-> **Niveau :** Niveau 1 — Beginner  
+> **Niveau :** Niveau 1 – Beginner  
 > **Durée estimée :** 45 minutes (15 min Théorie • 20 min Laboratoire Pratique • 10 min Évaluation & Synthèse)  
-> **Prérequis :** Notions de base sur les systèmes de numération (binaire et hexadécimal) et compréhension élémentaire d'un réseau local (LAN).
+> **Prerequisites :** Notions de base sur les systèmes de numération (binaire et hexadécimal) et compréhension élémentaire d'un réseau local (LAN).
 
 ---
 
@@ -34,8 +34,9 @@ LESSONS_VOL4_TO_6 = [
 1. **Distinguer** sans ambiguïté les 7 couches du modèle théorique OSI et les 4 couches du modèle opérationnel TCP/IP.
 2. **Décrire** le processus mécanique d'encapsulation et de désencapsulation d'une trame à travers chaque en-tête.
 3. **Positionner rigoureusement** les protocoles pivots tels qu'**ICMP (Couche 3)** et **ARP (Couche 2 / Liaison)** selon les normes IETF.
-4. **Identifier** les unités de données de protocole (PDU) associées à chaque niveau : Bits, Trames, Paquets, Segments et Messages.
-5. **Diagnostiquer** les pannes d'infrastructure et les anomalies de connectivité en isolant la couche réseau défaillante.
+4. **Comprendre la réalité de l'adresse MAC** : du constructeur (BIA) à la randomisation logicielle moderne (Privacy MAC sous iOS/Android/Windows).
+5. **Disséquer** une trame réseau réelle issue d'une capture Wireshark octet par octet (Ethernet II, IPv4, ICMP Echo Request).
+6. **Diagnostiquer** les pannes d'infrastructure et les anomalies de connectivité en isolant la couche réseau défaillante (Bottom-Up Troubleshooting).
 
 ---
 
@@ -78,20 +79,28 @@ Le modèle **OSI (Open Systems Interconnection)**, standardisé par l'ISO en 198
 
 ---
 
-## 4. Précision Technique Critique : Le Positionnement d'ICMP et d'ARP
+## 4. Précision Technique Critique : Le Positionnement d'ICMP, d'ARP et de l'Adresse MAC
 
-Deux protocoles fondamentaux sont fréquemment mal positionnés dans la documentation vulgarisée. Voici leur définition normative exacte :
+Trois éléments fondamentaux sont fréquemment imprécis dans les documentations vulgarisées :
 
-### A. ICMP (Internet Control Message Protocol — RFC 792) : Couche 3 (Internet / Réseau)
+### A. ICMP (Internet Control Message Protocol – RFC 792) : Couche 3 (Internet / Réseau)
 * **Pourquoi pas en Couche 4 (Transport) ?**  
-  Bien que les messages ICMP soient transportés à l'intérieur de paquets IP (au même titre que TCP ou UDP, avec le champ *Protocol = 1* dans l'en-tête IP), ICMP **ne fournit aucun service de transport** de données applicatives.
+  Bien que les messages ICMP soient transportés à l'intérieur de paquets IP (champ *Protocol = 1* dans l'en-tête IP), ICMP **ne fournit aucun service de transport applicatif**.
 * Il ne dispose **ni de numéros de port source/destination**, ni de mécanisme d'ordonnancement, ni de contrôle de flux.
-* ICMP est une partie intégrante et indissociable de la couche Internet : il a pour rôle unique de **transporter des messages de contrôle, de diagnostic et de signalement d'erreurs** (ex : *Echo Request/Reply [ping]*, *Destination Unreachable*, *Time to Live [TTL] Expired [traceroute]*).
+* ICMP est une partie intégrante et indissociable de la couche Internet : son rôle unique est de **transporter des messages de contrôle, de diagnostic et de signalement d'erreurs** (ex : *Echo Request/Reply [ping]*, *Destination Unreachable*, *Time to Live [TTL] Expired [traceroute]*).
 
-### B. ARP (Address Resolution Protocol — RFC 826) : Couche 2 (Liaison de Données / Accès Réseau)
+### B. ARP (Address Resolution Protocol – RFC 826) : Couche 2 (Liaison de Données / Accès Réseau)
 * **Pourquoi pas en Couche 3 (Réseau) ?**  
   ARP ne transporte pas de données à travers des routeurs et **n'utilise pas d'en-tête IP**. Il est directement encapsulé dans les trames Ethernet avec son propre code EtherType (`0x0806`).
 * Son rôle est strictement local au domaine de diffusion (*broadcast domain*) de Couche 2 : il résout la correspondance entre une adresse logique de couche supérieure (IPv4) et une adresse matérielle physique (MAC).
+
+### C. L'Adresse MAC : Entre Burned-In Address (BIA) et Randomisation Moderne
+* **Structure :** Une adresse MAC standard (EUI-48) comporte 48 bits (6 octets hexadécimaux, ex: `00:1A:2B:3C:4D:5E`). Les 3 premiers octets constituent l'**OUI (Organizationally Unique Identifier)** attribué par l'IEEE au fabricant de la puce, et les 3 derniers octets constituent l'identifiant de la carte.
+* **Non immuable :** Historiquement appelée BIA (*Burned-In Address*) car gravée dans la ROM de l'interface réseau, l'adresse MAC utilisée par le système d'exploitation n'est **absolument pas figée**. Elle est configurable par logiciel (*MAC Spoofing* via `ip link set dev eth0 address` sous Linux ou via le registre Windows).
+* **Randomisation MAC pour la vie privée :** Pour contrer le traçage des utilisateurs via les requêtes de sonde Wi-Fi (*Probe Requests*) dans les lieux publics, tous les systèmes d'exploitation modernes (**iOS Private Wi-Fi Address**, **Android MAC Randomization**, **Windows Random Hardware Addresses**) génèrent par défaut une adresse MAC aléatoire différente pour chaque réseau Wi-Fi !
+* **Bits de contrôle du premier octet :**
+  * **Bit 0 (I/G - Individual/Group) :** `0` = Unicast (machine individuelle), `1` = Multicast.
+  * **Bit 1 (U/L - Universal/Local) :** `0` = Universelle (OUI IEEE officiel du fabricant), `1` = **Localement administrée** (adresse modifiée ou randomisée logiciellement).
 
 ---
 
@@ -112,31 +121,93 @@ Chaque couche réseau ajoute un en-tête (*Header*) spécifique contenant les m�
 [ En-tête Eth | En-tête IP | En-tête TCP | Données | FCS ] (Couche 2 : Trame)
                        |
                        v  Conversion en signal physique
-0 1 1 0 1 0 0 1 0 1 1 0 0 0 1 1 0 1 ...                     (Couche 1 : Bits)
+0 1 1 0 1 0 0 1 0 1 1 0 1 1 0 1 0 0 1 0 1 1 0 1 0 1 1 0    (Couche 1 : Bits)
 ```
 
-À la réception, le récepteur effectue la **Désencapsulation** inverse :
-1. La carte réseau vérifie le CRC du FCS de la trame.
-2. L'en-tête Ethernet est ôté, révélant le paquet IP.
-3. Le noyau vérifie que l'IP de destination correspond à la machine ou route le paquet.
-4. L'en-tête TCP est analysé, le numéro de séquence est validé, et la charge utile applicative est remise au processus écoutant sur le port cible (ex : serveur Nginx ou Apache).
+Lors de la réception, le processus inverse (**désencapsulation**) est appliqué : la carte réseau valide le CRC, retire l'en-tête Ethernet, transmet le paquet au noyau IP, qui retire l'en-tête IP, transmet le segment à la pile TCP, et la charge utile applicative est remise au processus écoutant sur le port cible (ex : serveur Nginx ou Apache).
 
 ---
 
-## 6. Synthèse des Références Officielles
+## 6. Dissection Réelle d'une Trame Wireshark (Echo Request ICMP)
 
-* **RFC 791 :** *Internet Protocol (IPv4 Specification)* — Standard de la couche Internet.
-* **RFC 792 :** *Internet Control Message Protocol (ICMP)* — Diagnostic de couche 3.
-* **RFC 826 :** *Ethernet Address Resolution Protocol (ARP)* — Résolution locale de couche 2.
-* **RFC 793 :** *Transmission Control Protocol (TCP)* — Protocole orienté connexion fiable.
-* **RFC 1122 :** *Requirements for Internet Hosts -- Communication Layers* — Spécification normative des couches TCP/IP.
-""",
+Examinons une véritable trame réseau capturée lors d'une commande `ping 192.168.1.1` :
+
+```text
+0000   00 15 5d 01 2a 3b 00 15 5d 01 2a 3c 08 00 45 00
+0010   00 54 f3 a2 40 00 40 01 a1 75 c0 a8 01 32 c0 a8
+0020   01 01 08 00 4d 5b 00 01 00 01 61 62 63 64 65 66
+```
+
+### Découpage Octet par Octet :
+1. **Couche 2 (En-tête Ethernet II - 14 octets) :**
+   * `00 15 5d 01 2a 3b` (Octets 0 à 5) : **MAC Destination** (Passerelle / Routeur).
+   * `00 15 5d 01 2a 3c` (Octets 6 à 11) : **MAC Source** (Machine émettrice).
+   * `08 00` (Octets 12 et 13) : **EtherType** (`0x0800` = IPv4, `0x0806` = ARP).
+2. **Couche 3 (En-tête IPv4 - 20 octets) :**
+   * `45` (Octet 14) : Version IPv4 (`4`) et Longueur d'en-tête IHL = 5 mots de 32 bits (`20 octets`).
+   * `40` (Octet 22) : **TTL (Time to Live)** = 64 sauts.
+   * `01` (Octet 23) : **Protocole supérieur = 1 (ICMP - RFC 792)** (si `06` = TCP, si `11` = UDP).
+   * `c0 a8 01 32` (Octets 26 à 29) : **IP Source** (`192.168.1.50`).
+   * `c0 a8 01 01` (Octets 30 à 33) : **IP Destination** (`192.168.1.1`).
+3. **Protocole de Contrôle Réseau (ICMP - RFC 792) :**
+   * `08` (Octet 34) : **Type ICMP = 8 (Echo Request)** (le ping d'émission).
+   * `00` (Octet 35) : **Code ICMP = 0** (aucun sous-code).
+   * `4d 5b` (Octets 36 et 37) : Checksum ICMP.
+   * `61 62 63 64 ...` (Octets 42+) : Données de test (alphabet ASCII `abcdef...`).
+
+---
+
+## 7. Synthèse des Références Officielles
+
+* **RFC 791 :** *Internet Protocol (IPv4 Specification)* – Standard de la couche Internet.
+* **RFC 792 :** *Internet Control Message Protocol (ICMP)* – Diagnostic et contrôle de couche 3.
+* **RFC 826 :** *Ethernet Address Resolution Protocol (ARP)* – Résolution locale de couche 2.
+* **RFC 793 :** *Transmission Control Protocol (TCP)* – Protocole orienté connexion fiable.
+* **RFC 1122 :** *Requirements for Internet Hosts -- Communication Layers* – Spécification normative des couches TCP/IP.""",
         "exercise": {
-            "title": "Analyseur d'En-tête & Détection de Couche Réseau en Python",
-            "description_md": "Développez une fonction Python `classifier_protocole(nom_protocole: str) -> dict[str, str]` qui prend le nom d'un protocole en entrée (insensible à la casse, ex: 'ICMP', 'arp', 'tcp', 'http') et retourne un dictionnaire contenant sa couche OSI, sa couche TCP/IP et son unité de données (PDU). Si le protocole est inconnu, renvoyez une erreur explicite.",
-            "starter_code": "def classifier_protocole(nom_protocole: str) -> dict[str, str]:\n    # Écrivez votre code ici\n    pass\n",
-            "solution_code": "def classifier_protocole(nom_protocole: str) -> dict[str, str]:\n    table = {\n        'http': {'osi': 'Couche 7 (Application)', 'tcpip': 'Application', 'pdu': 'Message'},\n        'https': {'osi': 'Couche 7 (Application)', 'tcpip': 'Application', 'pdu': 'Message'},\n        'dns': {'osi': 'Couche 7 (Application)', 'tcpip': 'Application', 'pdu': 'Message'},\n        'tcp': {'osi': 'Couche 4 (Transport)', 'tcpip': 'Transport', 'pdu': 'Segment'},\n        'udp': {'osi': 'Couche 4 (Transport)', 'tcpip': 'Transport', 'pdu': 'Datagramme'},\n        'icmp': {'osi': 'Couche 3 (Réseau)', 'tcpip': 'Internet', 'pdu': 'Paquet'},\n        'ipv4': {'osi': 'Couche 3 (Réseau)', 'tcpip': 'Internet', 'pdu': 'Paquet'},\n        'ipv6': {'osi': 'Couche 3 (Réseau)', 'tcpip': 'Internet', 'pdu': 'Paquet'},\n        'arp': {'osi': 'Couche 2 (Liaison de données)', 'tcpip': 'Accès Réseau', 'pdu': 'Trame'},\n        'ethernet': {'osi': 'Couche 2 (Liaison de données)', 'tcpip': 'Accès Réseau', 'pdu': 'Trame'},\n    }\n    proto = nom_protocole.strip().lower()\n    if proto not in table:\n        raise ValueError(f'Protocole non reconnu : {nom_protocole}')\n    return table[proto]\n",
-            "difficulty": "beginner"
+            "title": "Dissecteur Réseau Python : Analyse d'une Trame Hexadécimale Wireshark",
+            "description_md": """Développez une fonction Python `dissequer_trame_hex(trame_hex: str) -> dict` qui prend une chaîne hexadécimale brute (contenant les octets d'une trame Ethernet + IPv4 + ICMP séparés ou non par des espaces) et extrait un dictionnaire avec :
+- `mac_dst`: l'adresse MAC destination formatée (ex: '00:15:5D:01:2A:3B')
+- `mac_src`: l'adresse MAC source formatée (ex: '00:15:5D:01:2A:3C')
+- `ethertype`: l'EtherType en hexadécimal (ex: '0x0800')
+- `ip_src`: l'adresse IPv4 source décimale pointée (ex: '192.168.1.50')
+- `ip_dst`: l'adresse IPv4 destination décimale pointée (ex: '192.168.1.1')
+- `protocole_l3`: 'ICMP' si l'octet de protocole vaut 1, sinon 'AUTRE'
+- `type_icmp`: le code numérique du type ICMP (ex: 8 pour Echo Request).""",
+            "starter_code": """def dissequer_trame_hex(trame_hex: str) -> dict:
+    # Votre code de dissection ici
+    pass
+""",
+            "solution_code": """def dissequer_trame_hex(trame_hex: str) -> dict:
+    # Nettoyage et conversion en octets
+    nettoyee = trame_hex.replace(' ', '').replace('\n', '').strip()
+    octets = bytes.fromhex(nettoyee)
+    if len(octets) < 38:
+        raise ValueError('Trame trop courte pour contenir Ethernet + IPv4 + ICMP')
+
+    mac_dst = ':'.join(f'{b:02X}' for b in octets[0:6])
+    mac_src = ':'.join(f'{b:02X}' for b in octets[6:12])
+    ethertype = f'0x{octets[12]:02X}{octets[13]:02X}'
+
+    # En-tête IPv4 (commence à l'octet 14)
+    proto_num = octets[23]
+    ip_src = '.'.join(str(b) for b in octets[26:30])
+    ip_dst = '.'.join(str(b) for b in octets[30:34])
+
+    # En-tête ICMP (commence à l'octet 34)
+    type_icmp = octets[34]
+
+    return {
+        'mac_dst': mac_dst,
+        'mac_src': mac_src,
+        'ethertype': ethertype,
+        'ip_src': ip_src,
+        'ip_dst': ip_dst,
+        'protocole_l3': 'ICMP' if proto_num == 1 else 'AUTRE',
+        'type_icmp': type_icmp
+    }
+""",
+            "difficulty": "intermediate"
         },
         "quiz": {
             "title": "Quiz Évaluatif - Modèles Réseau, Encapsulation, ICMP & ARP",
@@ -161,6 +232,17 @@ Chaque couche réseau ajoute un en-tête (*Header*) spécifique contenant les m�
                         {"text": "Il est routé à travers tous les routeurs d'Internet", "is_correct": False},
                         {"text": "Il utilise des numéros de ports TCP pour transmettre ses requêtes", "is_correct": False},
                         {"text": "Il crypte les données de session applicative", "is_correct": False}
+                    ]),
+                    "points": 10
+                },
+                {
+                    "prompt_md": "L'adresse MAC d'un équipement moderne est-elle immuable à vie ?",
+                    "explanation_md": "Non. Même si l'adresse constructeur est inscrite en ROM (Burned-In Address), l'adresse MAC manipulée par l'OS peut être modifiée logiciellement (MAC spoofing) et est randomisée par défaut sur les OS modernes (iOS, Android, Windows) pour protéger la vie privée sur les réseaux Wi-Fi.",
+                    "options_json": json.dumps([
+                        {"text": "Non : elle est modifiable logiciellement et randomisée par défaut sur les OS mobiles et récents", "is_correct": True},
+                        {"text": "Oui : c'est un identifiant matériel scellé physiquement dans le silicium impossible à modifier", "is_correct": False},
+                        {"text": "Oui : l'IEEE interdit formellement toute modification au niveau du pilote réseau", "is_correct": False},
+                        {"text": "Non : elle change automatiquement à chaque redémarrage de la machine sur tous les systèmes", "is_correct": False}
                     ]),
                     "points": 10
                 }
