@@ -71,7 +71,7 @@ export default function PathsCatalogClient({ paths }: PathsCatalogClientProps) {
   };
 
   const getV4TargetHours = (slug: string): string => {
-    if (slug.includes("cyberpath")) return "180 \u00e0 220 h";
+    if (slug.includes("cyberpath")) return "120 h (12 Volumes)";
     if (slug.includes("python")) return "100 \u00e0 120 h";
     if (slug.includes("system") || slug.includes("linux")) return "80 \u00e0 100 h";
     if (slug.includes("reseau")) return "80 \u00e0 100 h";
@@ -134,7 +134,7 @@ export default function PathsCatalogClient({ paths }: PathsCatalogClientProps) {
                 <span className="text-ivory-dim font-bold">&bull;</span>
                 <span className="text-gold font-semibold flex items-center space-x-1">
                   <Sparkles className="w-3.5 h-3.5" />
-                  <span>Grand Cursus F&eacute;d&eacute;rateur (180 &agrave; 220 h)</span>
+                  <span>Grand Cursus F&eacute;d&eacute;rateur (120 h exactes &bull; 70% Pratique / 30% Th&eacute;orie)</span>
                 </span>
               </div>
 
@@ -143,17 +143,27 @@ export default function PathsCatalogClient({ paths }: PathsCatalogClientProps) {
               </h2>
 
               <p className="text-xs sm:text-sm text-ivory-muted leading-relaxed">
-                Ce parcours transversal regroupe les comp&eacute;tences fondamentales et avanc&eacute;es des 8 acad&eacute;mies RayLab : de l&apos;architecture binaire &agrave; l&apos;ing&eacute;nierie Python, aux r&eacute;seaux TCP/IP, au SOC, au durcissement et &agrave; l&apos;audit de s&eacute;curit&eacute;.
+                Ce parcours transversal int&egrave;gre les comp&eacute;tences des 8 acad&eacute;mies de sp&eacute;cialisation : des fondations mat&eacute;rielles et Linux au pentest encadr&eacute;, &agrave; la d&eacute;tection SOC/SIEM, au Cloud s&eacute;curis&eacute; et aux 7 projets Capstones.
               </p>
+
+              {/* Ratios Pédagogiques Vérifiables */}
+              <div className="p-3 bg-[#11141b] rounded-xl border border-gold/20 flex flex-wrap items-center gap-4 text-xs font-mono">
+                <span className="text-ivory-dim">Ventilation des 120 heures :</span>
+                <span className="text-gold font-bold">36h Th&eacute;orie (30%)</span>
+                <span className="text-ivory-dim">&bull;</span>
+                <span className="text-emerald-400 font-bold">60h Lab Virtuel &amp; TP (50%)</span>
+                <span className="text-ivory-dim">&bull;</span>
+                <span className="text-cyan-400 font-bold">24h Projets Autonomes (20%)</span>
+              </div>
 
               <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-ivory-dim pt-2">
                 <span className="flex items-center space-x-1.5">
                   <CheckCircle2 className="w-4 h-4 text-gold" />
-                  <span>12 Volumes Int&eacute;gr&eacute;s</span>
+                  <span>12 Volumes Concili&eacute;s (120h)</span>
                 </span>
                 <span className="flex items-center space-x-1.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span>7 Capstones &amp; Livrables GitHub</span>
+                  <span>7 Projets Capstones GitHub</span>
                 </span>
                 <span className="flex items-center space-x-1.5">
                   <CheckCircle2 className="w-4 h-4 text-blue-400" />
@@ -258,9 +268,11 @@ export default function PathsCatalogClient({ paths }: PathsCatalogClientProps) {
         </div>
       </div>
 
-      {/* 3. CATALOGUE CARDS GRID */}
+      {/* 3. CATALOGUE CARDS GRID (8 Académies Spécialisées & Pôle Carrière) */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-        {filteredPaths.map((p) => {
+        {filteredPaths
+          .filter((p) => !p.slug.includes("cyberpath"))
+          .map((p) => {
           const Icon = getPathIcon(p.slug);
           const accentStyle = getPathAccentColor(p.slug);
           const targetHours = getV4TargetHours(p.slug);

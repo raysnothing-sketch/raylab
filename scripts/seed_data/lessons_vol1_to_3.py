@@ -754,117 +754,220 @@ echo -e "${GREEN}=====================================================${NC}"
         "id": "les_cp_vol3_ch9",
         "module_id": "m_vol3_1",
         "slug": "python-moderne-syntaxe-typage-pep484-structures",
-        "title": "Python Moderne 3.12+ : Typage Statique, Match-Case & Structures",
-        "summary": "Maîtriser les spécifications modernes de Python : annotations de type PEP 484, filtrage par motif (structural pattern matching) et structures de données optimisées.",
+        "title": "Python Moderne 3.12+ : Fondations, Typage PEP 484, Pattern Matching & Ingénierie Logicielle",
+        "summary": "De la consolidation des bases (fonctions, gestion d'erreurs, tests pytest) aux spécifications modernes de Python 3.12+ : typage statique rigoureux, pattern matching structurel, collections optimisées et environnements virtuels.",
         "lesson_type": "article",
         "position": 1,
-        "estimated_minutes": 45,
-        "content_md": """# Python Moderne 3.12+ : Typage PEP 484, Pattern Matching & Collections
+        "estimated_minutes": 50,
+        "content_md": """# Python Moderne 3.12+ : Fondations, Typage Statique & Ingénierie Logicielle
 
-Issu des **Parties I, II et III du Manuel Complet de Python**, ce cours vous initie aux pratiques d'ingénierie logicielle contemporaines de Python 3.12+. En cybersécurité comme en développement d'API, l'écriture de code typé, prévisible et robuste est une exigence absolue.
+> **Fiche Pédagogique V4**  
+> **Niveau :** Niveau 1 — Beginner  
+> **Durée estimée :** 50 minutes (15 min Théorie • 25 min Laboratoire Pratique • 10 min Évaluation & Synthèse)  
+> **Prérequis :** Notions élémentaires d'algorithmique (variables, conditions, boucles et fonctions).
 
 ---
 
-## 1. Le Typage Statique Optionnel (PEP 484 & PEP 526)
+## 1. Objectifs Pédagogiques Mesurables
 
-Python demeure un langage à typage dynamique fort, mais les annotations de types permettent d'éliminer des catégories entières de bogues avant l'exécution grâce aux analyseurs statiques (`mypy`, `pyright`) :
+À l'issue de cette leçon, vous serez capable de :
+1. **Annoter** rigoureusement votre code Python avec le système de typage PEP 484 / PEP 585 (`from typing import Any, Optional, TypedDict`).
+2. **Comprendre la frontière critique** entre le typage statique (analysé par `mypy` / `pyright`) et l'absence de vérification automatique au runtime par l'interpréteur CPython.
+3. **Exploiter le Pattern Matching Structurel (`match/case`)** pour déconstruire des dictionnaires, des tuples et des flux de données réseau sans cascades de `if/elif/else`.
+4. **Utiliser les collections haute performance** (`deque`, `Counter`, `defaultdict`) avec une complexité algorithmique optimale ($O(1)$).
+5. **Structurer un environnement de développement professionnel** : environnements virtuels (`venv` / `uv`), tests unitaires avec `pytest` et gestion de projet via `pyproject.toml`.
+
+---
+
+## 2. Contexte Opérationnel Réel
+
+Dans l'ingénierie logicielle et la cybersécurité moderne, les scripts jetables de quelques lignes non typés causent des régressions critiques en production. 
+
+Un script d'analyse de journaux ou un middleware d'API qui reçoit un entier au lieu d'une chaîne ou une valeur `None` non anticipée peut interrompre un pipeline de surveillance SOC ou créer une faille de sécurité par déni de service. 
+
+L'adoption de Python 3.12+ avec le typage statique, les dataclasses immuables et les tests automatisés permet aux équipes de détecter **plus de 80% des bogues dès l'étape d'intégration continue (CI)**, avant tout déploiement en production.
+
+---
+
+## 3. Consolidation des Fondations & Ingénierie Logicielle
+
+Avant d'aborder les fonctionnalités avancées, rappelons les piliers indispensables à tout projet Python professionnel :
+
+### A. Environnements Virtuels & Gestion des Dépendances
+Ne travaillez jamais directement dans l'interpréteur global de votre système d'exploitation :
+```bash
+# Création d'un environnement virtuel isolé
+python3 -m venv .venv
+
+# Activation (Linux / macOS)
+source .venv/bin/activate
+
+# Activation (Windows PowerShell)
+.venv\\Scripts\\Activate.ps1
+
+# Outil moderne ultra-rapide recommandé : uv
+uv venv && source .venv/bin/activate
+```
+
+### B. Tests Automatisés avec `pytest`
+Chaque fonction critique doit être couverte par des assertions claires :
+```python
+# test_securite.py
+def valider_port(port: int) -> bool:
+    return 1 <= port <= 65535
+
+def test_valider_port():
+    assert valider_port(80) is True
+    assert valider_port(443) is True
+    assert valider_port(0) is False
+    assert valider_port(70000) is False
+```
+
+### C. Débogage Moderne avec `breakpoint()`
+Introduit en Python 3.7, l'appel à `breakpoint()` invoque directement le débogueur `pdb` sans importation supplémentaire :
+```python
+def traiter_trame(trame_octets: bytes):
+    if len(trame_octets) < 20:
+        breakpoint()  # Suspend l'exécution et ouvre le shell interactif pdb
+```
+
+---
+
+## 4. Typage Statique Moderne (PEP 484, PEP 585 & PEP 604)
+
+### Nuance Fondamentale : Statique vs Runtime
+> **Attention :** En Python, les annotations de types sont purement **statiques**. L'interpréteur standard CPython **n'interrompt pas** l'exécution si une variable ne respecte pas son type annoté ! Elles servent exclusivement aux linters (`mypy`, `pyright`) et aux environnements de développement pour détecter les incohérences avant l'exécution. Pour forcer une validation au runtime, on associe le typage à des bibliothèques comme Pydantic (`BaseModel`) ou des fonctions de garde `isinstance()`.
+
+### Définition d'un Typage Rigoureux
+Notez l'utilisation de `Any` importé depuis `typing` (avec une majuscule), et la puissance des dictionnaires typés (`TypedDict`) :
 
 ```python
-from typing import Final, Optional
+from typing import Any, Optional, TypedDict
 from dataclasses import dataclass
 
-# Constante immuable avec type explicite
-MAX_TENTATIVES_AUTH: Final[int] = 5
+# 1. Dictionnaire structuré avec TypedDict
+class MetadonneesUtilisateur(TypedDict, total=False):
+    user_id: int
+    role: str
+    ip_source: str
 
+class ReponseApi(TypedDict):
+    status: int
+    data: MetadonneesUtilisateur
+    meta: dict[str, Any]  # Note : Any avec une majuscule depuis 'typing'
+
+# 2. Dataclass immuable pour structures de données métier
 @dataclass(frozen=True)
 class ReglePareFeu:
     port: int
-    protocole: str
-    action: str  # 'ALLOW' ou 'DENY'
+    protocole: str  # 'TCP' ou 'UDP'
+    action: str     # 'ALLOW' ou 'DENY'
     description: Optional[str] = None
 
-def evaluer_regle(paquet_port: int, regle: ReglePareFeu) -> bool:
-    \"\"\"Retourne True si le paquet est autorisé par la règle.\"\"\"
-    if paquet_port == regle.port and regle.action == "ALLOW":
-        return True
-    return False
+    def est_active(self) -> bool:
+        return self.action in ("ALLOW", "DENY")
 ```
 
 ---
 
-## 2. Le Structural Pattern Matching (`match / case` introduit en Python 3.10)
+## 5. Le Structural Pattern Matching (`match / case`)
 
-Le `match/case` remplace avantageusement les longues séries de `if / elif / else` en permettant la déconstruction directe des structures d'objets, de dictionnaires ou de tuples :
+Introduit par la PEP 634 en Python 3.10+, le filtrage par motif structurel offre une déconstruction élégante des objets et des dictionnaires avec des gardes conditionnelles (`if`) :
 
 ```python
-def analyser_reponse_serveur(reponse: dict[str, any]) -> str:
+from typing import Any
+
+def analyser_reponse_serveur(reponse: dict[str, Any]) -> str:
+    \"\"\"
+    Déconstruit la charge utile réseau et qualifie le résultat opérationnel.
+    \"\"\"
     match reponse:
-        case {"status": 200, "data": {"user_id": uid, "role": "admin"}}:
-            return f"[+] Administrateur authentifié : ID={uid}"
-        case {"status": 200, "data": {"user_id": uid}}:
+        # Correspondance exacte d'un administrateur
+        case {"status": 200, "data": {"user_id": int(uid), "role": "admin"}}:
+            return f"[+] Administrateur authentifié avec succès : ID={uid}"
+
+        # Correspondance d'un utilisateur standard
+        case {"status": 200, "data": {"user_id": int(uid)}}:
             return f"[+] Utilisateur standard connecté : ID={uid}"
-        case {"status": 401 | 403, "error": message}:
-            return f"[!] Échec d'autorisation : {message}"
-        case {"status": int(code), "error": message} if code >= 500:
-            return f"[CRITICAL] Erreur serveur interne ({code}) : {message}"
+
+        # Capture des erreurs d'authentification 401 ou 403 avec garde
+        case {"status": 401 | 403, "error": str(msg)}:
+            return f"[!] Échec d'autorisation : {msg}"
+
+        # Capture de toute erreur serveur 5xx via garde conditionnelle
+        case {"status": int(code), "error": str(msg)} if code >= 500:
+            return f"[CRITICAL] Incident serveur interne ({code}) : {msg}"
+
+        # Cas par défaut (wildcard)
         case _:
-            return "[?] Format de réponse réseau non reconnu."
+            return "[?] Format de réponse télémétrique non reconnu."
 ```
 
 ---
 
-## 3. Les Collections Optimisées de la Bibliothèque Standard
+## 6. Collections Optimisées de la Bibliothèque Standard
 
-Le module `collections` fournit des conteneurs hautement performants :
-* **`collections.deque` :** File à double extrémité avec insertion et suppression en temps constant $O(1)$ à gauche comme à droite (contrairement aux listes Python ordinaires où `list.pop(0)` s'exécute en $O(n)$).
-* **`collections.Counter` :** Idéal pour compter les fréquences d'adresses IP ou de mots de passe lors de l'analyse forensique de logs.
-* **`collections.defaultdict` :** Dictionnaire évitant les erreurs `KeyError` en générant automatiquement une valeur par défaut.
+Le module standard `collections` propose des conteneurs C optimisés pour la vitesse et la mémoire :
 
-Exemple de calcul des 3 adresses IP les plus agressives dans un flux de logs :
 ```python
-from collections import Counter
+from collections import deque, Counter, defaultdict
 
-logs_ips = [
-    "192.168.1.50", "10.0.0.1", "192.168.1.50", "185.220.101.5",
-    "192.168.1.50", "185.220.101.5", "10.0.0.1", "192.168.1.50"
-]
+# 1. collections.deque : File doublement chaînée avec insertion/suppression en O(1)
+historique_requetes: deque[str] = deque(maxlen=1000)
+historique_requetes.append("192.168.1.10")     # Ajout à droite : O(1)
+historique_requetes.appendleft("10.0.0.5")     # Ajout à gauche : O(1) (vs O(n) sur une liste)
 
-compteur = Counter(logs_ips)
-print("[*] Top 2 des adresses les plus fréquentes :")
-for ip, occurrences in compteur.most_common(2):
-    print(f"    - IP {ip} : {occurrences} requêtes")
+# 2. collections.Counter : Calcul de fréquences en un seul passage
+adresses_ip = ["192.168.1.1", "10.0.0.1", "192.168.1.1", "172.16.0.5", "192.168.1.1"]
+top_adresses = Counter(adresses_ip).most_common(1)
+# Résultat : [('192.168.1.1', 3)]
+
+# 3. collections.defaultdict : Élimination des KeyError
+ports_par_ip: defaultdict[str, list[int]] = defaultdict(list)
+ports_par_ip["192.168.1.1"].append(80)
+ports_par_ip["192.168.1.1"].append(443)
 ```
+
+---
+
+## 7. Synthèse des Références Officielles
+
+* **PEP 484 :** *Type Hints* — Spécification formelle du typage en Python.
+* **PEP 585 :** *Type Hinting Generics In Standard Collections* — Utilisation directe de `list[int]`, `dict[str, Any]`.
+* **PEP 604 :** *Complementary syntax for typing.Union* — Syntaxe moderne `str | int`.
+* **PEP 634 / 635 / 636 :** *Structural Pattern Matching* — Spécification et tutoriel du `match/case`.
+* **Documentation Officielle Python 3.12 :** [docs.python.org/3.12/library/typing.html](https://docs.python.org/3.12/library/typing.html).
 """,
         "exercise": {
-            "title": "Analyseur de Codes d'État HTTP avec Pattern Matching",
-            "description_md": "Écrivez une fonction Python `categoriser_http(status_code: int) -> str` qui utilise `match/case` pour retourner 'SUCCESS' (200-299), 'REDIRECTION' (300-399), 'CLIENT_ERROR' (400-499), 'SERVER_ERROR' (500-599) ou 'UNKNOWN'.",
-            "starter_code": "def categoriser_http(status_code: int) -> str:\n    # Utilisez match / case\n    pass\n",
-            "solution_code": "def categoriser_http(status_code: int) -> str:\n    match status_code:\n        case code if 200 <= code <= 299:\n            return 'SUCCESS'\n        case code if 300 <= code <= 399:\n            return 'REDIRECTION'\n        case code if 400 <= code <= 499:\n            return 'CLIENT_ERROR'\n        case code if 500 <= code <= 599:\n            return 'SERVER_ERROR'\n        case _:\n            return 'UNKNOWN'\n",
+            "title": "Catégorisation & Validation de Télémétrie HTTP en Python 3.12",
+            "description_md": "Développez une fonction typée `categoriser_evenement_http(evenement: dict[str, Any]) -> str` qui prend en entrée un dictionnaire contenant les clés 'code' (int) et 'methode' (str). À l'aide d'un `match/case`, retournez :\n- 'AUTH_ADMIN_OK' si le code est 200 et la méthode est 'POST' vers '/login'\n- 'API_READ_OK' si le code est 200 et la méthode est 'GET'\n- 'CLIENT_ERROR' si le code est entre 400 et 499\n- 'SERVER_ERROR' si le code est >= 500\n- 'UNRECOGNIZED' pour tout autre cas.",
+            "starter_code": "from typing import Any\n\ndef categoriser_evenement_http(evenement: dict[str, Any]) -> str:\n    # Écrivez votre match/case ici\n    pass\n",
+            "solution_code": "from typing import Any\n\ndef categoriser_evenement_http(evenement: dict[str, Any]) -> str:\n    match evenement:\n        case {\"code\": 200, \"methode\": \"POST\", \"path\": \"/login\"}:\n            return \"AUTH_ADMIN_OK\"\n        case {\"code\": 200, \"methode\": \"GET\"}:\n            return \"API_READ_OK\"\n        case {\"code\": int(c)} if 400 <= c <= 499:\n            return \"CLIENT_ERROR\"\n        case {\"code\": int(c)} if c >= 500:\n            return \"SERVER_ERROR\"\n        case _:\n            return \"UNRECOGNIZED\"\n",
             "difficulty": "beginner"
         },
         "quiz": {
-            "title": "Quiz - Python Moderne & Typage",
+            "title": "Quiz Évaluatif - Typage Statique, Pattern Matching & CPython",
             "passing_score": 100,
             "questions": [
                 {
-                    "prompt_md": "Quelle structure de données de la bibliothèque standard Python offre une complexité temporelle de O(1) pour l'ajout et le retrait d'éléments à ses deux extrémités ?",
-                    "explanation_md": "`collections.deque` est implémentée sous forme de liste doublement chaînée optimisée pour l'insertion et l'extraction rapide en tête et en queue.",
+                    "prompt_md": "Quelle affirmation décrit fidèlement le comportement de CPython face aux annotations de types (PEP 484) ?",
+                    "explanation_md": "CPython n'effectue aucun contrôle automatique de type à l'exécution. Les annotations sont exploitées par des outils d'analyse statique (mypy, pyright) ou des bibliothèques de validation comme Pydantic.",
                     "options_json": json.dumps([
-                        {"text": "collections.deque", "is_correct": True},
-                        {"text": "list", "is_correct": False},
-                        {"text": "tuple", "is_correct": False},
-                        {"text": "collections.OrderedDict", "is_correct": False}
+                        {"text": "Les types sont analysés statiquement (mypy), mais CPython ne lève pas d'exception à l'exécution si le type est incorrect", "is_correct": True},
+                        {"text": "CPython lève automatiquement une TypeError à l'exécution si une fonction reçoit le mauvais type", "is_correct": False},
+                        {"text": "Le typage Python convertit automatiquement le code en C binaire compilé à l'exécution", "is_correct": False},
+                        {"text": "L'utilisation de 'dict[str, any]' avec un petit 'a' est la syntaxe recommandée par PEP 484", "is_correct": False}
                     ]),
                     "points": 10
                 },
                 {
-                    "prompt_md": "À quoi servent les annotations de type PEP 484 lors de l'exécution normale par le runtime CPython standard ?",
-                    "explanation_md": "En Python standard, les annotations de type ne modifient pas l'exécution ni les performances : elles sont conservées dans `__annotations__` et servent aux linters statiques (mypy) et aux IDE.",
+                    "prompt_md": "Quelle structure de données de la bibliothèque standard offre une complexité en O(1) pour l'ajout ou le retrait d'éléments aux deux extrémités ?",
+                    "explanation_md": "collections.deque est une file à double extrémité optimisée pour l'insertion et la suppression en temps constant O(1) à gauche comme à droite, contrairement aux listes dont pop(0) est en O(n).",
                     "options_json": json.dumps([
-                        {"text": "Elles sont ignorées à l'exécution mais validées par les analyseurs statiques (mypy)", "is_correct": True},
-                        {"text": "Elles provoquent un plantage immédiat si une variable reçoit un autre type", "is_correct": False},
-                        {"text": "Elles compilent le script en code assembleur natif x86_64", "is_correct": False},
-                        {"text": "Elles chiffront les variables locales en mémoire", "is_correct": False}
+                        {"text": "collections.deque", "is_correct": True},
+                        {"text": "list", "is_correct": False},
+                        {"text": "tuple", "is_correct": False},
+                        {"text": "set", "is_correct": False}
                     ]),
                     "points": 10
                 }

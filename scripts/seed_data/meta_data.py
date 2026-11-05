@@ -37,8 +37,8 @@ MODULES_DATA = [
     {"id": "m_vol8_2", "course_id": "c_vol8_pentest_tools", "title": "Module 2 : Méthodologie CTF & Élévation de Privilèges", "description": "Challenges Boot2Root, recherche d'accès initial et scripts LinPEAS/WinPEAS.", "position": 2},
 
     # Vol 9
-    {"id": "m_vol9_1", "course_id": "c_vol9_python_rat", "title": "Module 1 : Sockets Purs, Architecture de RAT & Reverse Shells", "description": "Sockets TCP natifs, redirection de commandes subprocess et navigation de répertoires.", "position": 1},
-    {"id": "m_vol9_2", "course_id": "c_vol9_python_rat", "title": "Module 2 : Exfiltration Délimitée, Packaging & Persistance", "description": "Transfert par blocs de 2048 octets, keylogger pynput, PyInstaller et registre Windows.", "position": 2},
+    {"id": "m_vol9_1", "course_id": "c_vol9_python_rat", "title": "Module 1 : Programmation Sockets Réseau & Modélisation Client-Serveur", "description": "Sockets TCP natifs, gestion de flux de données bidirectionnels et simulation de sessions.", "position": 1},
+    {"id": "m_vol9_2", "course_id": "c_vol9_python_rat", "title": "Module 2 : Analyse des Signatures C2 & Mécanismes de Détection Défensive", "description": "Modélisation de balisage C2, détection de flux anormaux, analyse d'intervalles et règles de détection.", "position": 2},
 
     # Vol 10
     {"id": "m_vol10_1", "course_id": "c_vol10_crypto_cloud", "title": "Module 1 : Cryptographie Moderne & Protocole TLS 1.3", "description": "Chiffrement AES-GCM, paires asymétriques RSA-4096 / ECC et négociation TLS.", "position": 1},
@@ -93,14 +93,14 @@ CERTIFICATIONS_DATA = [
     {
         "id": "cert_comptia_netplus",
         "slug": "comptia-network-plus",
-        "name": "CompTIA Network+ (N10-008)",
+        "name": "CompTIA Network+ (N10-009)",
         "provider": "CompTIA",
         "domain": "Networks",
         "level": "Entry / Associate",
         "prerequisites_md": "Volumes 1 et 4 de CyberPath (Architecture des ordinateurs, modèle OSI et couches TCP/IP).",
         "official_url": "https://www.comptia.org/certifications/network",
-        "price_description": "Env. 358 $ USD",
-        "exam_description": "90 questions en 90 minutes. Évalue la configuration des périphériques réseau, l'adressage IP et le dépannage de connectivité."
+        "price_description": "392 $ USD (~365 €) selon les centres Pearson VUE (Vérifié 2026)",
+        "exam_description": "90 questions maximum (QCM et questions de performance PBQ) en 90 minutes. Évalue l'architecture réseau, l'adressage IPv4/IPv6, les protocoles de routage et la sécurité périmétrique."
     },
     {
         "id": "cert_giac_gcih",
@@ -129,14 +129,14 @@ CERTIFICATIONS_DATA = [
     {
         "id": "cert_eccouncil_ceh",
         "slug": "certified-ethical-hacker-ceh",
-        "name": "Certified Ethical Hacker (CEH v12)",
+        "name": "Certified Ethical Hacker (CEH v13 AI)",
         "provider": "EC-Council",
         "domain": "Cybersecurity",
         "level": "Intermediate",
-        "prerequisites_md": "Volumes 4, 6, 8 et 9 de CyberPath (Réseau, Web OWASP, Outils Pentest, Sockets).",
+        "prerequisites_md": "Volumes 4, 6, 8 et 9 de CyberPath (Réseau, Web OWASP, Outils Pentest, Sockets & Détection).",
         "official_url": "https://www.eccouncil.org/programs/certified-ethical-hacker-ceh/",
-        "price_description": "Env. 1 199 $ USD",
-        "exam_description": "125 questions en 4 heures couvrant les vecteurs d'attaque, la reconnaissance réseau, le sniffing et les logiciels malveillants."
+        "price_description": "1 199 $ USD (Vérifié 2026)",
+        "exam_description": "125 questions en 4 heures couvrant les vecteurs d'attaque, la reconnaissance réseau, le sniffing et l'audit de sécurité encadré."
     }
 ]
 

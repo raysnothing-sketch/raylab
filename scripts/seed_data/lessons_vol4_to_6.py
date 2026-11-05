@@ -14,98 +14,153 @@ LESSONS_VOL4_TO_6 = [
         "id": "les_cp_vol4_ch12",
         "module_id": "m_vol4_1",
         "slug": "modeles-osi-tcpip-encapsulation-adressage-mac-ip",
-        "title": "Modèles OSI vs TCP/IP : Encapsulation & Adressage Réseau",
-        "summary": "Comprendre le parcours d'une donnée à travers les 7 couches du modèle OSI et les 4 couches TCP/IP, l'encapsulation et les en-têtes.",
+        "title": "Modèles OSI vs TCP/IP : Encapsulation, Adressage Réseau & Protocoles Clés",
+        "summary": "Maîtrisez le parcours complet d'une donnée à travers les 7 couches du modèle OSI et les 4 couches TCP/IP : encapsulation, en-têtes, positionnement rigoureux d'ICMP et ARP, et diagnostic réseau.",
         "lesson_type": "article",
         "position": 1,
-        "estimated_minutes": 40,
-        "content_md": """# Modèles OSI vs TCP/IP : Encapsulation & Architecture des Flux
+        "estimated_minutes": 45,
+        "content_md": """# Modèles OSI vs TCP/IP : Encapsulation & Architecture des Flux Réseau
 
-En cybersécurité, comprendre à quelle couche réseau se situe une vulnérabilité (ou un équipement de défense) est primordial. Le modèle théorique OSI à 7 couches et le modèle pratique Internet TCP/IP à 4 couches fournissent cette grille de lecture universelle.
+> **Fiche Pédagogique V4**  
+> **Niveau :** Niveau 1 — Beginner  
+> **Durée estimée :** 45 minutes (15 min Théorie • 20 min Laboratoire Pratique • 10 min Évaluation & Synthèse)  
+> **Prérequis :** Notions de base sur les systèmes de numération (binaire et hexadécimal) et compréhension élémentaire d'un réseau local (LAN).
 
 ---
 
-## 1. Correspondance entre Modèle OSI et Modèle TCP/IP
+## 1. Objectifs Pédagogiques Mesurables
+
+À l'issue de cette leçon, vous serez capable de :
+1. **Distinguer** sans ambiguïté les 7 couches du modèle théorique OSI et les 4 couches du modèle opérationnel TCP/IP.
+2. **Décrire** le processus mécanique d'encapsulation et de désencapsulation d'une trame à travers chaque en-tête.
+3. **Positionner rigoureusement** les protocoles pivots tels qu'**ICMP (Couche 3)** et **ARP (Couche 2 / Liaison)** selon les normes IETF.
+4. **Identifier** les unités de données de protocole (PDU) associées à chaque niveau : Bits, Trames, Paquets, Segments et Messages.
+5. **Diagnostiquer** les pannes d'infrastructure et les anomalies de connectivité en isolant la couche réseau défaillante.
+
+---
+
+## 2. Contexte Opérationnel Réel
+
+Dans le quotidien d'un ingénieur réseau ou d'un analyste en cybersécurité, plus de 70% des incidents de connectivité et des alertes de sécurité sont initialement qualifiés par rapport à leur couche réseau. 
+
+Lorsqu'un serveur web ne répond plus, l'analyste applique la méthode de **dépannage en entonnoir (Bottom-Up Troubleshooting)** :
+* *Le lien physique est-il actif (Couche 1) ?*
+* *La passerelle répond-elle aux requêtes ARP locales (Couche 2) ?*
+* *Le paquet IP est-il routé et le ping ICMP traverse-t-il les routeurs (Couche 3) ?*
+* *Le port TCP 443 est-il ouvert et le handshake est-il validé (Couche 4) ?*
+* *Le certificat TLS et la requête applicative HTTP sont-ils valides (Couches 6 et 7) ?*
+
+---
+
+## 3. Correspondance entre Modèle OSI et Modèle Internet TCP/IP
+
+Le modèle **OSI (Open Systems Interconnection)**, standardisé par l'ISO en 1984, est une référence architecturale universelle en 7 couches. Le modèle **TCP/IP (RFC 1122)** est l'implémentation opérationnelle pragmatique qui régit l'ensemble de l'Internet moderne.
 
 ```
 +------------------------------------+--------------------------+-----------------------+
-|        MODÈLE OSI (7 COUCHES)      |    MODÈLE TCP/IP         |   UNITÉ DE DONNÉE     |
+|        MODÈLE OSI (7 COUCHES)      |    MODÈLE TCP/IP (RFC 1122) |   UNITÉ DE DONNÉE (PDU) |
 +------------------------------------+--------------------------+-----------------------+
 | 7. Application (HTTP, DNS, SSH)    |                          |                       |
 | 6. Présentation (TLS, ASCII, JSON) | 4. APPLICATION           | Message / Payload     |
 | 5. Session (RPC, Sockets, NetBIOS) |                          |                       |
 +------------------------------------+--------------------------+-----------------------+
-| 4. Transport (TCP, UDP, ICMP)      | 3. TRANSPORT             | Segment (TCP) /       |
+| 4. Transport (TCP, UDP, SCTP)      | 3. TRANSPORT             | Segment (TCP) /       |
 |                                    |                          | Datagramme (UDP)      |
 +------------------------------------+--------------------------+-----------------------+
-| 3. Réseau (IPv4, IPv6, ARP, ICMP)  | 2. INTERNET              | Paquet (Packet)       |
+| 3. Réseau (IPv4, IPv6, ICMP, IPsec)| 2. INTERNET              | Paquet (Packet)       |
 +------------------------------------+--------------------------+-----------------------+
 | 2. Liaison de Données (Ethernet,   |                          |                       |
-|    Wi-Fi 802.11, VLAN 802.1Q)      | 1. ACCÈS RÉSEAU          | Trame (Frame)         |
-| 1. Physique (Câbles RJ45, Fibres,  |    (Network Access)      | Bits (0 et 1)         |
+|    Wi-Fi 802.11, ARP, VLAN 802.1Q) | 1. ACCÈS RÉSEAU          | Trame (Frame)         |
+| 1. Physique (Câbles RJ45, Fibres,  |    (Network Interface)   | Bits (0 et 1)         |
 |    Ondes Radio)                    |                          |                       |
 +------------------------------------+--------------------------+-----------------------+
 ```
 
 ---
 
-## 2. Le Mécanisme de l'Encapsulation des Données
+## 4. Précision Technique Critique : Le Positionnement d'ICMP et d'ARP
 
-Lorsqu'une application (ex: un client Web qui demande `GET /index.html`) envoie une donnée sur le réseau, chaque couche inférieure lui ajoute son propre en-tête (Header) :
+Deux protocoles fondamentaux sont fréquemment mal positionnés dans la documentation vulgarisée. Voici leur définition normative exacte :
 
-```
-[ Données Applicatives ]                               (Couche 7)
-       |
-       v  + Ajout de l'en-tête TCP (Ports source et destination)
-[ En-tête TCP | Données Applicatives ]                 (Couche 4 : Segment)
-       |
-       v  + Ajout de l'en-tête IP (Adresses IP source et cible, TTL)
-[ En-tête IP | En-tête TCP | Données Applicatives ]    (Couche 3 : Paquet)
-       |
-       v  + Ajout de l'en-tête Ethernet (Adresses MAC) et du FCS (Checksum)
-[ En-tête Eth | En-tête IP | En-tête TCP | Données | FCS ] (Couche 2 : Trame)
-```
+### A. ICMP (Internet Control Message Protocol — RFC 792) : Couche 3 (Internet / Réseau)
+* **Pourquoi pas en Couche 4 (Transport) ?**  
+  Bien que les messages ICMP soient transportés à l'intérieur de paquets IP (au même titre que TCP ou UDP, avec le champ *Protocol = 1* dans l'en-tête IP), ICMP **ne fournit aucun service de transport** de données applicatives.
+* Il ne dispose **ni de numéros de port source/destination**, ni de mécanisme d'ordonnancement, ni de contrôle de flux.
+* ICMP est une partie intégrante et indissociable de la couche Internet : il a pour rôle unique de **transporter des messages de contrôle, de diagnostic et de signalement d'erreurs** (ex : *Echo Request/Reply [ping]*, *Destination Unreachable*, *Time to Live [TTL] Expired [traceroute]*).
 
-À la réception, le destinataire effectue l'opération inverse, appelée **Désencapsulation** : il vérifie la somme de contrôle de la trame, retire l'en-tête Ethernet, traite l'en-tête IP, réassemble le segment TCP et livre les données brutes à l'application destinataire.
+### B. ARP (Address Resolution Protocol — RFC 826) : Couche 2 (Liaison de Données / Accès Réseau)
+* **Pourquoi pas en Couche 3 (Réseau) ?**  
+  ARP ne transporte pas de données à travers des routeurs et **n'utilise pas d'en-tête IP**. Il est directement encapsulé dans les trames Ethernet avec son propre code EtherType (`0x0806`).
+* Son rôle est strictement local au domaine de diffusion (*broadcast domain*) de Couche 2 : il résout la correspondance entre une adresse logique de couche supérieure (IPv4) et une adresse matérielle physique (MAC).
 
 ---
 
-## 3. Adressage Physique (MAC) vs Adressage Logique (IP)
+## 5. Le Mécanisme de l'Encapsulation et de la Désencapsulation
 
-* **L'Adresse MAC (Media Access Control) :** Adresse matérielle unique de 48 bits (6 octets, ex: `00:1A:2B:3C:4D:5E`) gravée sur la carte réseau (NIC). Elle ne permet que la communication au sein du même réseau local (Couche 2). Les trois premiers octets désignent le constructeur (OUI - Organizationally Unique Identifier).
-* **L'Adresse IP (Internet Protocol) :** Adresse logique routable (32 bits en IPv4, 128 bits en IPv6) qui permet d'acheminer un paquet d'un sous-réseau à un autre à travers des routeurs interconnectés (Couche 3).
-* **Le Protocole ARP (Address Resolution Protocol) :** Fait le lien indispensable entre Couche 3 et Couche 2 en répondant à la question : *« Quelle est l'adresse MAC correspondant à l'adresse IP 192.168.1.1 ? »*.
+Chaque couche réseau ajoute un en-tête (*Header*) spécifique contenant les métadonnées nécessaires à son homologue récepteur.
+
+```
+[ Données Applicatives (Requête HTTP GET) ]                 (Couche 7 / Application)
+                       |
+                       v  + En-tête TCP (Port source 54321, Port cible 80)
+[ En-tête TCP | Données Applicatives ]                     (Couche 4 : Segment)
+                       |
+                       v  + En-tête IP (IP Source 192.168.1.50, IP Cible 93.184.216.34)
+[ En-tête IP | En-tête TCP | Données Applicatives ]        (Couche 3 : Paquet)
+                       |
+                       v  + En-tête Ethernet (MAC Source, MAC Cible) et FCS (Checksum)
+[ En-tête Eth | En-tête IP | En-tête TCP | Données | FCS ] (Couche 2 : Trame)
+                       |
+                       v  Conversion en signal physique
+0 1 1 0 1 0 0 1 0 1 1 0 0 0 1 1 0 1 ...                     (Couche 1 : Bits)
+```
+
+À la réception, le récepteur effectue la **Désencapsulation** inverse :
+1. La carte réseau vérifie le CRC du FCS de la trame.
+2. L'en-tête Ethernet est ôté, révélant le paquet IP.
+3. Le noyau vérifie que l'IP de destination correspond à la machine ou route le paquet.
+4. L'en-tête TCP est analysé, le numéro de séquence est validé, et la charge utile applicative est remise au processus écoutant sur le port cible (ex : serveur Nginx ou Apache).
+
+---
+
+## 6. Synthèse des Références Officielles
+
+* **RFC 791 :** *Internet Protocol (IPv4 Specification)* — Standard de la couche Internet.
+* **RFC 792 :** *Internet Control Message Protocol (ICMP)* — Diagnostic de couche 3.
+* **RFC 826 :** *Ethernet Address Resolution Protocol (ARP)* — Résolution locale de couche 2.
+* **RFC 793 :** *Transmission Control Protocol (TCP)* — Protocole orienté connexion fiable.
+* **RFC 1122 :** *Requirements for Internet Hosts -- Communication Layers* — Spécification normative des couches TCP/IP.
 """,
         "exercise": {
-            "title": "Parseur d'Adresse MAC en Python",
-            "description_md": "Écrivez une fonction Python `extraire_oui_mac(adresse_mac: str) -> str` qui prend une adresse MAC (format '00:1A:2B:3C:4D:5E' ou '00-1a-2b-3c-4d-5e') et retourne l'identifiant OUI (les 3 premiers octets) au format '00:1A:2B'.",
-            "starter_code": "def extraire_oui_mac(adresse_mac: str) -> str:\n    # Votre code ici\n    pass\n",
-            "solution_code": "def extraire_oui_mac(adresse_mac: str) -> str:\n    nettoyee = adresse_mac.replace('-', ':').upper()\n    octets = nettoyee.split(':')\n    if len(octets) < 3:\n        return ''\n    return ':'.join(octets[:3])\n",
+            "title": "Analyseur d'En-tête & Détection de Couche Réseau en Python",
+            "description_md": "Développez une fonction Python `classifier_protocole(nom_protocole: str) -> dict[str, str]` qui prend le nom d'un protocole en entrée (insensible à la casse, ex: 'ICMP', 'arp', 'tcp', 'http') et retourne un dictionnaire contenant sa couche OSI, sa couche TCP/IP et son unité de données (PDU). Si le protocole est inconnu, renvoyez une erreur explicite.",
+            "starter_code": "def classifier_protocole(nom_protocole: str) -> dict[str, str]:\n    # Écrivez votre code ici\n    pass\n",
+            "solution_code": "def classifier_protocole(nom_protocole: str) -> dict[str, str]:\n    table = {\n        'http': {'osi': 'Couche 7 (Application)', 'tcpip': 'Application', 'pdu': 'Message'},\n        'https': {'osi': 'Couche 7 (Application)', 'tcpip': 'Application', 'pdu': 'Message'},\n        'dns': {'osi': 'Couche 7 (Application)', 'tcpip': 'Application', 'pdu': 'Message'},\n        'tcp': {'osi': 'Couche 4 (Transport)', 'tcpip': 'Transport', 'pdu': 'Segment'},\n        'udp': {'osi': 'Couche 4 (Transport)', 'tcpip': 'Transport', 'pdu': 'Datagramme'},\n        'icmp': {'osi': 'Couche 3 (Réseau)', 'tcpip': 'Internet', 'pdu': 'Paquet'},\n        'ipv4': {'osi': 'Couche 3 (Réseau)', 'tcpip': 'Internet', 'pdu': 'Paquet'},\n        'ipv6': {'osi': 'Couche 3 (Réseau)', 'tcpip': 'Internet', 'pdu': 'Paquet'},\n        'arp': {'osi': 'Couche 2 (Liaison de données)', 'tcpip': 'Accès Réseau', 'pdu': 'Trame'},\n        'ethernet': {'osi': 'Couche 2 (Liaison de données)', 'tcpip': 'Accès Réseau', 'pdu': 'Trame'},\n    }\n    proto = nom_protocole.strip().lower()\n    if proto not in table:\n        raise ValueError(f'Protocole non reconnu : {nom_protocole}')\n    return table[proto]\n",
             "difficulty": "beginner"
         },
         "quiz": {
-            "title": "Quiz - Modèles Réseau & Encapsulation",
+            "title": "Quiz Évaluatif - Modèles Réseau, Encapsulation, ICMP & ARP",
             "passing_score": 100,
             "questions": [
                 {
-                    "prompt_md": "À quelle unité de données (PDU) correspond le niveau de la Couche 2 (Liaison de données) dans le modèle OSI ?",
-                    "explanation_md": "En Couche 2, les unités de données manipulées sont appelées des Trames (Frames). En Couche 3, ce sont des Paquets, et en Couche 4, des Segments.",
+                    "prompt_md": "À quelle couche du modèle OSI et de la pile TCP/IP le protocole ICMP (RFC 792) appartient-il rigoureusement ?",
+                    "explanation_md": "ICMP relève strictement de la Couche 3 (Réseau / Internet). Bien qu'encapsulé dans un paquet IP (champ Protocole = 1), il ne possède pas de ports et assure le diagnostic et le contrôle réseau, sans rôle de transport applicatif.",
                     "options_json": json.dumps([
-                        {"text": "Une Trame (Frame)", "is_correct": True},
-                        {"text": "Un Paquet (Packet)", "is_correct": False},
-                        {"text": "Un Segment", "is_correct": False},
-                        {"text": "Un Datagramme", "is_correct": False}
+                        {"text": "Couche 3 Réseau (OSI) / Couche Internet (TCP/IP)", "is_correct": True},
+                        {"text": "Couche 4 Transport (OSI) / Couche Transport (TCP/IP)", "is_correct": False},
+                        {"text": "Couche 2 Liaison de données (OSI) / Accès Réseau (TCP/IP)", "is_correct": False},
+                        {"text": "Couche 7 Application (OSI) / Application (TCP/IP)", "is_correct": False}
                     ]),
                     "points": 10
                 },
                 {
-                    "prompt_md": "Quel protocole réseau permet à une machine de découvrir l'adresse MAC matérielle correspondant à une adresse IPv4 locale ?",
-                    "explanation_md": "ARP (Address Resolution Protocol - RFC 826) résout les adresses IP en adresses physiques MAC au sein du domaine de diffusion local.",
+                    "prompt_md": "Pourquoi le protocole ARP (RFC 826) est-il classé dans la Couche 2 (Liaison de données / Accès Réseau) ?",
+                    "explanation_md": "ARP est encapsulé directement dans des trames Ethernet (EtherType 0x0806). Il ne possède pas d'en-tête IP et opère exclusivement sur le domaine de diffusion local de niveau 2 pour associer une IP à une MAC.",
                     "options_json": json.dumps([
-                        {"text": "ARP (Address Resolution Protocol)", "is_correct": True},
-                        {"text": "DNS (Domain Name System)", "is_correct": False},
-                        {"text": "DHCP (Dynamic Host Configuration Protocol)", "is_correct": False},
-                        {"text": "BGP (Border Gateway Protocol)", "is_correct": False}
+                        {"text": "Il est encapsulé directement dans une trame Ethernet sans en-tête IP et opère sur le broadcast local", "is_correct": True},
+                        {"text": "Il est routé à travers tous les routeurs d'Internet", "is_correct": False},
+                        {"text": "Il utilise des numéros de ports TCP pour transmettre ses requêtes", "is_correct": False},
+                        {"text": "Il crypte les données de session applicative", "is_correct": False}
                     ]),
                     "points": 10
                 }
