@@ -65,8 +65,23 @@ export default function PathsCatalogClient({ paths }: PathsCatalogClientProps) {
     if (slug.includes("ethical") || slug.includes("offensive") || slug.includes("pentest")) return "offensive";
     if (slug.includes("forensic") || slug.includes("dfir")) return "forensics";
     if (slug.includes("cloud") || slug.includes("devsecops")) return "devsecops";
+    if (slug.includes("ia")) return "ai";
     if (slug.includes("career")) return "career";
-    return "other";
+    return "cyberpath";
+  };
+
+  const getV4TargetHours = (slug: string): string => {
+    if (slug.includes("cyberpath")) return "180 \u00e0 220 h";
+    if (slug.includes("python")) return "100 \u00e0 120 h";
+    if (slug.includes("system") || slug.includes("linux")) return "80 \u00e0 100 h";
+    if (slug.includes("reseau")) return "80 \u00e0 100 h";
+    if (slug.includes("cybersecurity") || slug.includes("blue")) return "90 \u00e0 110 h";
+    if (slug.includes("ethical") || slug.includes("offensive")) return "90 \u00e0 110 h";
+    if (slug.includes("forensic") || slug.includes("dfir")) return "80 \u00e0 100 h";
+    if (slug.includes("cloud") || slug.includes("devsecops")) return "90 \u00e0 110 h";
+    if (slug.includes("ia")) return "70 \u00e0 90 h";
+    if (slug.includes("career")) return "25 \u00e0 35 h";
+    return "80 \u00e0 100 h";
   };
 
   // Filtered list
@@ -83,8 +98,20 @@ export default function PathsCatalogClient({ paths }: PathsCatalogClientProps) {
       const matchesDomain = selectedDomain === "all" || domain === selectedDomain;
 
       // Difficulty filter
-      const matchesDifficulty =
-        selectedDifficulty === "all" || p.difficulty === selectedDifficulty;
+      let matchesDifficulty = true;
+      if (selectedDifficulty !== "all") {
+        if (selectedDifficulty === "foundation") {
+          matchesDifficulty = p.difficulty === "beginner" || p.slug.includes("python") || p.slug.includes("system");
+        } else if (selectedDifficulty === "beginner") {
+          matchesDifficulty = p.difficulty === "beginner";
+        } else if (selectedDifficulty === "intermediate") {
+          matchesDifficulty = p.difficulty === "intermediate";
+        } else if (selectedDifficulty === "advanced") {
+          matchesDifficulty = p.difficulty === "advanced" || p.slug.includes("cyberpath");
+        } else if (selectedDifficulty === "professional") {
+          matchesDifficulty = p.slug.includes("career") || p.slug.includes("cyberpath");
+        }
+      }
 
       return matchesSearch && matchesDomain && matchesDifficulty;
     });
@@ -94,7 +121,7 @@ export default function PathsCatalogClient({ paths }: PathsCatalogClientProps) {
 
   return (
     <div className="space-y-12">
-      {/* 1. GRAND CURSUS INTÉGRATEUR (CYBERPATH MASTER) */}
+      {/* 1. GRAND CURSUS INTÉGRATEUR (CYBERPATH MASTER V4) */}
       {masterPath && (
         <div className="relative rounded-3xl border-2 border-gold/50 bg-gradient-to-br from-[#181d26] via-[#12161e] to-[#0e1117] p-8 lg:p-10 shadow-2xl overflow-hidden group">
           <div className="absolute top-0 right-0 w-80 h-80 bg-gold/10 rounded-full blur-3xl pointer-events-none" />
@@ -102,55 +129,45 @@ export default function PathsCatalogClient({ paths }: PathsCatalogClientProps) {
             <div className="space-y-4 max-w-3xl">
               <div className="flex items-center space-x-3 text-xs font-mono">
                 <span className="px-3 py-1 rounded-full bg-gold text-[#101216] font-bold tracking-wider uppercase">
-                  ★ Cursus Intégrateur Maître
+                  Parcours Int&eacute;grateur V4
                 </span>
-                <span className="px-3 py-1 rounded-full bg-[#1e2430] text-gold border border-gold/30">
-                  12 Volumes • 7 Projets Capstone
-                </span>
-                <span className="text-ivory-dim flex items-center space-x-1">
-                  <Clock className="w-3.5 h-3.5 text-gold" />
-                  <span>~200h de pratique</span>
+                <span className="text-ivory-dim font-bold">&bull;</span>
+                <span className="text-gold font-semibold flex items-center space-x-1">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Grand Cursus F&eacute;d&eacute;rateur (180 &agrave; 220 h)</span>
                 </span>
               </div>
-              <h2 className="text-2xl sm:text-4xl font-black text-ivory tracking-tight group-hover:text-gold transition-colors">
-                <Link href={`/paths/${masterPath.slug}`}>{masterPath.title}</Link>
+
+              <h2 className="text-2xl sm:text-3xl font-black text-ivory tracking-tight">
+                {masterPath.title}
               </h2>
+
               <p className="text-xs sm:text-sm text-ivory-muted leading-relaxed">
-                {masterPath.description}
+                Ce parcours transversal regroupe les comp&eacute;tences fondamentales et avanc&eacute;es des 8 acad&eacute;mies RayLab : de l&apos;architecture binaire &agrave; l&apos;ing&eacute;nierie Python, aux r&eacute;seaux TCP/IP, au SOC, au durcissement et &agrave; l&apos;audit de s&eacute;curit&eacute;.
               </p>
-              <div className="flex flex-wrap gap-2 pt-2">
-                <span className="px-2.5 py-1 rounded-lg bg-[#11141a] text-[11px] text-ivory-muted border border-[#252e3c] font-mono">
-                  01. Hardware &amp; Noyau Linux
+
+              <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-ivory-dim pt-2">
+                <span className="flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-gold" />
+                  <span>12 Volumes Int&eacute;gr&eacute;s</span>
                 </span>
-                <span className="px-2.5 py-1 rounded-lg bg-[#11141a] text-[11px] text-ivory-muted border border-[#252e3c] font-mono">
-                  02. Shell Bash &amp; Admin
+                <span className="flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <span>7 Capstones &amp; Livrables GitHub</span>
                 </span>
-                <span className="px-2.5 py-1 rounded-lg bg-[#11141a] text-[11px] text-ivory-muted border border-[#252e3c] font-mono">
-                  03. Manuel Complet Python
-                </span>
-                <span className="px-2.5 py-1 rounded-lg bg-[#11141a] text-[11px] text-ivory-muted border border-[#252e3c] font-mono">
-                  04. Réseaux TCP/IP
-                </span>
-                <span className="px-2.5 py-1 rounded-lg bg-[#11141a] text-[11px] text-ivory-muted border border-[#252e3c] font-mono">
-                  05. Analyse Wireshark &amp; Scapy
-                </span>
-                <span className="px-2.5 py-1 rounded-lg bg-[#11141a] text-[11px] text-ivory-muted border border-[#252e3c] font-mono">
-                  07. OWASP Top 10 Web
-                </span>
-                <span className="px-2.5 py-1 rounded-lg bg-[#11141a] text-[11px] text-ivory-muted border border-[#252e3c] font-mono">
-                  11. Blue Team SOC &amp; SIEM
-                </span>
-                <span className="px-2.5 py-1 rounded-lg bg-[#11141a] text-[11px] text-ivory-muted border border-[#252e3c] font-mono">
-                  12. Capstone Forensique DFIR
+                <span className="flex items-center space-x-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                  <span>Attestation V&eacute;rifi&eacute;e RayLab</span>
                 </span>
               </div>
             </div>
-            <div className="flex-shrink-0">
+
+            <div className="flex flex-col sm:flex-row lg:flex-col gap-3 flex-shrink-0">
               <Link
                 href={`/paths/${masterPath.slug}`}
-                className="w-full sm:w-auto px-8 py-4 rounded-xl bg-gold hover:bg-gold-light text-[#101216] font-bold text-xs tracking-wider uppercase transition-all shadow-gold flex items-center justify-center space-x-2"
+                className="px-6 py-4 rounded-xl bg-gold hover:bg-gold-light text-[#101216] font-bold text-xs uppercase tracking-wider transition-all shadow-gold flex items-center justify-center space-x-2"
               >
-                <span>Accéder au Cursus Intégrateur</span>
+                <span>Explorer le CyberPath</span>
                 <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
@@ -165,7 +182,7 @@ export default function PathsCatalogClient({ paths }: PathsCatalogClientProps) {
             <Search className="w-4 h-4 text-ivory-dim absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Rechercher une académie ou une technologie (ex: Python, Bash, SOC, Scapy)..."
+              placeholder="Rechercher une acad&eacute;mie ou une technologie (ex: Python, Bash, SOC, Scapy, Docker)..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="w-full bg-[#0d1016] border border-[#222938] rounded-xl pl-10 pr-4 py-2.5 text-xs text-ivory placeholder-ivory-dim/60 outline-none focus:border-gold font-mono"
@@ -174,51 +191,56 @@ export default function PathsCatalogClient({ paths }: PathsCatalogClientProps) {
 
           <div className="flex items-center space-x-2 text-xs font-mono text-ivory-dim">
             <Filter className="w-4 h-4 text-gold" />
-            <span>{filteredPaths.length} cursus trouvé(s)</span>
+            <span>{filteredPaths.length} cursus trouv&eacute;(s)</span>
           </div>
         </div>
 
         {/* Domain Filter Pills */}
         <div className="space-y-2">
           <div className="text-[11px] font-mono uppercase tracking-wider text-ivory-dim">
-            Filtrer par Domaine Pédagogique :
+            Filtrer par Domaine P&eacute;dagogique (8 Acad&eacute;mies &amp; P&ocirc;les) :
           </div>
           <div className="flex flex-wrap gap-2">
             {[
               { id: "all", label: "Tous les Domaines" },
-              { id: "python", label: "🐍 Programmation Python" },
-              { id: "systems", label: "🐧 Linux & Systèmes" },
-              { id: "networks", label: "🌐 Réseaux TCP/IP" },
-              { id: "blue_team", label: "🛡️ Blue Team & SOC" },
-              { id: "offensive", label: "🔥 Audit & Pentest" },
-              { id: "forensics", label: "🔍 Forensique DFIR" },
-              { id: "devsecops", label: "☁️ Cloud & DevSecOps" },
-              { id: "career", label: "💼 Insertion Professionnelle" },
-            ].map((f) => (
+              { id: "python", label: "Python Academy" },
+              { id: "systems", label: "Linux & Syst\u00e8mes" },
+              { id: "networks", label: "R\u00e9seaux & Protocoles" },
+              { id: "blue_team", label: "Blue Team & SOC" },
+              { id: "offensive", label: "Ethical Hacking" },
+              { id: "forensics", label: "DFIR Forensics" },
+              { id: "devsecops", label: "Cloud & DevSecOps" },
+              { id: "ai", label: "IA Appliqu\u00e9e" },
+              { id: "career", label: "P\u00f4le Carri\u00e8re" },
+            ].map((d) => (
               <button
-                key={f.id}
-                onClick={() => setSelectedDomain(f.id)}
+                key={d.id}
+                onClick={() => setSelectedDomain(d.id)}
                 className={`px-3 py-1.5 rounded-xl text-xs font-mono transition-all ${
-                  selectedDomain === f.id
-                    ? "bg-gold text-[#101216] font-bold shadow-sm"
-                    : "bg-[#0d1016] text-ivory-muted hover:text-ivory hover:bg-[#1a202c] border border-[#202735]"
+                  selectedDomain === d.id
+                    ? "bg-gold text-[#101216] font-bold shadow-gold"
+                    : "bg-[#0d1016] text-ivory-dim hover:text-ivory border border-[#202735]"
                 }`}
               >
-                {f.label}
+                {d.label}
               </button>
             ))}
           </div>
         </div>
 
-        {/* Level Filter Pills */}
-        <div className="flex items-center space-x-3 pt-2 border-t border-[#1d232e]">
-          <span className="text-[11px] font-mono uppercase tracking-wider text-ivory-dim">Niveau :</span>
-          <div className="flex items-center space-x-2">
+        {/* Difficulty Filter Pills (V4 Scale: Niv 0 à Niv 4) */}
+        <div className="flex flex-wrap items-center gap-3 pt-2 border-t border-[#1d2430]">
+          <span className="text-[11px] font-mono uppercase tracking-wider text-ivory-dim">
+            Niveau de Comp&eacute;tence V4 :
+          </span>
+          <div className="flex flex-wrap items-center gap-2">
             {[
-              { id: "all", label: "Tous" },
-              { id: "beginner", label: "Débutant" },
-              { id: "intermediate", label: "Intermédiaire" },
-              { id: "advanced", label: "Avancé" },
+              { id: "all", label: "Tous les Niveaux" },
+              { id: "foundation", label: "Niv. 0 Foundation" },
+              { id: "beginner", label: "Niv. 1 Beginner" },
+              { id: "intermediate", label: "Niv. 2 Intermediate" },
+              { id: "advanced", label: "Niv. 3 Advanced" },
+              { id: "professional", label: "Niv. 4 Professional Practice" },
             ].map((lvl) => (
               <button
                 key={lvl.id}
@@ -236,18 +258,19 @@ export default function PathsCatalogClient({ paths }: PathsCatalogClientProps) {
         </div>
       </div>
 
-      {/* 3. GRILLE DES CURSUS FILTRÉS */}
+      {/* 3. CATALOGUE CARDS GRID */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
         {filteredPaths.map((p) => {
           const Icon = getPathIcon(p.slug);
           const accentStyle = getPathAccentColor(p.slug);
+          const targetHours = getV4TargetHours(p.slug);
 
           return (
             <div
               key={p.id}
-              className="bg-[#141820] rounded-3xl border border-[#222935] p-8 flex flex-col justify-between hover:border-gold/40 transition-all duration-300 relative group overflow-hidden space-y-6"
+              className="bg-[#141820] rounded-3xl border border-[#222935] p-8 hover:border-gold/40 transition-all flex flex-col justify-between group space-y-6"
             >
-              <div className="space-y-5">
+              <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className={`w-12 h-12 rounded-2xl border flex items-center justify-center ${accentStyle}`}>
                     <Icon className="w-6 h-6" />
@@ -258,7 +281,7 @@ export default function PathsCatalogClient({ paths }: PathsCatalogClientProps) {
                     </span>
                     <span className="flex items-center space-x-1">
                       <Clock className="w-3.5 h-3.5 text-gold" />
-                      <span>~{Math.round(p.estimated_minutes / 60)}h</span>
+                      <span>{targetHours}</span>
                     </span>
                   </div>
                 </div>
@@ -275,17 +298,17 @@ export default function PathsCatalogClient({ paths }: PathsCatalogClientProps) {
                 {/* Continuum Badges */}
                 <div className="pt-2 space-y-2">
                   <div className="text-[11px] font-mono uppercase tracking-wider text-ivory-dim">
-                    Continuité Pédagogique :
+                    Continuit&eacute; P&eacute;dagogique V4 :
                   </div>
                   <div className="flex flex-wrap gap-2">
                     <span className="px-2.5 py-1 rounded-lg bg-[#11141a] text-[11px] text-ivory-muted border border-[#252e3c] font-mono">
-                      {p.course_count} cours approfondis
+                      Modules codifi&eacute;s
                     </span>
                     <span className="px-2.5 py-1 rounded-lg bg-[#11141a] text-[11px] text-gold/90 border border-gold/20 font-mono">
-                      Exercices &amp; Sandbox WASM
+                      TP &amp; Sandbox WASM
                     </span>
                     <span className="px-2.5 py-1 rounded-lg bg-[#11141a] text-[11px] text-emerald-400 border border-emerald-500/20 font-mono">
-                      Validation Projet Capstone
+                      Projet Capstone &amp; GitHub
                     </span>
                   </div>
                 </div>
@@ -293,7 +316,7 @@ export default function PathsCatalogClient({ paths }: PathsCatalogClientProps) {
 
               <div className="pt-6 border-t border-[#1d232e] flex items-center justify-between">
                 <span className="text-xs text-ivory-dim font-mono">
-                  Accès libre &amp; persistant
+                  Acc&egrave;s libre &amp; persistant
                 </span>
                 <Link
                   href={`/paths/${p.slug}`}
@@ -311,9 +334,9 @@ export default function PathsCatalogClient({ paths }: PathsCatalogClientProps) {
       {filteredPaths.length === 0 && (
         <div className="bg-[#141820] p-12 rounded-3xl border border-[#222935] text-center space-y-3">
           <BookOpen className="w-8 h-8 text-gold/40 mx-auto" />
-          <h3 className="text-lg font-bold text-ivory">Aucun cursus ne correspond à vos filtres</h3>
+          <h3 className="text-lg font-bold text-ivory">Aucun cursus ne correspond &agrave; vos filtres</h3>
           <p className="text-xs text-ivory-muted">
-            Essayez de réinitialiser le terme de recherche ou de sélectionner &quot;Tous les Domaines&quot;.
+            Essayez de r&eacute;initialiser le terme de recherche ou de s&eacute;lectionner &laquo; Tous les Domaines &raquo;.
           </p>
           <button
             onClick={() => {
@@ -323,7 +346,7 @@ export default function PathsCatalogClient({ paths }: PathsCatalogClientProps) {
             }}
             className="px-4 py-2 rounded-xl bg-gold text-[#101216] text-xs font-bold font-mono mt-2"
           >
-            Réinitialiser les Filtres
+            R&eacute;initialiser les Filtres
           </button>
         </div>
       )}

@@ -17,6 +17,7 @@ import {
   Sparkles,
   Send,
   Terminal,
+  Award,
 } from "lucide-react";
 
 export default function ProjectClient({ project }: { project: any }) {
@@ -76,16 +77,16 @@ export default function ProjectClient({ project }: { project: any }) {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left 2 Cols: Project Description, Requirements, Safety */}
+        {/* Left 2 Cols: Project Description, Requirements, Safety, Evaluation Rubric */}
         <div className="lg:col-span-2 space-y-8">
           <div className="bg-[#141820] rounded-3xl border border-[#222935] p-8 space-y-6">
             <div className="flex flex-wrap items-center justify-between gap-4">
               <span className="px-3 py-1 rounded-full text-xs font-mono font-semibold bg-gold/15 text-gold border border-gold/40">
-                {project.domain} • {project.difficulty.toUpperCase()}
+                {project.domain} &bull; {project.difficulty.toUpperCase()}
               </span>
               <div className="flex items-center space-x-2 text-xs font-mono text-ivory-dim">
                 <Clock className="w-3.5 h-3.5 text-gold" />
-                <span>Estimé : {project.estimated_minutes} min</span>
+                <span>Estim&eacute; : ~{Math.round((project.estimated_minutes || 600) / 60)}h</span>
               </div>
             </div>
 
@@ -96,6 +97,69 @@ export default function ProjectClient({ project }: { project: any }) {
               <p className="text-sm text-ivory-muted mt-2 leading-relaxed">
                 {project.summary}
               </p>
+            </div>
+          </div>
+
+          {/* V4 Standard Evaluation Rubric (100 Points) */}
+          <div className="bg-[#141820] rounded-2xl border border-[#222935] p-6 space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-[#1f2633] pb-3">
+              <div className="flex items-center space-x-2 text-xs font-mono text-gold font-bold">
+                <Award className="w-4 h-4 text-gold" />
+                <span>Bar&egrave;me d&apos;&Eacute;valuation Standard V4 (100 Points)</span>
+              </div>
+              <span className="text-[11px] font-mono text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/20 self-start sm:self-auto">
+                Seuil d&apos;admission : 70 / 100 pts
+              </span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-xs font-mono">
+              <div className="p-3 bg-[#0f1217] rounded-xl border border-[#1d232e] space-y-1">
+                <div className="flex justify-between text-ivory font-semibold">
+                  <span>Fonctionnement</span>
+                  <span className="text-gold">25 pts</span>
+                </div>
+                <p className="text-[11px] text-ivory-dim font-sans">R&eacute;ponse stricte au cahier des charges sans crash.</p>
+              </div>
+
+              <div className="p-3 bg-[#0f1217] rounded-xl border border-[#1d232e] space-y-1">
+                <div className="flex justify-between text-ivory font-semibold">
+                  <span>Qualit&eacute; &amp; PEP 8</span>
+                  <span className="text-gold">20 pts</span>
+                </div>
+                <p className="text-[11px] text-ivory-dim font-sans">Modularit&eacute;, typage, clart&eacute; et propret&eacute; du code.</p>
+              </div>
+
+              <div className="p-3 bg-[#0f1217] rounded-xl border border-[#1d232e] space-y-1">
+                <div className="flex justify-between text-ivory font-semibold">
+                  <span>S&eacute;curit&eacute; &amp; Robustesse</span>
+                  <span className="text-gold">20 pts</span>
+                </div>
+                <p className="text-[11px] text-ivory-dim font-sans">Gestion des erreurs et absence de secrets expos&eacute;s.</p>
+              </div>
+
+              <div className="p-3 bg-[#0f1217] rounded-xl border border-[#1d232e] space-y-1">
+                <div className="flex justify-between text-ivory font-semibold">
+                  <span>Documentation</span>
+                  <span className="text-gold">15 pts</span>
+                </div>
+                <p className="text-[11px] text-ivory-dim font-sans">README soign&eacute;, sch&eacute;mas et guide de d&eacute;ploiement.</p>
+              </div>
+
+              <div className="p-3 bg-[#0f1217] rounded-xl border border-[#1d232e] space-y-1">
+                <div className="flex justify-between text-ivory font-semibold">
+                  <span>Tests Automatis&eacute;s</span>
+                  <span className="text-gold">10 pts</span>
+                </div>
+                <p className="text-[11px] text-ivory-dim font-sans">Tests unitaires reproductibles (pytest / assertions).</p>
+              </div>
+
+              <div className="p-3 bg-[#0f1217] rounded-xl border border-[#1d232e] space-y-1">
+                <div className="flex justify-between text-ivory font-semibold">
+                  <span>Soutenance &amp; Choix</span>
+                  <span className="text-gold">10 pts</span>
+                </div>
+                <p className="text-[11px] text-ivory-dim font-sans">Capacit&eacute; &agrave; justifier les arbitrages techniques.</p>
+              </div>
             </div>
           </div>
 
@@ -113,7 +177,7 @@ export default function ProjectClient({ project }: { project: any }) {
             <div className="bg-[#141820] rounded-2xl border border-[#222935] p-6 space-y-3">
               <h3 className="font-bold text-sm text-ivory flex items-center space-x-2">
                 <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                <span>Prérequis &amp; Spécifications</span>
+                <span>Pr&eacute;requis &amp; Sp&eacute;cifications</span>
               </h3>
               <p className="text-xs text-ivory-muted leading-relaxed whitespace-pre-line">
                 {project.requirements_md || project.prerequisites_md}
@@ -123,7 +187,7 @@ export default function ProjectClient({ project }: { project: any }) {
             <div className="bg-[#141820] rounded-2xl border border-red-500/20 p-6 space-y-3">
               <h3 className="font-bold text-sm text-red-400 flex items-center space-x-2">
                 <ShieldAlert className="w-4 h-4 text-red-400" />
-                <span>Règles d&apos;Éthique &amp; Sécurité</span>
+                <span>R&egrave;gles d&apos;&Eacute;thique &amp; S&eacute;curit&eacute;</span>
               </h3>
               <p className="text-xs text-ivory-muted leading-relaxed whitespace-pre-line">
                 {project.safety_notes_md ||
@@ -142,10 +206,10 @@ export default function ProjectClient({ project }: { project: any }) {
                 <span>Portfolio Submission</span>
               </div>
               <h2 className="text-lg font-bold text-ivory">
-                Enregistrer ma Réalisation
+                Enregistrer ma R&eacute;alisation
               </h2>
               <p className="text-xs text-ivory-dim mt-1">
-                Liez votre code source et intégrez ce projet à votre portfolio RayLab.
+                Liez votre code source et int&eacute;grez ce projet &agrave; votre portfolio public RayLab.
               </p>
             </div>
 
@@ -153,10 +217,10 @@ export default function ProjectClient({ project }: { project: any }) {
               <div className="p-4 rounded-xl bg-emerald-950/40 border border-emerald-500/40 text-emerald-300 space-y-2 text-xs font-mono">
                 <div className="flex items-center space-x-2 font-bold">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400" />
-                  <span>Projet enregistré avec succès !</span>
+                  <span>Projet enregistr&eacute; avec succ&egrave;s !</span>
                 </div>
                 <p className="text-[11px] text-ivory-muted">
-                  +150 XP accordés. Votre projet apparaît désormais dans votre Tableau de Bord et votre Portfolio.
+                  +150 XP accord&eacute;s. Votre projet appara&icirc;t d&eacute;sormais dans votre Tableau de Bord et votre Portfolio.
                 </p>
               </div>
             ) : (
@@ -164,7 +228,7 @@ export default function ProjectClient({ project }: { project: any }) {
                 <div className="space-y-1.5">
                   <label className="font-semibold text-ivory flex items-center space-x-1.5">
                     <GitBranch className="w-3.5 h-3.5 text-gold" />
-                    <span>Lien du Dépôt GitHub *</span>
+                    <span>Lien du D&eacute;p&ocirc;t GitHub *</span>
                   </label>
                   <input
                     type="url"
@@ -179,7 +243,7 @@ export default function ProjectClient({ project }: { project: any }) {
                 <div className="space-y-1.5">
                   <label className="font-semibold text-ivory flex items-center space-x-1.5">
                     <Globe className="w-3.5 h-3.5 text-blue-400" />
-                    <span>Lien Démo ou Documentation (Optionnel)</span>
+                    <span>Lien D&eacute;mo ou Documentation (Optionnel)</span>
                   </label>
                   <input
                     type="url"
@@ -192,21 +256,21 @@ export default function ProjectClient({ project }: { project: any }) {
 
                 <div className="space-y-1.5">
                   <label className="font-semibold text-ivory">
-                    Visibilité du projet
+                    Visibilit&eacute; du projet
                   </label>
                   <select
                     value={visibility}
                     onChange={(e) => setVisibility(e.target.value as any)}
                     className="w-full bg-[#101216] border border-[#262f3c] rounded-lg px-3 py-2 text-ivory focus:outline-none focus:border-gold"
                   >
-                    <option value="public">Public (Affiché sur mon profil RayLab)</option>
-                    <option value="private">Privé (Visible uniquement par moi)</option>
+                    <option value="public">Public (Affich&eacute; sur mon portfolio RayLab)</option>
+                    <option value="private">Priv&eacute; (Visible uniquement par moi)</option>
                   </select>
                 </div>
 
                 <div className="space-y-1.5">
                   <label className="font-semibold text-ivory">
-                    Notes &amp; Résultats obtenus (Formule Google XYZ)
+                    Notes &amp; R&eacute;sultats obtenus (Formule Google XYZ)
                   </label>
                   <textarea
                     rows={4}
@@ -236,7 +300,7 @@ export default function ProjectClient({ project }: { project: any }) {
               <span>Tester dans le Labo Virtuel</span>
             </div>
             <p className="text-xs text-ivory-muted leading-relaxed">
-              Expérimentez votre logique, vos fonctions critiques et vos requêtes réseau dans le bac à sable interactif et le terminal de RayLab.
+              Exp&eacute;rimentez votre logique, vos fonctions critiques et vos requ&ecirc;tes r&eacute;seau dans le bac &agrave; sable interactif et le terminal de RayLab.
             </p>
             <Link
               href="/lab"
