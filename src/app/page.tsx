@@ -31,6 +31,13 @@ export default async function HomePage() {
   const projects = await getProjects();
   const certs = await getCertifications();
 
+  // Separate the CyberPath Master, the 8 Academies, and the Career Launchpad
+  const masterPath = paths.find((p) => p.slug === "cyberpath-2026-2027");
+  const careerPath = paths.find((p) => p.slug.includes("career"));
+  const specializedAcademies = paths.filter(
+    (p) => p.slug !== "cyberpath-2026-2027" && !p.slug.includes("career")
+  );
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* 1. HERO SECTION */}
@@ -44,20 +51,20 @@ export default async function HomePage() {
             {/* Top pill badge */}
             <div className="inline-flex items-center space-x-2.5 px-4 py-1.5 rounded-full bg-[#161a22] border border-[#2d3540] text-xs font-mono text-gold shadow-sm">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>RayLab • Institut Technique &amp; Plateforme d&apos;Apprentissage</span>
+              <span>RayLab &bull; Plateforme d&apos;Ing&eacute;nierie &amp; Cybers&eacute;curit&eacute; Pratique</span>
             </div>
 
             {/* Main title */}
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-black text-ivory tracking-tight leading-[1.12]">
-              Apprenez l&apos;Informatique, les Systèmes et la{" "}
+              Apprenez l&apos;Informatique, les Syst&egrave;mes et la{" "}
               <span className="bg-gradient-to-r from-gold via-amber-300 to-gold bg-clip-text text-transparent">
-                Cybersécurité par la Pratique
+                Cybers&eacute;curit&eacute; par la Pratique
               </span>
             </h1>
 
             {/* Subheading */}
             <p className="text-base sm:text-lg text-ivory-muted max-w-2xl mx-auto leading-relaxed">
-              De l&apos;initiation en Python à la détection d&apos;incidents en SOC : des parcours progressifs, des projets réels publiables et un accompagnement vers l&apos;emploi.
+              De l&apos;initiation Python &agrave; la d&eacute;tection d&apos;incidents en SOC : des cursus structur&eacute;s, des simulations en sandbox et des projets document&eacute;s sur GitHub.
             </p>
 
             {/* Signature */}
@@ -65,14 +72,14 @@ export default async function HomePage() {
               Learn. Build. Secure. Become.
             </div>
 
-            {/* Action buttons: Dual Pathway (Débutant vs Avancé - Recommandation V3) */}
+            {/* Action buttons: Dual Pathway (Débutant vs Pratiquant) */}
             <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link
                 href="/paths"
                 className="w-full sm:w-auto px-7 py-4 rounded-xl bg-gold hover:bg-gold-light text-[#101216] font-bold text-xs tracking-wider uppercase shadow-gold transition-all flex items-center justify-center space-x-2 group"
               >
                 <BookOpen className="w-4 h-4" />
-                <span>Débutant : Découvrir les 8 Académies</span>
+                <span>D&eacute;butant : D&eacute;couvrir les 8 Acad&eacute;mies</span>
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </Link>
               <Link
@@ -97,33 +104,49 @@ export default async function HomePage() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#0e1218]/80 via-transparent to-transparent z-10 pointer-events-none" />
                 <img
                   src="/raylab-banner.png"
-                  alt="RayLab Official Banner — Académie de Cybersécurité & Lab Virtuel"
+                  alt="Banniere Officielle RayLab - Academie de Cybersecurite et Laboratoire Virtuel"
                   className="w-full h-auto object-cover transform group-hover:scale-[1.01] transition-transform duration-500"
                 />
                 <div className="absolute bottom-3 left-4 z-20 flex items-center space-x-2 text-[11px] font-mono text-gold bg-[#10141b]/90 px-3 py-1 rounded-full border border-gold/30 backdrop-blur-sm">
                   <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>RAYLAB ACADÉMIE • CYBERPATH 2026-2027</span>
+                  <span>RAYLAB ACAD&Eacute;MIE &bull; CYBERPATH 2026-2027</span>
                 </div>
               </div>
             </div>
 
-            {/* Statistics Row (Conforme Cahier des Charges V3.0) */}
-            <div className="pt-14 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto border-t border-[#1c222b]">
+            {/* Pedagogical Hierarchy Reference Bar (Règle V3.0) */}
+            <div className="pt-6 max-w-3xl mx-auto">
+              <div className="p-3.5 bg-[#12161f] rounded-xl border border-gold/20 flex flex-wrap items-center justify-center gap-2 text-xs font-mono text-ivory-dim">
+                <span className="text-gold font-bold">Hi&eacute;rarchie Unique :</span>
+                <span className="text-ivory font-semibold bg-[#1a202c] px-2 py-0.5 rounded">Acad&eacute;mies</span>
+                <span className="text-gold">&rarr;</span>
+                <span className="text-ivory font-semibold bg-[#1a202c] px-2 py-0.5 rounded">Parcours</span>
+                <span className="text-gold">&rarr;</span>
+                <span className="text-ivory font-semibold bg-[#1a202c] px-2 py-0.5 rounded">Cours</span>
+                <span className="text-gold">&rarr;</span>
+                <span className="text-ivory font-semibold bg-[#1a202c] px-2 py-0.5 rounded">Modules</span>
+                <span className="text-gold">&rarr;</span>
+                <span className="text-emerald-400 font-semibold bg-[#1a202c] px-2 py-0.5 rounded">Le&ccedil;ons</span>
+              </div>
+            </div>
+
+            {/* Statistics Row (Harmonisé Données Réelles) */}
+            <div className="pt-8 grid grid-cols-2 sm:grid-cols-4 gap-4 max-w-4xl mx-auto border-t border-[#1c222b]">
               <div className="p-4 bg-[#13171e] rounded-2xl border border-[#202732] text-left">
-                <div className="text-2xl font-black text-gold font-mono">8 Académies</div>
-                <div className="text-xs text-ivory-dim mt-1">Python, Linux, Réseaux, SOC, DFIR...</div>
+                <div className="text-2xl font-black text-gold font-mono">8 Acad&eacute;mies</div>
+                <div className="text-xs text-ivory-dim mt-1">Python, Linux, R&eacute;seaux, SOC, DFIR...</div>
               </div>
               <div className="p-4 bg-[#13171e] rounded-2xl border border-[#202732] text-left">
                 <div className="text-2xl font-black text-ivory font-mono">12 Volumes</div>
-                <div className="text-xs text-ivory-dim mt-1">CyberPath : 70% Pratique / 30% Théorie</div>
+                <div className="text-xs text-ivory-dim mt-1">CyberPath : 70% Pratique / 30% Th&eacute;orie</div>
               </div>
               <div className="p-4 bg-[#13171e] rounded-2xl border border-[#202732] text-left">
                 <div className="text-2xl font-black text-emerald-400 font-mono">7 Projets</div>
-                <div className="text-xs text-ivory-dim mt-1">Capstones documentés sur GitHub</div>
+                <div className="text-xs text-ivory-dim mt-1">Capstones document&eacute;s sur GitHub</div>
               </div>
               <div className="p-4 bg-[#13171e] rounded-2xl border border-[#202732] text-left">
-                <div className="text-2xl font-black text-gold font-mono">100% Sandboxé</div>
-                <div className="text-xs text-ivory-dim mt-1">WASM &amp; Terminal émulé sans risque</div>
+                <div className="text-2xl font-black text-gold font-mono">100% Sandbox&eacute;</div>
+                <div className="text-xs text-ivory-dim mt-1">WASM &amp; Terminal &eacute;mul&eacute; in-browser</div>
               </div>
             </div>
           </div>
@@ -138,11 +161,11 @@ export default async function HomePage() {
               Le Manifeste RayLab
             </span>
             <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-ivory leading-tight">
-              « L&apos;ambition n&apos;est pas de produire des personnes qui suivent des tutoriels. L&apos;ambition est de former des personnes capables de concevoir, résoudre et démontrer ce qu&apos;elles savent faire. »
+              &laquo; L&apos;ambition n&apos;est pas de produire des personnes qui suivent des tutoriels. L&apos;ambition est de former des personnes capables de concevoir, r&eacute;soudre et d&eacute;montrer ce qu&apos;elles savent faire. &raquo;
             </h2>
             <div className="h-0.5 w-16 bg-gold mx-auto" />
             <p className="text-sm text-ivory-muted leading-relaxed text-justify sm:text-center">
-              Dans un secteur inondé de promesses superficielles, <strong>RayLab</strong> a été pensé comme un espace d&apos;ingénierie et d&apos;expérimentation rigoureux. Ici, les concepts fondamentaux (mémoire, protocoles, permissions) précèdent la manipulation des outils avancés, et chaque notion apprise débouche sur une réalisation concrète et vérifiable.
+              Dans un secteur inond&eacute; de promesses superficielles, <strong>RayLab</strong> a &eacute;t&eacute; con&ccedil;u comme un espace d&apos;ing&eacute;nierie et d&apos;exp&eacute;rimentation rigoureux. Ici, les concepts fondamentaux (m&eacute;moire, protocoles, permissions) pr&eacute;c&egrave;dent la manipulation des outils avanc&eacute;s, et chaque notion apprise d&eacute;bouche sur une r&eacute;alisation concr&egrave;te et v&eacute;rifiable.
             </p>
           </div>
         </div>
@@ -152,13 +175,13 @@ export default async function HomePage() {
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
           <h2 className="text-xs font-mono uppercase tracking-widest text-gold">
-            Notre Méthodologie
+            Notre M&eacute;thodologie
           </h2>
           <p className="text-3xl font-extrabold text-ivory">
-            Quatre Étapes vers l&apos;Excellence Technique
+            Quatre &Eacute;tapes vers l&apos;Excellence Technique
           </p>
           <p className="text-xs sm:text-sm text-ivory-dim">
-            Chaque module suit un cycle rigoureux garantissant une assimilation pérenne.
+            Chaque module suit un cycle rigoureux garantissant une assimilation p&eacute;renne.
           </p>
         </div>
 
@@ -170,7 +193,7 @@ export default async function HomePage() {
             </div>
             <h3 className="text-lg font-bold text-ivory">LEARN</h3>
             <p className="text-xs text-ivory-muted leading-relaxed">
-              Découvrez les mécanismes réels sous le capot. Pas de magie : de la gestion mémoire en Python aux entêtes TCP/IP et permissions Unix.
+              Comprenez les mécanismes réels sous le capot. Pas de boîte noire : de la gestion mémoire en Python aux en-têtes TCP/IP et permissions Unix.
             </p>
           </div>
 
@@ -181,7 +204,7 @@ export default async function HomePage() {
             </div>
             <h3 className="text-lg font-bold text-ivory">BUILD</h3>
             <p className="text-xs text-ivory-muted leading-relaxed">
-              Développez des outils concrets : Password Entropy Analyzer, analyseur de logs de serveurs web, surveillance de fichiers FIM.
+              Développez des outils concrets : Password Entropy Analyzer, dissecteur de trames Scapy, analyseur de logs et surveillance d&apos;intégrité FIM.
             </p>
           </div>
 
@@ -192,7 +215,7 @@ export default async function HomePage() {
             </div>
             <h3 className="text-lg font-bold text-ivory">SECURE</h3>
             <p className="text-xs text-ivory-muted leading-relaxed">
-              Intégrez la sécurité dès la conception. Maîtrisez la triade CIA, les règles de détection d&apos;intrusion et l&apos;éthique de l&apos;audit.
+              Intégrez la sécurité dès la conception. Maîtrisez la triade CIA, les règles de détection d&apos;intrusion (Suricata), le durcissement et l&apos;éthique de l&apos;audit.
             </p>
           </div>
 
@@ -203,130 +226,114 @@ export default async function HomePage() {
             </div>
             <h3 className="text-lg font-bold text-ivory">BECOME</h3>
             <p className="text-xs text-ivory-muted leading-relaxed">
-              Valorisez vos réalisations : CV technique compatible ATS pour l&apos;Europe et l&apos;Allemagne, dépôts GitHub professionnels et entretiens.
+              Valorisez vos réalisations : CV technique trilingue compatible ATS, dépôts GitHub professionnels vérifiés et préparation aux entretiens.
             </p>
           </div>
         </div>
       </section>
 
-      {/* 4. LES GRANDES ACADÉMIES */}
-      <section className="py-20 bg-[#0c0e12] border-y border-[#1c222b]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-            <div>
-              <h2 className="text-xs font-mono uppercase tracking-widest text-gold mb-2">
-                Le Catalogue Pédagogique
-              </h2>
-              <p className="text-3xl font-extrabold text-ivory">
-                Les Académies Spécialisées
-              </p>
+      {/* 4. LE GRAND PARCOURS MAÎTRE TRANSVERSAL : CYBERPATH */}
+      {masterPath && (
+        <section className="py-16 bg-[#0c0e12] border-y border-[#1c222b]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="p-8 lg:p-10 rounded-3xl bg-gradient-to-r from-gold/10 via-[#131720] to-[#0e1117] border-2 border-gold/40 shadow-xl flex flex-col lg:flex-row items-center justify-between gap-8">
+              <div className="space-y-4 max-w-2xl">
+                <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-gold/15 text-gold text-xs font-mono border border-gold/30">
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Grand Parcours Ma&icirc;tre &bull; 12 Volumes CyberPath</span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-ivory">
+                  {masterPath.title}
+                </h3>
+                <p className="text-sm text-ivory-muted leading-relaxed">
+                  Le cursus de r&eacute;f&eacute;rence int&eacute;grant l&apos;ensemble de la progression RayLab : des fondamentaux de l&apos;architecture machine &agrave; l&apos;investigation num&eacute;rique et au triage d&apos;incidents en SOC.
+                </p>
+                <div className="flex flex-wrap gap-4 text-xs font-mono text-ivory-dim">
+                  <span className="flex items-center space-x-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-gold" />
+                    <span>12 Volumes Structur&eacute;s</span>
+                  </span>
+                  <span className="flex items-center space-x-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    <span>7 Projets Capstone</span>
+                  </span>
+                  <span className="flex items-center space-x-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-blue-400" />
+                    <span>Attestation Finale RayLab</span>
+                  </span>
+                </div>
+              </div>
+              <div className="w-full lg:w-auto flex flex-col sm:flex-row gap-3">
+                <Link
+                  href={`/paths/${masterPath.slug}`}
+                  className="px-6 py-4 rounded-xl bg-gold hover:bg-gold-light text-[#101216] font-bold text-xs uppercase tracking-wider shadow-gold flex items-center justify-center space-x-2 transition-all"
+                >
+                  <span>Explorer le Parcours Ma&icirc;tre</span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </div>
             </div>
-            <Link
-              href="/paths"
-              className="inline-flex items-center space-x-1.5 text-xs font-semibold text-gold hover:text-gold-light"
-            >
-              <span>Consulter l&apos;intégralité des cursus</span>
-              <ChevronRight className="w-4 h-4" />
-            </Link>
           </div>
+        </section>
+      )}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {paths.map((p) => (
-              <div
-                key={p.id}
-                className="bg-[#141820] rounded-2xl border border-[#222935] p-7 hover:border-gold/40 transition-all flex flex-col justify-between"
-              >
-                <div className="space-y-4">
-                  <div className="flex items-center justify-between">
-                    <span className="px-3 py-1 rounded-full text-[11px] font-mono font-semibold bg-gold/15 text-gold border border-gold/30">
-                      {p.difficulty.toUpperCase()}
-                    </span>
-                    <span className="text-xs text-ivory-dim font-mono">
-                      ~{Math.round(p.estimated_minutes / 60)}h au programme
-                    </span>
-                  </div>
-
-                  <div>
-                    <h3 className="text-xl font-bold text-ivory hover:text-gold transition-colors">
-                      <Link href={`/paths/${p.slug}`}>{p.title}</Link>
-                    </h3>
-                    <p className="text-xs text-ivory-muted mt-2.5 leading-relaxed">
-                      {p.description}
-                    </p>
-                  </div>
-                </div>
-
-                <div className="pt-6 mt-6 border-t border-[#1d232e] flex items-center justify-between">
-                  <span className="text-xs text-ivory-dim font-mono">
-                    {p.course_count} cours approfondis
-                  </span>
-                  <Link
-                    href={`/paths/${p.slug}`}
-                    className="px-4 py-2 rounded-xl bg-gold hover:bg-gold-light text-[#101216] text-xs font-bold transition-all flex items-center space-x-1.5 shadow-gold"
-                  >
-                    <span>Découvrir le Cursus</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
-              </div>
-            ))}
+      {/* 5. LES 8 ACADÉMIES SPÉCIALISÉES */}
+      <section className="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+          <div>
+            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-gold/10 text-gold text-xs font-mono border border-gold/30 mb-3">
+              <Layers className="w-3.5 h-3.5" />
+              <span>Niveau 1 de la Hi&eacute;rarchie P&eacute;dagogique</span>
+            </div>
+            <h2 className="text-3xl font-extrabold text-ivory">
+              Les 8 Acad&eacute;mies Sp&eacute;cialis&eacute;es
+            </h2>
+            <p className="text-sm text-ivory-dim mt-1">
+              Chaque acad&eacute;mie regroupe des parcours, cours et modules d&eacute;di&eacute;s &agrave; un domaine technique pr&eacute;cis.
+            </p>
           </div>
-        </div>
-      </section>
-
-      {/* 5. LES PROJETS PHARE DU LAB */}
-      <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto mb-16 space-y-3">
-          <h2 className="text-xs font-mono uppercase tracking-widest text-gold">
-            Laboratoire de Projets
-          </h2>
-          <p className="text-3xl font-extrabold text-ivory">
-            Construisez des Outils, Pas Juste du Code
-          </p>
-          <p className="text-xs sm:text-sm text-ivory-dim">
-            Chaque réalisation suit un cahier des charges rigoureux prêt à être présenté en entretien d&apos;embauche.
-          </p>
+          <Link
+            href="/paths"
+            className="inline-flex items-center space-x-1.5 text-xs font-semibold text-gold hover:text-gold-light"
+          >
+            <span>Consulter le catalogue complet avec filtres</span>
+            <ChevronRight className="w-4 h-4" />
+          </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {projects.map((proj) => (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          {specializedAcademies.map((p) => (
             <div
-              key={proj.id}
-              className="bg-[#141820] rounded-2xl border border-[#222935] p-6 flex flex-col justify-between hover:border-gold/40 transition-all group"
+              key={p.id}
+              className="bg-[#141820] rounded-2xl border border-[#222935] p-6 hover:border-gold/40 transition-all flex flex-col justify-between group"
             >
-              <div className="space-y-4">
-                <div className="flex items-center justify-between text-xs">
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#1b212c] text-gold font-mono border border-gold/30">
-                    {proj.domain}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-gold/15 text-gold border border-gold/30">
+                    {p.difficulty.toUpperCase()}
                   </span>
-                  <span className="text-ivory-dim font-mono">{proj.estimated_minutes} min</span>
+                  <span className="text-[11px] font-mono text-ivory-dim">
+                    {p.course_count || 1} cours
+                  </span>
                 </div>
-
-                <div>
-                  <h3 className="text-lg font-bold text-ivory group-hover:text-gold transition-colors">
-                    <Link href={`/projects/${proj.slug}`}>{proj.title}</Link>
-                  </h3>
-                  <p className="text-xs text-ivory-muted mt-2 leading-relaxed line-clamp-3">
-                    {proj.summary}
-                  </p>
-                </div>
-
-                <div className="text-[11px] font-mono text-ivory-dim">
-                  Niveau d&apos;exigence : <span className="text-ivory capitalize font-semibold">{proj.difficulty}</span>
-                </div>
+                <h3 className="text-base font-bold text-ivory group-hover:text-gold transition-colors leading-snug">
+                  {p.title}
+                </h3>
+                <p className="text-xs text-ivory-muted line-clamp-3 leading-relaxed">
+                  {p.description}
+                </p>
               </div>
 
-              <div className="pt-5 mt-5 border-t border-[#1d232e] flex items-center justify-between">
-                <span className="text-xs text-emerald-400 font-mono flex items-center space-x-1">
-                  <CheckCircle2 className="w-3.5 h-3.5" />
-                  <span>Spécifications Claires</span>
+              <div className="pt-5 border-t border-[#1f2530] mt-4 flex items-center justify-between">
+                <span className="text-[11px] font-mono text-ivory-dim">
+                  ~{Math.round((p.estimated_minutes || 600) / 60)}h estim&eacute;es
                 </span>
                 <Link
-                  href={`/projects/${proj.slug}`}
-                  className="text-xs font-semibold text-gold hover:text-gold-light inline-flex items-center space-x-1"
+                  href={`/paths/${p.slug}`}
+                  className="text-xs font-semibold text-gold group-hover:text-gold-light inline-flex items-center space-x-1"
                 >
-                  <span>Fiche Projet</span>
-                  <ChevronRight className="w-3.5 h-3.5" />
+                  <span>D&eacute;couvrir</span>
+                  <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
                 </Link>
               </div>
             </div>
@@ -334,153 +341,140 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* 6. LABORATOIRE VIRTUEL & TERMINAL INTERACTIF (Méthode CyberPath 70/30) */}
-      <section className="py-24 bg-[#0d1015] border-t border-[#1c222b]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center">
-            <div className="lg:col-span-5 space-y-6">
-              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-gold/15 text-gold text-xs font-mono border border-gold/30">
-                <Terminal className="w-3.5 h-3.5 text-gold animate-pulse" />
-                <span>Labo Virtuel • 70% Pratique / 30% Théorie</span>
+      {/* 6. PÔLE TRANSVERSAL : CARRIÈRE & CERTIFICATIONS (CATÉGORIE DISTINCTE) */}
+      {careerPath && (
+        <section className="py-16 bg-[#0f131a] border-y border-[#1c222b]">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="bg-[#141923] rounded-3xl border border-[#242d3b] p-8 lg:p-10 flex flex-col md:flex-row items-center justify-between gap-8">
+              <div className="space-y-3 max-w-2xl">
+                <div className="inline-flex items-center space-x-2 text-xs font-mono text-teal-400">
+                  <Briefcase className="w-3.5 h-3.5" />
+                  <span>P&ocirc;le Carri&egrave;re &amp; Insertion Professionnelle</span>
+                </div>
+                <h3 className="text-2xl sm:text-3xl font-extrabold text-ivory">
+                  Career Launchpad, CV Studio &amp; Certifications
+                </h3>
+                <p className="text-xs sm:text-sm text-ivory-muted leading-relaxed">
+                  Ce p&ocirc;le transversal n&apos;est pas un simple cours th&eacute;orique : il convertit vos comp&eacute;tences de laboratoire en opportunit&eacute;s concr&egrave;tes via le CV Builder ATS trilingue, les pr&eacute;parations certifiantes (CompTIA, Cisco, OffSec) et le portfolio public.
+                </p>
               </div>
-              <h2 className="text-3xl sm:text-4xl font-extrabold text-ivory leading-tight">
-                L&apos;Ingénierie Pratique les Mains sur le Terminal
-              </h2>
-              <p className="text-xs sm:text-sm text-ivory-muted leading-relaxed">
-                Conformément aux principes de CyberPath 2026-2027, la maîtrise technique s&apos;acquiert par l&apos;expérimentation concrète. Testez vos scripts Python, simulez des poignées de main TCP SYN/ACK, décortiquez des trames réseau et analysez des journaux de cyberattaques en temps réel directement dans votre navigateur.
-              </p>
-
-              <div className="grid grid-cols-2 gap-3 text-xs font-mono">
-                <div className="p-3 bg-[#13171f] rounded-xl border border-[#202734] space-y-1">
-                  <div className="text-gold font-bold">🐍 Python Sandbox</div>
-                  <div className="text-[11px] text-ivory-dim">Sockets, Algorithmes &amp; PEP 8</div>
-                </div>
-                <div className="p-3 bg-[#13171f] rounded-xl border border-[#202734] space-y-1">
-                  <div className="text-blue-400 font-bold">🌐 Scan TCP &amp; Handshake</div>
-                  <div className="text-[11px] text-ivory-dim">Sondes SYN, Bannières &amp; Ports</div>
-                </div>
-                <div className="p-3 bg-[#13171f] rounded-xl border border-[#202734] space-y-1">
-                  <div className="text-emerald-400 font-bold">🛡️ Scapy &amp; ARP Spoofing</div>
-                  <div className="text-[11px] text-ivory-dim">Dissection de Trames &amp; MITM</div>
-                </div>
-                <div className="p-3 bg-[#13171f] rounded-xl border border-[#202734] space-y-1">
-                  <div className="text-purple-400 font-bold">📜 SIEM &amp; Détection Regex</div>
-                  <div className="text-[11px] text-ivory-dim">SQLi, Traversal &amp; MITRE ATT&amp;CK</div>
-                </div>
-              </div>
-
-              <div className="pt-2 flex flex-col sm:flex-row gap-3">
+              <div className="flex flex-wrap gap-3">
                 <Link
-                  href="/lab"
-                  className="px-6 py-3 rounded-xl bg-gold hover:bg-gold-light text-[#101216] font-bold text-xs uppercase tracking-wider shadow-gold inline-flex items-center justify-center space-x-2"
+                  href="/career/cv-builder"
+                  className="px-5 py-3 rounded-xl bg-[#1c222b] hover:bg-[#252e3b] text-ivory font-bold text-xs uppercase tracking-wider border border-[#2d3746] text-center"
                 >
-                  <span>Ouvrir le Laboratoire Virtuel</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
+                  CV Studio ATS
+                </Link>
+                <Link
+                  href="/certifications"
+                  className="px-5 py-3 rounded-xl bg-[#1c222b] hover:bg-[#252e3b] text-ivory font-bold text-xs uppercase tracking-wider border border-[#2d3746] text-center"
+                >
+                  Certifications Mondiales
+                </Link>
+                <Link
+                  href="/career"
+                  className="px-5 py-3 rounded-xl bg-gold hover:bg-gold-light text-[#101216] font-bold text-xs uppercase tracking-wider shadow-gold text-center"
+                >
+                  Centre de Carri&egrave;re
                 </Link>
               </div>
             </div>
+          </div>
+        </section>
+      )}
 
-            {/* Interactive Live Terminal Widget */}
-            <div className="lg:col-span-7">
-              <InteractiveTerminalLab />
+      {/* 7. LABORATOIRE VIRTUEL INTERACTIF */}
+      <section className="py-24 bg-[#0a0c0f] border-b border-[#1c222b]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+            <div>
+              <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-gold/10 text-gold text-xs font-mono border border-gold/30 mb-3">
+                <Terminal className="w-3.5 h-3.5" />
+                <span>Environnement Sandbox&eacute; 100% In-Browser</span>
+              </div>
+              <h2 className="text-3xl font-extrabold text-ivory">
+                Laboratoire Virtuel &amp; Cyber Range
+              </h2>
+              <p className="text-sm text-ivory-dim mt-1">
+                Ex&eacute;cution Python r&eacute;elle via WebAssembly (Pyodide CPython 3.12) et terminal virtuel avec syst&egrave;me de fichiers isol&eacute;.
+              </p>
             </div>
+            <Link
+              href="/lab"
+              className="inline-flex items-center space-x-2 px-5 py-2.5 rounded-xl bg-gold/10 hover:bg-gold/20 text-gold border border-gold/30 text-xs font-mono font-bold transition-all"
+            >
+              <span>Acc&eacute;der au Cyber Range Complet</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+          </div>
+
+          {/* Interactive Lab Widget */}
+          <div className="rounded-3xl border border-[#222935] overflow-hidden shadow-2xl bg-[#101216]">
+            <InteractiveTerminalLab />
           </div>
         </div>
       </section>
 
-      {/* 7. LE CENTRE DE CARRIÈRE & CV ATS */}
+      {/* 8. LES 7 PROJETS CONCRETS CAPSTONES */}
       <section className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-[#141923] rounded-3xl border border-[#273242] p-8 lg:p-14 flex flex-col lg:flex-row items-center justify-between gap-10">
-          <div className="max-w-xl space-y-4">
-            <span className="text-xs font-mono uppercase tracking-widest text-gold">
-              Centre de Carrière RayLab
-            </span>
-            <h2 className="text-3xl font-extrabold text-ivory">
-              Valorisez vos Compétences sur le Marché Européen
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-14 gap-4">
+          <div>
+            <h2 className="text-xs font-mono uppercase tracking-widest text-gold mb-2">
+              Le Volet Build
             </h2>
-            <p className="text-xs sm:text-sm text-ivory-muted leading-relaxed">
-              Nous vous apprenons à rédiger un CV technique compatible avec les filtres automatisés ATS (Applicant Tracking Systems), à appliquer la formule d&apos;impact Google XYZ et à vous positionner efficacement en France ou en Allemagne (*Lebenslauf*).
+            <p className="text-3xl font-extrabold text-ivory">
+              7 Projets Capstone &amp; R&eacute;alisations
             </p>
-            <div className="pt-2 flex flex-wrap gap-4">
-              <Link
-                href="/career/cv-builder"
-                className="px-6 py-3 rounded-xl bg-gold hover:bg-gold-light text-[#101216] font-bold text-xs shadow-gold transition-all"
-              >
-                Générateur de CV ATS Gratuit
-              </Link>
-              <Link
-                href="/certifications"
-                className="px-6 py-3 rounded-xl bg-[#202836] hover:bg-[#283244] text-ivory font-semibold text-xs border border-[#303d52] transition-all"
-              >
-                Catalogue Certifications Officielles
-              </Link>
-            </div>
+            <p className="text-sm text-ivory-dim mt-1">
+              Des projets structur&eacute;s avec code source, architecture d&eacute;taill&eacute;e et livrables document&eacute;s sur GitHub.
+            </p>
           </div>
-
-          <div className="w-full lg:w-80 bg-[#101318] rounded-2xl border border-[#222935] p-6 space-y-3 font-mono text-xs">
-            <div className="text-ivory font-bold border-b border-[#202732] pb-2 flex items-center justify-between">
-              <span>Standard Recrutement IT</span>
-              <span className="text-emerald-400">Vérifié 2026</span>
-            </div>
-            <div className="text-[11px] text-ivory-dim space-y-2">
-              <p>✔ Titres normalisés sans graphismes destructeurs</p>
-              <p>✔ Projets avec métriques chiffrées (%)</p>
-              <p>✔ Format PDF lisible par machine</p>
-              <p>✔ Alignement marché international</p>
-            </div>
-          </div>
+          <Link
+            href="/projects"
+            className="inline-flex items-center space-x-1.5 text-xs font-semibold text-gold hover:text-gold-light"
+          >
+            <span>Voir les 7 projets</span>
+            <ChevronRight className="w-4 h-4" />
+          </Link>
         </div>
-      </section>
 
-      {/* 8. FOIRE AUX QUESTIONS (FAQ) */}
-      <section className="py-20 bg-[#0c0e12] border-t border-[#1c222b]">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-          <div className="text-center space-y-3">
-            <h2 className="text-xs font-mono uppercase tracking-widest text-gold">
-              Questions Fréquentes
-            </h2>
-            <p className="text-2xl sm:text-3xl font-extrabold text-ivory">
-              Tout ce que vous devez savoir sur RayLab
-            </p>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {projects.slice(0, 6).map((proj) => (
+            <div
+              key={proj.id}
+              className="bg-[#141820] rounded-2xl border border-[#222935] p-6 hover:border-gold/40 transition-all flex flex-col justify-between group"
+            >
+              <div className="space-y-3">
+                <div className="flex items-center justify-between">
+                  <span className="px-2.5 py-0.5 rounded-full text-[10px] font-mono font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                    {proj.difficulty}
+                  </span>
+                  <span className="text-[11px] font-mono text-ivory-dim">
+                    ~{Math.round((proj.estimated_minutes || 600) / 60)}h estim&eacute;es
+                  </span>
+                </div>
+                <h3 className="text-base font-bold text-ivory group-hover:text-gold transition-colors leading-snug">
+                  {proj.title}
+                </h3>
+                <p className="text-xs text-ivory-muted line-clamp-3 leading-relaxed">
+                  {proj.summary}
+                </p>
+              </div>
 
-          <div className="space-y-4 text-xs sm:text-sm">
-            <div className="p-6 bg-[#141820] rounded-2xl border border-[#222935] space-y-2">
-              <h3 className="font-bold text-ivory text-base">
-                À qui s&apos;adresse la plateforme ?
-              </h3>
-              <p className="text-ivory-muted leading-relaxed">
-                RayLab a été conçu pour les débutants motivés, les étudiants en informatique, les autodidactes et les personnes en reconversion professionnelle souhaitant acquérir des compétences pratiques et prouvées en Python, systèmes Linux et cybersécurité opérationnelle.
-              </p>
+              <div className="pt-4 border-t border-[#1f2530] mt-4 flex items-center justify-between">
+                <span className="text-[11px] font-mono text-ivory-dim">
+                  Livrable : D&eacute;p&ocirc;t GitHub
+                </span>
+                <Link
+                  href={`/projects/${proj.slug}`}
+                  className="text-xs font-semibold text-gold group-hover:text-gold-light inline-flex items-center space-x-1"
+                >
+                  <span>D&eacute;tails</span>
+                  <ChevronRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
+                </Link>
+              </div>
             </div>
-
-            <div className="p-6 bg-[#141820] rounded-2xl border border-[#222935] space-y-2">
-              <h3 className="font-bold text-ivory text-base">
-                Les cours et projets sont-ils gratuits ?
-              </h3>
-              <p className="text-ivory-muted leading-relaxed">
-                Oui. La plateforme est entièrement gratuite dans sa phase actuelle afin de démocratiser l&apos;accès aux fondamentaux techniques de qualité et de constituer une communauté rigoureuse.
-              </p>
-            </div>
-
-            <div className="p-6 bg-[#141820] rounded-2xl border border-[#222935] space-y-2">
-              <h3 className="font-bold text-ivory text-base">
-                Quelle est la différence entre une attestation interne et une certification officielle ?
-              </h3>
-              <p className="text-ivory-muted leading-relaxed">
-                RayLab est transparent : nous ne délivrons pas de fausses promesses de certification. Nos cours préparent aux véritables examens d&apos;État et d&apos;éditeurs mondiaux surveillés (CompTIA Security+, Cisco CCNA, LPIC-1) et vous permettent de constituer un portfolio prouvé.
-              </p>
-            </div>
-
-            <div className="p-6 bg-[#141820] rounded-2xl border border-[#222935] space-y-2">
-              <h3 className="font-bold text-ivory text-base">
-                Comment fonctionne le Laboratoire Virtuel RayLab ?
-              </h3>
-              <p className="text-ivory-muted leading-relaxed">
-                Le Laboratoire Virtuel RayLab intègre un bac à sable d&apos;exécution Python dans votre navigateur, des simulateurs de sockets TCP, des dissecteurs de trames ARP Scapy et des analyseurs de journaux SOC conformes aux RFC et à la méthode 70/30 de CyberPath.
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
     </div>

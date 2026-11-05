@@ -355,9 +355,6 @@ cursor.executemany("""
 user_achievements = [
     ("user_alex_learner", "ach_first_blood", "2026-10-02 10:30:00"),
     ("user_founder_raylab", "ach_first_blood", "2026-09-02 09:00:00"),
-    ("user_founder_raylab", "ach_bash_master", "2026-09-10 14:00:00"),
-    ("user_founder_raylab", "ach_scapy_forger", "2026-09-20 16:30:00"),
-    ("user_founder_raylab", "ach_capstone_hero", "2026-10-01 18:00:00"),
 ]
 cursor.executemany("""
   INSERT INTO user_achievements (user_id, achievement_id, earned_at)

@@ -41,8 +41,8 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export function AppProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<AppUser>(DEFAULT_FOUNDER);
   const [mode, setMode] = useState<"personal" | "public">("personal");
-  const [userXp, setUserXp] = useState(850);
-  const [streakDays, setStreakDays] = useState(7);
+  const [userXp, setUserXp] = useState(100);
+  const [streakDays, setStreakDays] = useState(2);
 
   useEffect(() => {
     const savedMode = localStorage.getItem("raylab_mode");
